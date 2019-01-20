@@ -41,19 +41,23 @@ package io.github.ddobbelaere.jchess.chess;
  * </p>
  *
  * @author Dieter Dobbelaere
- *
  */
-public class Position
+public class ChessPosition
 {
+	/**
+	 * Chess board corresponding to the position.
+	 */
+	private ChessBoard board;
+
 	/**
 	 * Create a legal chess position from a FEN string.
 	 *
-	 * @param fen Given FEN record.
+	 * @param fen Given FEN string.
 	 * @return Position corresponding to the given FEN string.
 	 * @throws InvalidFenException If the FEN string is invalid or represents an
 	 *                             illegal position.
 	 */
-	static Position fromFEN(String fen) throws InvalidFenException
+	public static ChessPosition fromFen(String fen) throws InvalidFenException
 	{
 		return null;
 	}
