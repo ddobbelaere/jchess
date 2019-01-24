@@ -24,7 +24,21 @@ package io.github.ddobbelaere.jchess.chess;
  *
  */
 @SuppressWarnings("serial")
-public class InvalidFenException extends Exception
+public class IllegalFenException extends RuntimeException
 {
+	/**
+	 * @see RuntimeException#RuntimeException()
+	 */
+	public IllegalFenException()
+	{
+		super();
+	}
 
+	/**
+	 * @see RuntimeException#RuntimeException(String)
+	 */
+	public IllegalFenException(String message)
+	{
+		super(message);
+	}
 }
