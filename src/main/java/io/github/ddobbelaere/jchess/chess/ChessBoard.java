@@ -114,12 +114,12 @@ public class ChessBoard
 				if (!isMirrored)
 				{
 					// The board is from white's perspective.
-					squareBitboard = (1 << (8 * row + col));
+					squareBitboard = (1L << (8 * row + col));
 				}
 				else
 				{
 					// The board is from black's perspective.
-					squareBitboard = (1 << (8 * (7 - row) + col));
+					squareBitboard = (1L << (8 * (7 - row) + col));
 				}
 
 				// Determine square label.

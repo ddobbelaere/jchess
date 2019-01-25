@@ -47,7 +47,7 @@ public class ChessPosition
 	/**
 	 * Chess board corresponding to the position.
 	 */
-	ChessBoard board;
+	ChessBoard board = new ChessBoard();
 
 	/**
 	 * Active player still has short castling rights.
@@ -138,7 +138,7 @@ public class ChessPosition
 					throw new IllegalFenException("Invalid piece placement string.");
 				}
 
-				long squareBitboard = (1 << (8 * row + col));
+				long squareBitboard = (1L << (8 * row + col));
 
 				if (Character.isUpperCase(c))
 				{
