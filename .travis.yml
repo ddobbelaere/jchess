@@ -1,5 +1,5 @@
 language: java
 
-# push results to coveralls.io
+# run tests and push results to coveralls.io
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+  - mvn clean test jacoco:report coveralls:report
