@@ -1,5 +1,7 @@
 # jchess
 
+[![Build Status](https://travis-ci.org/ddobbelaere/jchess.svg?branch=master)](https://travis-ci.org/ddobbelaere/jchess)
+
 Java chess library.
 
 Currently implemented:
