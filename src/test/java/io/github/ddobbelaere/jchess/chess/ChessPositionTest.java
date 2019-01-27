@@ -17,6 +17,11 @@
  */
 package io.github.ddobbelaere.jchess.chess;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,8 +39,39 @@ class ChessPositionTest
 	@Test
 	void testFromFen()
 	{
-		ChessPosition startingPos = ChessPosition.STARTING;
-		System.out.println(startingPos);
+		// Test illegal FEN strings.
+		List<String> illegalFenStrings = new ArrayList<>();
+		// No castling availability.
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w");
+		// Illegal character in piece placement string.
+		illegalFenStrings.add("rnbqkbnr+pppppppp+8+8+8+8+PPPPPPPP+RNBQKBNR w KQkq - 0 1");
+		// Too many rows in piece placement string.
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		// Invalid en passant square.
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h9 0 1");
+
+		for (String illegalFenString : illegalFenStrings)
+		{
+			// Check that the right exception is thrown.
+			assertThrows(IllegalFenException.class, () ->
+			{
+				ChessPosition.fromFen(illegalFenString);
+			}, "Illegal FEN string \"" + illegalFenString + "\" should cause an exception.");
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link io.github.ddobbelaere.jchess.chess.ChessPosition#mirror()}.
+	 */
+	@Test
+	void testMirror()
+	{
+		// Test with starting position.
+		ChessPosition position = ChessPosition.STARTING;
+		position.mirror();
+
+		System.out.println(position);
 	}
 
 }

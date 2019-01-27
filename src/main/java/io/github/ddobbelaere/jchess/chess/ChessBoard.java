@@ -176,6 +176,11 @@ public class ChessBoard
 				{
 					sb.append('\n');
 				}
+				else
+				{
+					// Add space between square labels.
+					sb.append(' ');
+				}
 			}
 		}
 
