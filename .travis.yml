@@ -2,4 +2,4 @@ language: java
 
 # push results to coveralls.io
 after_success:
-  - coveralls
+  - mvn clean cobertura:cobertura coveralls:report
