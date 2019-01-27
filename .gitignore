@@ -6,6 +6,9 @@
 # Eclipse build directory
 bin/
 
+# Maven directories
+target/
+
 # Compiled class file
 *.class
 
