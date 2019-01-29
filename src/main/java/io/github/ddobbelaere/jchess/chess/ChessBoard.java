@@ -98,6 +98,40 @@ public class ChessBoard
 	}
 
 	/**
+	 * Get the bitboard corresponding to a given square.
+	 *
+	 * @param square Given square (between 0 and 63).
+	 * @return Bitboard corresponding to the square.
+	 */
+	static long getSquareBitboard(final int square)
+	{
+		return 1L << square;
+	}
+
+	/**
+	 * Get the bitboard corresponding to a given square.
+	 *
+	 * @param row Row of the square.
+	 * @param row Column of the square.
+	 * @return Bitboard corresponding to the square.
+	 */
+	static long getSquareBitboard(final int row, final int col)
+	{
+		return 1L << (8 * row + col);
+	}
+
+	/**
+	 * Get the bitboard corresponding to a given square.
+	 *
+	 * @param name Square name (e.g. "e4").
+	 * @return Bitboard corresponding to the square.
+	 */
+	static long getSquareBitboard(final String name)
+	{
+		return getSquareBitboard(name.charAt(1) - '1', name.charAt(0) - 'a');
+	}
+
+	/**
 	 * @return String representation of the chess board.
 	 */
 	@Override

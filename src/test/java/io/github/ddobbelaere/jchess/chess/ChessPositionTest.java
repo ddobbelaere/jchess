@@ -17,6 +17,7 @@
  */
 package io.github.ddobbelaere.jchess.chess;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -39,6 +40,16 @@ class ChessPositionTest
 	@Test
 	void testFromFen()
 	{
+		// Test legal FEN strings.
+		List<String> legalFenStrings = new ArrayList<>();
+		// En passant capture possible.
+		legalFenStrings.add("rnbqkb1r/pppp1ppp/5n2/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 3");
+
+		for (String legalFenString : legalFenStrings)
+		{
+			ChessPosition.fromFen(legalFenString);
+		}
+
 		// Test illegal FEN strings.
 		List<String> illegalFenStrings = new ArrayList<>();
 		// No castling availability.
@@ -49,6 +60,12 @@ class ChessPositionTest
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		// Invalid en passant square.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h9 0 1");
+		// Illegal position: black has no king.
+		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
+		// Illegal position: black cannot castle short at the rook is missing.
+		illegalFenStrings.add("rnbqkbn1/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
+		// Illegal position: white cannot castle long at the rook is missing.
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/1NBQKBNR/8 b KQkq - 0 1");
 
 		for (String illegalFenString : illegalFenStrings)
 		{
@@ -70,6 +87,9 @@ class ChessPositionTest
 		// Test with starting position.
 		ChessPosition position = ChessPosition.STARTING;
 		position.mirror();
+
+		// The mirrored position must be legal.
+		assertEquals(position.isLegal(), true, "Mirrored position is illegal.");
 
 		System.out.println(position);
 	}

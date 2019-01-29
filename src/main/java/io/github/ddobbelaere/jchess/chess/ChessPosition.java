@@ -138,7 +138,7 @@ public class ChessPosition
 					throw new IllegalFenException("Invalid piece placement string.");
 				}
 
-				long squareBitboard = (1L << (8 * row + col));
+				long squareBitboard = ChessBoard.getSquareBitboard(row, col);
 
 				if (Character.isUpperCase(c))
 				{
@@ -206,6 +206,12 @@ public class ChessPosition
 			position.mirror();
 		}
 
+		// Check if the position is legal.
+		if (!position.isLegal())
+		{
+			throw new IllegalFenException("Illegal position.");
+		}
+
 		return position;
 	}
 
@@ -244,5 +250,61 @@ public class ChessPosition
 
 		// TODO: castling availability, en passant information, move numbers.
 		return sb.toString();
+	}
+
+	/**
+	 * @return The chess position is legal.
+	 */
+	boolean isLegal()
+	{
+		// Check that each side has exactly one king.
+		if (Long.bitCount(board.kings & board.ourPieces) != 1 || Long.bitCount(board.kings & board.ourPieces) != 1)
+		{
+			return false;
+		}
+
+		// TODO: Check that the king of the side that is not to move is not in check.
+
+		// Castling availability must pass some obvious sanity checks.
+		boolean ourKingOnOriginalSquare = (board.kings & board.ourPieces) == ChessBoard.getSquareBitboard("e1");
+		boolean theirKingOnOriginalSquare = (board.kings & board.theirPieces) == ChessBoard.getSquareBitboard("e8");
+
+		// Castling is not possible if the king has moved.
+		if (((weCanCastleShort || weCanCastleLong) && !ourKingOnOriginalSquare)
+				|| ((theyCanCastleShort || theyCanCastleLong) && !theirKingOnOriginalSquare))
+		{
+			return false;
+		}
+
+		// Castling is not possible if the rook has moved.
+		long ourRooks = board.rooks & ~board.bishops & board.ourPieces;
+		long theirRooks = board.rooks & ~board.bishops & board.theirPieces;
+
+		if ((weCanCastleShort && (ourRooks & ChessBoard.getSquareBitboard("h1")) == 0)
+				|| (weCanCastleLong && (ourRooks & ChessBoard.getSquareBitboard("a1")) == 0)
+				|| (theyCanCastleShort && (theirRooks & ChessBoard.getSquareBitboard("h8")) == 0)
+				|| (theyCanCastleLong && (theirRooks & ChessBoard.getSquareBitboard("a8")) == 0))
+		{
+			return false;
+		}
+
+		// En passant information must pass some obvious sanity checks.
+		if (enPassantCaptureSquare != 0)
+		{
+			// Check that the en passant capture square lies at the sixth row.
+			if ((enPassantCaptureSquare >> 3) != 5)
+			{
+				return false;
+			}
+
+			// Check that there is an opponent's pawn in front of the capture square.
+			if (((ChessBoard.getSquareBitboard(enPassantCaptureSquare) >> 8) & board.pawns & board.theirPieces) == 0)
+			{
+				return false;
+			}
+		}
+
+		// If we get here, the position is considered legal.
+		return true;
 	}
 }
