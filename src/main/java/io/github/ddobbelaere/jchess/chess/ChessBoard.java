@@ -176,6 +176,17 @@ public class ChessBoard
 	}
 
 	/**
+	 * Get the name corresponding to a given square.
+	 *
+	 * @param square Given square (between 0 and 63).
+	 * @return Name corresponding to the square (i.e. "e4").
+	 */
+	static String getSquareName(final int square)
+	{
+		return "" + (char) ('a' + (square & 0b111)) + (char) ('1' + (square / 8));
+	}
+
+	/**
 	 * @return String representation of the chess board.
 	 */
 	@Override

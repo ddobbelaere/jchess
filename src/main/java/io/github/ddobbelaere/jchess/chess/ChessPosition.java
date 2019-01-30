@@ -25,7 +25,7 @@ package io.github.ddobbelaere.jchess.chess;
  * <li>Color of side to move.</li>
  * <li>Castling availability.</li>
  * <li>En passant capture possibility.</li>
- * <li>Number of halfmoves since the last capture or pawn advance.</li>
+ * <li>Number of plies since the last capture or pawn advance.</li>
  * <li>Number of full moves since the start of the game.</li>
  * </ul>
  * </p>
@@ -77,7 +77,7 @@ public class ChessPosition
 	byte enPassantCaptureSquare;
 
 	/**
-	 * Number of halfmoves since the last capture or pawn advance.
+	 * Number of plies since the last capture or pawn advance.
 	 */
 	int numNoCaptureOrPawnAdvancePlies;
 
@@ -207,6 +207,32 @@ public class ChessPosition
 			position.mirror();
 		}
 
+		// Process number of plies since last capture or pawn advance (if available).
+		if (fenParts.length >= 5)
+		{
+			try
+			{
+				position.numNoCaptureOrPawnAdvancePlies = Integer.parseInt(fenParts[4]);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new IllegalFenException("Invalid number of plies since the last capture or pawn advance..");
+			}
+		}
+
+		// Process move number (if available).
+		if (fenParts.length >= 6)
+		{
+			try
+			{
+				position.numGameMoves = Integer.parseInt(fenParts[5]);
+			}
+			catch (NumberFormatException e)
+			{
+				throw new IllegalFenException("Invalid number of full moves since the start of the game.");
+			}
+		}
+
 		// Check if the position is legal.
 		if (!position.isLegal())
 		{
@@ -234,7 +260,10 @@ public class ChessPosition
 		theyCanCastleLong = temp;
 
 		// Mirror en passant square.
-		enPassantCaptureSquare = (byte) (((enPassantCaptureSquare & 0b111) << 3) + (enPassantCaptureSquare >> 3));
+		if (enPassantCaptureSquare != 0)
+		{
+			enPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8) + (enPassantCaptureSquare & 0b111));
+		}
 	}
 
 	/**
@@ -249,7 +278,47 @@ public class ChessPosition
 		sb.append(board);
 		// sb.append('\n');
 
-		// TODO: castling availability, en passant information, move numbers.
+		// Color to move. and move numbers.
+		sb.append((board.isMirrored ? "black" : "white") + " to move");
+
+		// Castling information.
+		if (weCanCastleShort || weCanCastleLong || theyCanCastleShort || theyCanCastleLong)
+		{
+			sb.append(" - ");
+		}
+
+		if (board.isMirrored ? theyCanCastleShort : weCanCastleShort)
+		{
+			sb.append("K");
+		}
+
+		if (board.isMirrored ? theyCanCastleLong : weCanCastleLong)
+		{
+			sb.append("Q");
+		}
+
+		if (board.isMirrored ? weCanCastleShort : theyCanCastleShort)
+		{
+			sb.append("k");
+		}
+
+		if (board.isMirrored ? weCanCastleLong : theyCanCastleLong)
+		{
+			sb.append("q");
+		}
+
+		// Number of game moves.
+		sb.append(" - move " + numGameMoves + "\n");
+
+		// Number of plies since last capture or pawn advance.
+		sb.append(numNoCaptureOrPawnAdvancePlies + " plies since last capture or pawn advance");
+
+		// En passant information.
+		if (enPassantCaptureSquare != 0)
+		{
+			sb.append("\ne.p. capture square: " + ChessBoard.getSquareName(enPassantCaptureSquare));
+		}
+
 		return sb.toString();
 	}
 
