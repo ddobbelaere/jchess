@@ -132,6 +132,50 @@ public class ChessBoard
 	}
 
 	/**
+	 * Get the bitboard corresponding to a given row.
+	 *
+	 * @param row Given row (between 0 and 7).
+	 * @return Bitboard corresponding to the given row.
+	 */
+	static long getRowBitboard(final int row)
+	{
+		return 0xFFL << (8 * row);
+	}
+
+	/**
+	 * Get the bitboard corresponding to a given row.
+	 *
+	 * @param row Given row (between '1' and '8').
+	 * @return Bitboard corresponding to the given row.
+	 */
+	static long getRowBitboard(final char row)
+	{
+		return getRowBitboard(row - '1');
+	}
+
+	/**
+	 * Get the bitboard corresponding to a given column.
+	 *
+	 * @param col Given column (between 0 and 7).
+	 * @return Bitboard corresponding to the given column.
+	 */
+	static long getColBitboard(final int col)
+	{
+		return 0x0101010101010101L << col;
+	}
+
+	/**
+	 * Get the bitboard corresponding to a given column.
+	 *
+	 * @param col Given column (between 'a' and 'h').
+	 * @return Bitboard corresponding to the given column.
+	 */
+	static long getColBitboard(final char col)
+	{
+		return getRowBitboard(col - 'a');
+	}
+
+	/**
 	 * @return String representation of the chess board.
 	 */
 	@Override

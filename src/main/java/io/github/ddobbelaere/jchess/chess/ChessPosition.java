@@ -21,22 +21,23 @@ package io.github.ddobbelaere.jchess.chess;
  * <p>
  * Legal chess position that consists of
  * <ul>
- * <li>Board state (how pieces are positioned on the chess board)</li>
- * <li>Color of side to move</li>
- * <li>Castling availability</li>
- * <li>En passant capture possibility</li>
- * <li>Number of halfmoves since the last capture or pawn advance</li>
- * <li>Number of full moves since the start of the game</li>
+ * <li>Board state (how pieces are positioned on the chess board).</li>
+ * <li>Color of side to move.</li>
+ * <li>Castling availability.</li>
+ * <li>En passant capture possibility.</li>
+ * <li>Number of halfmoves since the last capture or pawn advance.</li>
+ * <li>Number of full moves since the start of the game.</li>
  * </ul>
  * </p>
  * <p>
  * By <em>legal</em> we mean:
  * <ul>
- * <li>Each side has exactly one king</li>
- * <li>The king of the side that is not to move is not in check</li>
+ * <li>Each side has exactly one king.</li>
+ * <li>The king of the side that is not to move is not in check.</li>
  * <li>Castling availability passes obvious sanity checks (e.g., white cannot
- * castle kingside if there is no rook on h1)</li>
- * <li>En passant information passes obvious sanity checks</li>
+ * castle kingside if there is no rook on h1).</li>
+ * <li>En passant information passes obvious sanity checks.</li>
+ * <li>Pawns cannot be at the back ranks.</li>
  * </ul>
  * </p>
  *
@@ -302,6 +303,12 @@ public class ChessPosition
 			{
 				return false;
 			}
+		}
+
+		// Check that pawns are not at the back ranks.
+		if ((board.pawns & (ChessBoard.getRowBitboard(0) | ChessBoard.getRowBitboard(7))) != 0)
+		{
+			return false;
 		}
 
 		// If we get here, the position is considered legal.

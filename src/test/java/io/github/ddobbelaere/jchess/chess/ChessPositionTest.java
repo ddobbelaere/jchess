@@ -66,6 +66,8 @@ class ChessPositionTest
 		illegalFenStrings.add("rnbqkbn1/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
 		// Illegal position: white cannot castle long at the rook is missing.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/1NBQKBNR/8 b KQkq - 0 1");
+		// Illegal position: pawns at the back rank.
+		illegalFenStrings.add("rnbqkbpr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - 0 1");
 
 		for (String illegalFenString : illegalFenStrings)
 		{
