@@ -156,7 +156,7 @@ class ChessBoard
 	 */
 	static long getColBitboard(final char col)
 	{
-		return getRowBitboard(col - 'a');
+		return getColBitboard(col - 'a');
 	}
 
 	/**

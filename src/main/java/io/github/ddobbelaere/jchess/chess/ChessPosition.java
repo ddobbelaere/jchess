@@ -333,7 +333,7 @@ public class ChessPosition
 	boolean isLegal()
 	{
 		// Check that each side has exactly one king.
-		if (Long.bitCount(board.kings & board.ourPieces) != 1 || Long.bitCount(board.kings & board.ourPieces) != 1)
+		if (Long.bitCount(board.kings & board.ourPieces) != 1 || Long.bitCount(board.kings & board.theirPieces) != 1)
 		{
 			return false;
 		}
@@ -366,7 +366,7 @@ public class ChessPosition
 		// En passant information must pass some obvious sanity checks.
 		if (enPassantCaptureSquare != 0)
 		{
-			// Check that the en passant capture square lies at the sixth row.
+			// Check that the en passant capture square lies on the sixth row.
 			if ((enPassantCaptureSquare >> 3) != 5)
 			{
 				return false;

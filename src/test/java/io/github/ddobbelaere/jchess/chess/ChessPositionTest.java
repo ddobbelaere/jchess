@@ -138,7 +138,7 @@ class ChessPositionTest
 		List<String> illegalFenStrings = new ArrayList<>();
 
 		// White has no king.
-		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1");
 		// No castling availability.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w");
 		// Illegal character in piece placement string.
@@ -147,6 +147,8 @@ class ChessPositionTest
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		// Invalid en passant square.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h9 0 1");
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h8 0 1");
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq e6 0 1");
 		// Illegal position: black has no king.
 		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
 		// Illegal position: black cannot castle short at the rook is missing.
