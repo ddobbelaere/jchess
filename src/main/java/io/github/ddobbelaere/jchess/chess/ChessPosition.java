@@ -276,7 +276,6 @@ public class ChessPosition
 
 		// Chess board representation.
 		sb.append(board);
-		// sb.append('\n');
 
 		// Color to move. and move numbers.
 		sb.append((board.isMirrored ? "black" : "white") + " to move");
@@ -308,7 +307,7 @@ public class ChessPosition
 		}
 
 		// Number of game moves.
-		sb.append(" - move " + numGameMoves + "\n");
+		sb.append(" - move " + numGameMoves + System.lineSeparator());
 
 		// Number of plies since last capture or pawn advance.
 		sb.append(numNoCaptureOrPawnAdvancePlies + " plies since last capture or pawn advance");
@@ -316,8 +315,14 @@ public class ChessPosition
 		// En passant information.
 		if (enPassantCaptureSquare != 0)
 		{
-			sb.append("\ne.p. capture square: " + ChessBoard.getSquareName(enPassantCaptureSquare));
+			byte mirroredEnPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8)
+					+ (enPassantCaptureSquare & 0b111));
+			sb.append(System.lineSeparator() + "e.p. capture square: " + ChessBoard
+					.getSquareName(board.isMirrored ? mirroredEnPassantCaptureSquare : enPassantCaptureSquare));
 		}
+
+		// Add line break.
+		sb.append(System.lineSeparator());
 
 		return sb.toString();
 	}

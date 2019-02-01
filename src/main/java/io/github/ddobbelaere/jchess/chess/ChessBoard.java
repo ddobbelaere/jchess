@@ -22,7 +22,7 @@ package io.github.ddobbelaere.jchess.chess;
  *
  * @author Dieter Dobbelaere
  */
-public class ChessBoard
+class ChessBoard
 {
 	/**
 	 * Active player's pieces bitboard.
@@ -58,22 +58,6 @@ public class ChessBoard
 	 * The board is mirrored (black to move).
 	 */
 	boolean isMirrored;
-
-	/**
-	 * @return Active player's pieces bitboard.
-	 */
-	public final long getOurPieces()
-	{
-		return ourPieces;
-	}
-
-	/**
-	 * @return Opponent's pieces bitboard.
-	 */
-	public final long getTheirPieces()
-	{
-		return theirPieces;
-	}
 
 	/**
 	 * Mirror the board.
@@ -263,7 +247,7 @@ public class ChessBoard
 
 				if (col == 7)
 				{
-					sb.append('\n');
+					sb.append(System.lineSeparator());
 				}
 				else
 				{

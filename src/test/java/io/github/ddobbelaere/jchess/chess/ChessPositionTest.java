@@ -82,15 +82,30 @@ class ChessPositionTest
 		// Test with position where black can no longer castle.
 		ChessPosition position = ChessPosition
 				.fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9");
-		System.out.println("Position:\n\n" + position + "\n\n");
+		System.out.printf("Position:%n%n%s%n", position);
 
 		// The mirrored position is from black's perspective.
 		position.mirror();
-		System.out.println("Mirrored position:\n\n" + position + "\n\n");
+		System.out.printf("Mirrored position:%n%n%s%n", position);
 
 		// Black (we) should not be able to castle.
 		assertEquals(position.weCanCastleShort || position.weCanCastleLong, false,
 				"Invalid mirrored castling information.");
+	}
+
+	/**
+	 * Test method for
+	 * {@link io.github.ddobbelaere.jchess.chess.ChessPosition#toString()}.
+	 */
+	@Test
+	void testToString()
+	{
+		// Test with all legal FEN strings.
+		for (String legalFenString : getLegalFenStrings())
+		{
+			System.out.printf("FEN string: %s%nPosition string representation:%n%n%s%n", legalFenString,
+					ChessPosition.fromFen(legalFenString));
+		}
 	}
 
 	/**
@@ -122,6 +137,8 @@ class ChessPositionTest
 		// Construct the list.
 		List<String> illegalFenStrings = new ArrayList<>();
 
+		// White has no king.
+		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		// No castling availability.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w");
 		// Illegal character in piece placement string.
