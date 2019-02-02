@@ -123,7 +123,7 @@ class ChessPositionTest
 		// En passant capture possible (black to move).
 		legalFenStrings.add("r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b KQ g3 0 11");
 
-		// Return list.
+		// Return the list.
 		return legalFenStrings;
 	}
 
@@ -137,8 +137,10 @@ class ChessPositionTest
 		// Construct the list.
 		List<String> illegalFenStrings = new ArrayList<>();
 
-		// White has no king.
+		// No king.
 		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1");
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQ1BNR w - - 0 1");
+		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
 		// No castling availability.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w");
 		// Illegal character in piece placement string.
@@ -149,17 +151,17 @@ class ChessPositionTest
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h9 0 1");
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h8 0 1");
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq e6 0 1");
-		// Illegal position: black has no king.
-		illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
-		// Illegal position: black cannot castle short at the rook is missing.
+		// White cannot castle as the king is not on its original square.
+		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBKQBNR w KQkq - 0 1");
+		// Black cannot castle short as the rook is not on its original square.
 		illegalFenStrings.add("rnbqkbn1/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
-		// Illegal position: white cannot castle long at the rook is missing.
+		// White cannot castle long at the rook is not on its original square.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/1NBQKBNR/8 b KQkq - 0 1");
-		// Illegal position: pawns at the back rank.
+		// Pawns at the back rank.
 		illegalFenStrings.add("rnbqkbpr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - 0 1");
-		// Illegal position: illegal number of plies since last capture or pawn advance.
+		// Illegal number of plies since last capture or pawn advance.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - - 1");
-		// Illegal position: illegal number of game moves.
+		// Illegal number of game moves.
 		illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - 0 -");
 
 		// Return the list.
