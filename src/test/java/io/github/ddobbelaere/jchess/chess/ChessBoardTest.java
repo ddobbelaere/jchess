@@ -17,6 +17,7 @@
  */
 package io.github.ddobbelaere.jchess.chess;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,9 @@ class ChessBoardTest
 		assertEquals(ChessBoard.getSquareBitboard("c2"), ChessBoard.getSquareBitboard(1, 2));
 		assertEquals(ChessBoard.getRowBitboard('8'), ChessBoard.getRowBitboard(7));
 		assertEquals(ChessBoard.getColBitboard('h'), ChessBoard.getColBitboard(7));
+		assertEquals(ChessBoard.getDiagsBitboard(0, 0), 0x8040201008040201L);
+		assertEquals(ChessBoard.getDiagsBitboard(0, 7), Long.reverseBytes(0x8040201008040201L));
+		assertTrue(ChessBoard.getBitboardDebugString(1L).contains("x"));
 
 		for (int i = 0; i < 8; i++)
 		{
@@ -49,7 +53,7 @@ class ChessBoardTest
 
 			for (int j = 0; j < 8; j++)
 			{
-				// Add square to expected bitboards.
+				// Add square to expected row and column bitboards.
 				rowBitboard |= ChessBoard.getSquareBitboard(i, j);
 				colBitboard |= ChessBoard.getSquareBitboard(j, i);
 			}

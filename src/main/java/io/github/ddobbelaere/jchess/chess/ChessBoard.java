@@ -60,6 +60,16 @@ class ChessBoard
 	boolean isMirrored;
 
 	/**
+	 * Bitboard representation of the first rank (aka row 0).
+	 */
+	private static final long BB_A1H1 = 0xFFL;
+
+	/**
+	 * Bitboard representation of the a-file (aka column 0).
+	 */
+	private static final long BB_A1A8 = 0x0101010101010101L;
+
+	/**
 	 * Mirror the board.
 	 */
 	public void mirror()
@@ -96,7 +106,7 @@ class ChessBoard
 	 * Get the bitboard corresponding to a given square.
 	 *
 	 * @param row Row of the square.
-	 * @param row Column of the square.
+	 * @param col Column of the square.
 	 * @return Bitboard corresponding to the square.
 	 */
 	static long getSquareBitboard(final int row, final int col)
@@ -123,7 +133,7 @@ class ChessBoard
 	 */
 	static long getRowBitboard(final int row)
 	{
-		return 0xFFL << (8 * row);
+		return BB_A1H1 << (8 * row);
 	}
 
 	/**
@@ -145,7 +155,7 @@ class ChessBoard
 	 */
 	static long getColBitboard(final int col)
 	{
-		return 0x0101010101010101L << col;
+		return BB_A1A8 << col;
 	}
 
 	/**
@@ -160,6 +170,34 @@ class ChessBoard
 	}
 
 	/**
+	 * Get the bitboard corresponding to the diagonals that go through a given
+	 * square.
+	 *
+	 * @param row Row of the square.
+	 * @param col Column of the square.
+	 * @return Bitboard orresponding to the diagonals that go through the square.
+	 */
+	static long getDiagsBitboard(final int row, final int col)
+	{
+		// Calculate the diagonals going through the square (row,col).
+		long diagsBitboard = 0;
+
+		for (int i = 0; i < 8; i++)
+		{
+			for (int j = 0; j < 8; j++)
+			{
+				if (Math.abs(row - i) == Math.abs(col - j))
+				{
+					// The square (i,j) lies on a diagonal through (row,col).
+					diagsBitboard |= ChessBoard.getSquareBitboard(i, j);
+				}
+			}
+		}
+
+		return diagsBitboard;
+	}
+
+	/**
 	 * Get the name corresponding to a given square.
 	 *
 	 * @param square Given square (between 0 and 63).
@@ -168,6 +206,49 @@ class ChessBoard
 	static String getSquareName(final int square)
 	{
 		return "" + (char) ('a' + (square & 0b111)) + (char) ('1' + (square / 8));
+	}
+
+	/**
+	 * Get the debug string corresponding to a given bitboard.
+	 *
+	 * @param bitboard Given bitboard.
+	 * @return String representation of the given bitboard.
+	 */
+	static String getBitboardDebugString(long bitboard)
+	{
+		StringBuilder sb = new StringBuilder();
+
+		for (int row = 7; row >= 0; row--)
+		{
+			for (int col = 0; col <= 7; col++)
+			{
+				// Determine square bitboard.
+				long squareBitboard = (1L << (8 * row + col));
+
+				// Determine square label.
+				char squareLabel = '.';
+
+				if ((bitboard & squareBitboard) != 0)
+				{
+					squareLabel = 'x';
+				}
+
+				// Append to string.
+				sb.append(squareLabel);
+
+				if (col == 7)
+				{
+					sb.append(System.lineSeparator());
+				}
+				else
+				{
+					// Add space between square labels.
+					sb.append(' ');
+				}
+			}
+		}
+
+		return sb.toString();
 	}
 
 	/**
