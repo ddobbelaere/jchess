@@ -17,6 +17,9 @@
  */
 package io.github.ddobbelaere.jchess.chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * Utility class that provides fast access to attack bitboards of sliding pieces
@@ -143,8 +146,10 @@ class MagicUtils
 		initMasks();
 
 		// Initialize lookup tables for rooks and bishops.
-		initLookupTables(rookMagicNumbers, rookMagicParameters, rookAttackBitboards);
-		initLookupTables(bishopMagicNumbers, bishopMagicParameters, bishopAttackBitboards);
+		initLookupTables(rookMagicNumbers, rookMagicParameters,
+				new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } }, rookAttackBitboards);
+		initLookupTables(bishopMagicNumbers, bishopMagicParameters,
+				new int[][] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } }, bishopAttackBitboards);
 	}
 
 	/**
@@ -158,8 +163,8 @@ class MagicUtils
 
 		for (int square = 0; square < 64; square++)
 		{
-			int row = square / 8;
-			int col = square % 8;
+			final int row = square / 8;
+			final int col = square % 8;
 
 			// Rook masks are obtained by adding the row and column bitboards and
 			// subtracting the rook square itself and the squares at the row and column's
@@ -179,18 +184,98 @@ class MagicUtils
 	/**
 	 * Initialize the attack bitboards lookup tables for a given sliding piece type.
 	 *
-	 * @param magicNumbers    Array holding the magic numbers for the sliding piece
-	 *                        type.
-	 * @param magicParameters Array holding the magic parameters for the sliding
-	 *                        piece type.
-	 * @param attackBitboards Lookup table of attack bitboards for the sliding piece
-	 *                        type.
+	 * @param magicNumbers    Array holding the magic numbers.
+	 * @param magicParameters Array holding the magic parameters.
+	 * @param pieceMovements  Array holding the possible piece movement directions.
+	 * @param attackBitboards Lookup table of attack bitboards.
 	 */
-	private static void initLookupTables(long[] magicNumbers, MagicParameters[] magicParameters, long[] attackBitboards)
+	private static void initLookupTables(long[] magicNumbers, MagicParameters[] magicParameters, int[][] pieceMovements,
+			long[] attackBitboards)
 	{
+		// Variable that holds current lookup table offset.
+		int tableOffset = 0;
+
+		// Generate lookup tables for all board squares.
 		for (int square = 0; square < 64; square++)
 		{
+			final int row = square / 8;
+			final int col = square % 8;
 
+			// Set number of right shifts applied during the index calculation.
+			// Since we use fancy magic bitboards, this equals 64 - (number of mask bits).
+			magicParameters[square].numShifts = (byte) (64 - Long.bitCount(magicParameters[square].mask));
+
+			// Store base index.
+			magicParameters[square].baseIndex = tableOffset;
+
+			// Loop over all relevant occupied squares bitboards.
+			// First, generate a list with all masked squares.
+			List<Integer> maskedSquares = new ArrayList<>();
+
+			for (int i = 0; i < 64; i++)
+			{
+				if ((magicParameters[square].mask & (1L << i)) != 0)
+				{
+					maskedSquares.add(i);
+				}
+			}
+
+			// Now loop over all possible combinations.
+			for (int i = 0; i < (1 << maskedSquares.size()); i++)
+			{
+				// Calculate the relevant occupied squares bitboard.
+				long relevantOccupiedSquares = 0;
+
+				for (int j = 0; j < maskedSquares.size(); j++)
+				{
+					if ((i & (1 << j)) != 0)
+					{
+						relevantOccupiedSquares |= 1L << maskedSquares.get(j);
+					}
+				}
+
+				// Calculate the attack bitboard.
+				long attackBitboard = 0;
+
+				for (int[] pieceMovement : pieceMovements)
+				{
+					// Start at the piece square.
+					int attackedSquareRow = row;
+					int attackedSquareCol = col;
+
+					while (true)
+					{
+						attackedSquareRow += pieceMovement[0];
+						attackedSquareCol += pieceMovement[1];
+
+						if (attackedSquareRow < 0 || attackedSquareRow > 7 || attackedSquareCol < 0
+								|| attackedSquareCol > 7)
+						{
+							// This square falls outside the chess board.
+							break;
+						}
+
+						// Add the square to the attack bitboard.
+						attackBitboard |= ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol);
+
+						if ((ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol)
+								& relevantOccupiedSquares) != 0)
+						{
+							// This square is occupied and hides all other following squares from the
+							// attack.
+							break;
+						}
+					}
+				}
+
+				// Store the attack bitboard.
+				attackBitboards[magicParameters[square].baseIndex
+						+ (int) ((magicNumbers[square] * (relevantOccupiedSquares
+								& magicParameters[square].mask)) >>> magicParameters[square].numShifts)] = attackBitboard;
+			}
+
+			// Update table offset.
+			tableOffset += 1 << maskedSquares.size();
 		}
 	}
 
@@ -206,7 +291,7 @@ class MagicUtils
 	{
 		MagicParameters params = rookMagicParameters[square];
 		return rookAttackBitboards[params.baseIndex
-				+ (int) ((rookMagicNumbers[square] * (occupiedSquaresBitboard & params.mask)) >> params.numShifts)];
+				+ (int) ((rookMagicNumbers[square] * (occupiedSquaresBitboard & params.mask)) >>> params.numShifts)];
 	}
 
 	/**
@@ -221,7 +306,7 @@ class MagicUtils
 	{
 		MagicParameters params = bishopMagicParameters[square];
 		return bishopAttackBitboards[params.baseIndex
-				+ (int) ((bishopMagicNumbers[square] * (occupiedSquaresBitboard & params.mask)) >> params.numShifts)];
+				+ (int) ((bishopMagicNumbers[square] * (occupiedSquaresBitboard & params.mask)) >>> params.numShifts)];
 	}
 
 }
