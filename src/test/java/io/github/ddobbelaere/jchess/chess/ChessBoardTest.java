@@ -17,7 +17,6 @@
  */
 package io.github.ddobbelaere.jchess.chess;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ class ChessBoardTest
 		assertEquals(ChessBoard.getColBitboard('h'), ChessBoard.getColBitboard(7));
 		assertEquals(ChessBoard.getDiagsBitboard(0, 0), 0x8040201008040201L);
 		assertEquals(ChessBoard.getDiagsBitboard(0, 7), Long.reverseBytes(0x8040201008040201L));
-		assertTrue(ChessBoard.getBitboardDebugString(1L).contains("x"));
+		assertEquals(ChessBoard.getBitboardDebugString(1L).contains("x"), true);
 
 		for (int i = 0; i < 8; i++)
 		{
