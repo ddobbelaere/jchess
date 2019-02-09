@@ -141,6 +141,10 @@ class MagicUtils
 
 		// Initialize masks.
 		initMasks();
+
+		// Initialize lookup tables for rooks and bishops.
+		initLookupTables(rookMagicNumbers, rookMagicParameters, rookAttackBitboards);
+		initLookupTables(bishopMagicNumbers, bishopMagicParameters, bishopAttackBitboards);
 	}
 
 	/**
@@ -169,6 +173,24 @@ class MagicUtils
 			// squares at the board's edges from the diagonals bitboard.
 			bishopMagicParameters[square].mask = ChessBoard.getDiagsBitboard(row, col)
 					& ~(ChessBoard.getSquareBitboard(square) | boardEdgesBitboard);
+		}
+	}
+
+	/**
+	 * Initialize the attack bitboards lookup tables for a given sliding piece type.
+	 *
+	 * @param magicNumbers    Array holding the magic numbers for the sliding piece
+	 *                        type.
+	 * @param magicParameters Array holding the magic parameters for the sliding
+	 *                        piece type.
+	 * @param attackBitboards Lookup table of attack bitboards for the sliding piece
+	 *                        type.
+	 */
+	private static void initLookupTables(long[] magicNumbers, MagicParameters[] magicParameters, long[] attackBitboards)
+	{
+		for (int square = 0; square < 64; square++)
+		{
+
 		}
 	}
 

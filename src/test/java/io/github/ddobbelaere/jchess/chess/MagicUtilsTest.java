@@ -33,6 +33,10 @@ class MagicUtilsTest
 	@Test
 	void testStaticMethods()
 	{
+		// Instantiate class once to get full test coverage.
+		MagicUtils magicUtils = new MagicUtils();
+
+		// Test static methods.
 		System.out.println(ChessBoard.getBitboardDebugString(MagicUtils.getRookAttackBitboard(0, 0)));
 		System.out.println(ChessBoard.getBitboardDebugString(MagicUtils.getBishopAttackBitboard(0, 0)));
 	}
