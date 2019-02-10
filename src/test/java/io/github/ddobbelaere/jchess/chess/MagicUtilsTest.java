@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 class MagicUtilsTest
 {
 	/**
-	 * Interface of an operator that yield an attack bitboard.
+	 * Interface of an operator that yields an attack bitboard.
 	 */
 	private interface GetAttackBitboardOperator
 	{
