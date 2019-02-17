@@ -79,6 +79,15 @@ class ChessMoveGeneratorTest
 		assertEquals(kingSafety.pinnedPieces, 0L);
 		assertEquals(kingSafety.isCheck(), true);
 		assertEquals(kingSafety.isDoubleCheck(), false);
+
+		// No checks and no pinned pieces.
+		kingSafety = ChessMoveGenerator
+				.generateKingSafety(ChessPosition.fromFen("8/1k6/2b5/8/4Q3/5Q2/6K1/8 w - - 0 1"));
+
+		assertEquals(kingSafety.attackLines, 0L);
+		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.isCheck(), false);
+		assertEquals(kingSafety.isDoubleCheck(), false);
 	}
 
 	/**
