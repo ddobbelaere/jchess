@@ -50,5 +50,5 @@ class ChessMove
 	/**
 	 * Promotion piece type.
 	 */
-	ChessPromotionPieceType promotionPieceType;
+	ChessPromotionPieceType promotionPieceType = ChessPromotionPieceType.NONE;
 }
