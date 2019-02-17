@@ -21,3 +21,4 @@ JChess is a pure Java chess library.
 ### Acknowledgments
 
 - Board representation inspired by [lc0](https://github.com/LeelaChessZero/lc0).
+- Move generation inspired by [lc0](https://github.com/LeelaChessZero/lc0).
