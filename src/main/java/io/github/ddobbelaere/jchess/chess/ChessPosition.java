@@ -30,7 +30,7 @@ package io.github.ddobbelaere.jchess.chess;
  * </ul>
  * </p>
  * <p>
- * By <em>legal</em> we mean:
+ * <em>Legal</em> means that
  * <ul>
  * <li>Each side has exactly one king.</li>
  * <li>The king of the side that is not to move is not in check.</li>

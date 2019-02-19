@@ -46,12 +46,12 @@ class MagicUtils
 	/**
 	 * Lookup table holding rook attack bitboards.
 	 */
-	private static long[] rookAttackBitboards = new long[0x19000];
+	private static final long[] rookAttackBitboards = new long[0x19000];
 
 	/**
 	 * Lookup table holding bishop attack bitboards.
 	 */
-	private static long[] bishopAttackBitboards = new long[0x1480];
+	private static final long[] bishopAttackBitboards = new long[0x1480];
 
 	/**
 	 * This holds all magic parameters (except magic number) for a given square that
@@ -118,12 +118,12 @@ class MagicUtils
 	/**
 	 * Rook magic parameters.
 	 */
-	private static MagicParameters[] rookMagicParameters = new MagicParameters[64];
+	private static final MagicParameters[] rookMagicParameters = new MagicParameters[64];
 
 	/**
 	 * Bishop magic parameters.
 	 */
-	private static MagicParameters[] bishopMagicParameters = new MagicParameters[64];
+	private static final MagicParameters[] bishopMagicParameters = new MagicParameters[64];
 
 	static
 	{
@@ -146,10 +146,10 @@ class MagicUtils
 		initMasks();
 
 		// Initialize lookup tables for rooks and bishops.
-		initLookupTables(rookMagicNumbers, rookMagicParameters,
-				new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } }, rookAttackBitboards);
-		initLookupTables(bishopMagicNumbers, bishopMagicParameters,
-				new int[][] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } }, bishopAttackBitboards);
+		initLookupTables(rookMagicNumbers, rookMagicParameters, ChessMoveGenerator.rookMoveDirections,
+				rookAttackBitboards);
+		initLookupTables(bishopMagicNumbers, bishopMagicParameters, ChessMoveGenerator.bishopMoveDirections,
+				bishopAttackBitboards);
 	}
 
 	/**

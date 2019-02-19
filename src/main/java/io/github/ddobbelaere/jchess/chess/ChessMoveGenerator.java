@@ -31,13 +31,20 @@ class ChessMoveGenerator
 	 * Array of all rook move directions. Each direction is a two element array of
 	 * the form (row increment, column increment).
 	 */
-	private static final int[][] rookMoveDirections = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+	static final int[][] rookMoveDirections = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
 
 	/**
 	 * Array of all bishop move directions. Each direction is a two element array of
 	 * the form (row increment, column increment).
 	 */
-	private static final int[][] bishopMoveDirections = new int[][] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+	static final int[][] bishopMoveDirections = new int[][] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+
+	/**
+	 * Array of all king move directions. Each direction is a two element array of
+	 * the form (row increment, column increment).
+	 */
+	static final int[][] kingMoveDirections = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 1 },
+			{ 1, -1 }, { -1, 1 }, { -1, -1 } };
 
 	/**
 	 * Array of attack bitboards of opponent's pawns.
@@ -93,9 +100,10 @@ class ChessMoveGenerator
 		long pinnedPieces;
 
 		/**
-		 * Bitboard of attacked squares around our king.
+		 * Bitboard of accessible squares around our king (i.e., squares where our king
+		 * can move to, not including castling squares).
 		 */
-		long attackedSquares;
+		long accessibleSquares;
 
 		/**
 		 * Double check.
@@ -137,7 +145,9 @@ class ChessMoveGenerator
 		KingSafety kingSafety = new KingSafety();
 
 		// Get square of our king.
-		int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
+		final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
+		final int ourKingRow = ourKingSquare / 8;
+		final int ourKingCol = ourKingSquare % 8;
 
 		// Temporary variable that hold number of pieces that give check.
 		int numCheckingPieces = 0;
@@ -146,7 +156,7 @@ class ChessMoveGenerator
 		for (int pieceType = 0; pieceType < 2; pieceType++)
 		{
 			int[][] pieceMoveDirections = (pieceType == 0) ? rookMoveDirections : bishopMoveDirections;
-			long attackingPieces = position.board.theirPieces
+			final long attackingPieces = position.board.theirPieces
 					& ((pieceType == 0) ? position.board.rooks : position.board.bishops);
 
 			if ((attackingPieces & ((pieceType == 0) ? MagicUtils.getRookAttackBitboard(ourKingSquare, 0)
@@ -155,8 +165,8 @@ class ChessMoveGenerator
 				for (int[] pieceMoveDirection : pieceMoveDirections)
 				{
 					// Start at the square of our king.
-					int row = ourKingSquare / 8;
-					int col = ourKingSquare % 8;
+					int row = ourKingRow;
+					int col = ourKingCol;
 
 					// Initialize temporary variables.
 					boolean possiblePinnedPieceFound = false;
@@ -241,10 +251,94 @@ class ChessMoveGenerator
 		// Set double check flag.
 		kingSafety.isDoubleCheck = (numCheckingPieces == 2);
 
-		// TODO: Attack squares around king.
+		// Accessible squares around king where the king can move to.
+		for (int[] kingMoveDirection : kingMoveDirections)
+		{
+			int row = ourKingRow + kingMoveDirection[0];
+			int col = ourKingCol + kingMoveDirection[1];
+
+			if (row < 0 || row > 7 || col < 0 || col > 7)
+			{
+				// Invalid square.
+				break;
+			}
+
+			final long squareBitboard = ChessBoard.getSquareBitboard(row, col);
+
+			if ((squareBitboard & position.board.ourPieces) != 0)
+			{
+				// If one of our pieces is present, the square is not accessible.
+				break;
+			}
+
+			if ((squareBitboard & kingSafety.attackLines) != 0)
+			{
+				// The square lies on an attack line and is certainly not accessible.
+				break;
+			}
+
+			if (!squareIsUnderAttack(position, 8 * row + col))
+			{
+				// The square is not under attack. Add it to the accessible
+				// squares bitboard.
+				kingSafety.accessibleSquares |= squareBitboard;
+			}
+		}
 
 		// Return king safety object.
 		return kingSafety;
+	}
+
+	/**
+	 * Check if the given square is under attack in the given position.
+	 *
+	 * @param position Given position.
+	 * @param square   Given square (between 0 and 63).
+	 * @return The square is under attack.
+	 */
+	static boolean squareIsUnderAttack(ChessPosition position, int square)
+	{
+		// Check rooks.
+		if ((MagicUtils.getRookAttackBitboard(square, position.board.ourPieces | position.board.theirPieces)
+				& position.board.theirPieces & position.board.rooks) != 0)
+		{
+			return true;
+		}
+
+		// Check bishops.
+		if ((MagicUtils.getBishopAttackBitboard(square, position.board.ourPieces | position.board.theirPieces)
+				& position.board.theirPieces & position.board.bishops) != 0)
+		{
+			return true;
+		}
+
+		// Check knights.
+		if ((knightAttackBitboards[square] & position.board.theirPieces
+				& ~(position.board.pawns | position.board.rooks | position.board.bishops | position.board.kings)) != 0)
+		{
+			return true;
+		}
+
+		// Check pawns.
+		if ((pawnAttackBitboards[square] & position.board.theirPieces & position.board.pawns) != 0)
+		{
+			return true;
+		}
+
+		// Check their king.
+		final int theirKingSquare = Long.numberOfTrailingZeros(position.board.theirPieces & position.board.kings);
+		final int theirKingRow = theirKingSquare / 8;
+		final int theirKingCol = theirKingSquare % 8;
+		final int row = square / 8;
+		final int col = square % 8;
+
+		if (Math.abs(theirKingRow - row) <= 1 && Math.abs(theirKingCol - col) <= 1)
+		{
+			return true;
+		}
+
+		// If we get here, the square is not under attack.
+		return false;
 	}
 
 	/**
