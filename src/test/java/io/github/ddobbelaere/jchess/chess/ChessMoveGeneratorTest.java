@@ -44,6 +44,7 @@ class ChessMoveGeneratorTest
 
 		assertEquals(kingSafety.attackLines, 0L);
 		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.accessibleSquares, 0L);
 		assertEquals(kingSafety.isCheck(), false);
 		assertEquals(kingSafety.isDoubleCheck(), false);
 
@@ -53,6 +54,9 @@ class ChessMoveGeneratorTest
 
 		assertEquals(kingSafety.attackLines, 0x40810203800L);
 		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.accessibleSquares,
+				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+						| ChessBoard.getSquareBitboard("g3") | ChessBoard.getSquareBitboard("h3"));
 		assertEquals(kingSafety.isCheck(), true);
 		assertEquals(kingSafety.isDoubleCheck(), true);
 
@@ -60,7 +64,12 @@ class ChessMoveGeneratorTest
 		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/1k6/2b5/8/8/5Q2/6K1/8 w - - 0 1"));
 
 		assertEquals(kingSafety.attackLines, 0L);
-		assertEquals(kingSafety.pinnedPieces, 0x200000L);
+		assertEquals(kingSafety.pinnedPieces, ChessBoard.getSquareBitboard("f3"));
+		assertEquals(kingSafety.accessibleSquares,
+				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
+						| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("g3")
+						| ChessBoard.getSquareBitboard("h3"));
 		assertEquals(kingSafety.isCheck(), false);
 		assertEquals(kingSafety.isDoubleCheck(), false);
 
@@ -69,6 +78,10 @@ class ChessMoveGeneratorTest
 
 		assertEquals(kingSafety.attackLines, 0x3E10L);
 		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.accessibleSquares,
+				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("g3")
+						| ChessBoard.getSquareBitboard("h3"));
 		assertEquals(kingSafety.isCheck(), true);
 		assertEquals(kingSafety.isDoubleCheck(), true);
 
@@ -77,6 +90,11 @@ class ChessMoveGeneratorTest
 
 		assertEquals(kingSafety.attackLines, 0x200000L);
 		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.accessibleSquares,
+				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
+						| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("f3")
+						| ChessBoard.getSquareBitboard("g3") | ChessBoard.getSquareBitboard("h3"));
 		assertEquals(kingSafety.isCheck(), true);
 		assertEquals(kingSafety.isDoubleCheck(), false);
 
@@ -86,6 +104,23 @@ class ChessMoveGeneratorTest
 
 		assertEquals(kingSafety.attackLines, 0L);
 		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.accessibleSquares,
+				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
+						| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("g3")
+						| ChessBoard.getSquareBitboard("h3"));
+		assertEquals(kingSafety.isCheck(), false);
+		assertEquals(kingSafety.isDoubleCheck(), false);
+
+		// No checks and no pinned pieces, but king movement restricted due to pawn and
+		// opponent's king.
+		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/8/8/3p4/8/4K3/8/4k3 w - - 0 1"));
+
+		assertEquals(kingSafety.attackLines, 0L);
+		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.accessibleSquares,
+				ChessBoard.getSquareBitboard("d3") | ChessBoard.getSquareBitboard("d4")
+						| ChessBoard.getSquareBitboard("f3") | ChessBoard.getSquareBitboard("f4"));
 		assertEquals(kingSafety.isCheck(), false);
 		assertEquals(kingSafety.isDoubleCheck(), false);
 	}

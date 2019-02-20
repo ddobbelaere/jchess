@@ -221,6 +221,8 @@ class ChessMoveGenerator
 								kingSafety.attackLines |= attackLine;
 								numCheckingPieces++;
 							}
+
+							break;
 						}
 					}
 				}
@@ -254,13 +256,13 @@ class ChessMoveGenerator
 		// Accessible squares around king where the king can move to.
 		for (int[] kingMoveDirection : kingMoveDirections)
 		{
-			int row = ourKingRow + kingMoveDirection[0];
-			int col = ourKingCol + kingMoveDirection[1];
+			final int row = ourKingRow + kingMoveDirection[0];
+			final int col = ourKingCol + kingMoveDirection[1];
 
 			if (row < 0 || row > 7 || col < 0 || col > 7)
 			{
 				// Invalid square.
-				break;
+				continue;
 			}
 
 			final long squareBitboard = ChessBoard.getSquareBitboard(row, col);
@@ -268,13 +270,14 @@ class ChessMoveGenerator
 			if ((squareBitboard & position.board.ourPieces) != 0)
 			{
 				// If one of our pieces is present, the square is not accessible.
-				break;
+				continue;
 			}
 
-			if ((squareBitboard & kingSafety.attackLines) != 0)
+			if ((squareBitboard & kingSafety.attackLines & ~position.board.theirPieces) != 0)
 			{
-				// The square lies on an attack line and is certainly not accessible.
-				break;
+				// The square lies on an attack line and is not equal to the attacking piece.
+				// Therefore, it is certainly not accessible.
+				continue;
 			}
 
 			if (!squareIsUnderAttack(position, 8 * row + col))
@@ -290,7 +293,8 @@ class ChessMoveGenerator
 	}
 
 	/**
-	 * Check if the given square is under attack in the given position.
+	 * Check if the given square is under attack in the given position (disregarding
+	 * our king, such that X-ray attacks are considered).
 	 *
 	 * @param position Given position.
 	 * @param square   Given square (between 0 and 63).
@@ -299,14 +303,16 @@ class ChessMoveGenerator
 	static boolean squareIsUnderAttack(ChessPosition position, int square)
 	{
 		// Check rooks.
-		if ((MagicUtils.getRookAttackBitboard(square, position.board.ourPieces | position.board.theirPieces)
+		if ((MagicUtils.getRookAttackBitboard(square,
+				(position.board.ourPieces & ~position.board.kings) | position.board.theirPieces)
 				& position.board.theirPieces & position.board.rooks) != 0)
 		{
 			return true;
 		}
 
 		// Check bishops.
-		if ((MagicUtils.getBishopAttackBitboard(square, position.board.ourPieces | position.board.theirPieces)
+		if ((MagicUtils.getBishopAttackBitboard(square,
+				(position.board.ourPieces & ~position.board.kings) | position.board.theirPieces)
 				& position.board.theirPieces & position.board.bishops) != 0)
 		{
 			return true;
