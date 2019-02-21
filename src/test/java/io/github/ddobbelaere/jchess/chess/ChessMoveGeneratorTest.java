@@ -123,6 +123,16 @@ class ChessMoveGeneratorTest
 						| ChessBoard.getSquareBitboard("f3") | ChessBoard.getSquareBitboard("f4"));
 		assertEquals(kingSafety.isCheck(), false);
 		assertEquals(kingSafety.isDoubleCheck(), false);
+
+		// No checks and no pinned pieces, king in the corner.
+		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("7K/1k6/8/8/8/8/8/8 w - - 0 1"));
+
+		assertEquals(kingSafety.attackLines, 0L);
+		assertEquals(kingSafety.pinnedPieces, 0L);
+		assertEquals(kingSafety.accessibleSquares, ChessBoard.getSquareBitboard("g7")
+				| ChessBoard.getSquareBitboard("h7") | ChessBoard.getSquareBitboard("g8"));
+		assertEquals(kingSafety.isCheck(), false);
+		assertEquals(kingSafety.isDoubleCheck(), false);
 	}
 
 	/**
