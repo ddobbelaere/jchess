@@ -40,15 +40,115 @@ class ChessMove
 	/**
 	 * Source square of the moved piece.
 	 */
-	byte fromSquare;
+	private byte fromSquare;
 
 	/**
 	 * Destination square of the moved piece.
 	 */
-	byte toSquare;
+	private byte toSquare;
 
 	/**
 	 * Promotion piece type.
 	 */
-	ChessPromotionPieceType promotionPieceType = ChessPromotionPieceType.NONE;
+	private ChessPromotionPieceType promotionPieceType = ChessPromotionPieceType.NONE;
+
+	/**
+	 * Construct with given source and destinations squares and promotion piece
+	 * type.
+	 *
+	 * @param fromSquare         Source square of the moved piece.
+	 * @param toSquare           Destination square of the moved piece.
+	 * @param promotionPieceType Promotion piece type.
+	 */
+	ChessMove(int fromSquare, int toSquare, ChessPromotionPieceType promotionPieceType)
+	{
+		this.fromSquare = (byte) fromSquare;
+		this.toSquare = (byte) toSquare;
+		this.promotionPieceType = promotionPieceType;
+	}
+
+	/**
+	 * Construct with given source and destination squares (assuming no promotion).
+	 *
+	 * @param fromSquare Source square of the moved piece.
+	 * @param toSquare   Destination square of the moved piece.
+	 */
+	ChessMove(int fromSquare, int toSquare)
+	{
+		this(fromSquare, toSquare, ChessPromotionPieceType.NONE);
+	}
+
+	/**
+	 * <p>
+	 * Construct with given string of the form:
+	 * <li>Two-character source square (e.g. d2).</li>
+	 * <li>Two-character destination square (e.g. d4).</li>
+	 * <li>Optional single-character promotion piece type (B, N, Q or R).</li>
+	 * </p>
+	 *
+	 * @param moveString Descriptive move string.
+	 */
+	ChessMove(String moveString)
+	{
+		// Check move string length.
+		int len = moveString.length();
+
+		if (len != 4 && len != 5)
+		{
+			throw new IllegalArgumentException(
+					"Move string " + moveString + " should contain either 4 or 5 characters.");
+		}
+
+		ChessPromotionPieceType promotionPieceType = ChessPromotionPieceType.NONE;
+
+		if (len == 5)
+		{
+			// Parse promotion piece type character.
+			switch (moveString.charAt(4))
+			{
+			case 'B':
+				promotionPieceType = ChessPromotionPieceType.BISHOP;
+				break;
+			case 'N':
+				promotionPieceType = ChessPromotionPieceType.KNIGHT;
+				break;
+			case 'Q':
+				promotionPieceType = ChessPromotionPieceType.QUEEN;
+				break;
+			case 'R':
+				promotionPieceType = ChessPromotionPieceType.ROOK;
+				break;
+			default:
+				throw new IllegalArgumentException("Illegal promotion piece type in move string " + moveString + ".");
+			}
+		}
+
+		this.fromSquare = (byte) ChessBoard.getSquare(moveString.substring(0, 2));
+		this.toSquare = (byte) ChessBoard.getSquare(moveString.substring(2, 4));
+		this.promotionPieceType = promotionPieceType;
+	}
+
+	/**
+	 * @return Source square of the moved piece.
+	 */
+	public int getFromSquare()
+	{
+		return fromSquare;
+	}
+
+	/**
+	 * @return Destination square of the moved piece.
+	 */
+	public int getToSquare()
+	{
+		return toSquare;
+	}
+
+	/**
+	 * @return Promotion piece type.
+	 */
+	public ChessPromotionPieceType getPromotionPieceType()
+	{
+		return promotionPieceType;
+	}
 }

@@ -359,7 +359,7 @@ class ChessMoveGenerator
 		List<ChessMove> legalMoves = new ArrayList<>();
 
 		// Add dummy move to get test coverage.
-		legalMoves.add(new ChessMove());
+		legalMoves.add(new ChessMove(0, 0));
 
 		// Return the list.
 		return legalMoves;

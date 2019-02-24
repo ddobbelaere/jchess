@@ -115,14 +115,25 @@ class ChessBoard
 	}
 
 	/**
-	 * Get the bitboard corresponding to a given square.
+	 * Get the bitboard corresponding to a given square name.
 	 *
 	 * @param name Square name (e.g. "e4").
-	 * @return Bitboard corresponding to the square.
+	 * @return Bitboard corresponding to the square name.
 	 */
 	static long getSquareBitboard(final String name)
 	{
 		return getSquareBitboard(name.charAt(1) - '1', name.charAt(0) - 'a');
+	}
+
+	/**
+	 * Get the square (between 0 and 63) corresponding to a given square name.
+	 *
+	 * @param name Square name (e.g. "e4").
+	 * @return Square corresponding to the square name.
+	 */
+	static int getSquare(final String name)
+	{
+		return 8 * (name.charAt(1) - '1') + (name.charAt(0) - 'a');
 	}
 
 	/**
