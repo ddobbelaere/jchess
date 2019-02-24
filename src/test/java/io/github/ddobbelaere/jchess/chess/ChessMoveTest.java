@@ -18,6 +18,7 @@
 package io.github.ddobbelaere.jchess.chess;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +50,23 @@ class ChessMoveTest
 		assertEquals(move.getFromSquare(), 55);
 		assertEquals(move.getToSquare(), 63);
 		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.QUEEN);
+
+		// Test with other promotion piece types.
+		move = new ChessMove("h7h8R");
+
+		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.ROOK);
+
+		move = new ChessMove("h7h8N");
+
+		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.KNIGHT);
+
+		move = new ChessMove("h7h8B");
+
+		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.BISHOP);
+
+		// Test with illegal move strings.
+		assertThrows(IllegalArgumentException.class, () -> new ChessMove("e4"));
+		assertThrows(IllegalArgumentException.class, () -> new ChessMove("h7h8K"));
 	}
 
 }
