@@ -358,6 +358,28 @@ class ChessMoveGenerator
 		// Construct the legal moves list.
 		List<ChessMove> legalMoves = new ArrayList<>();
 
+		// Generate king safety.
+		KingSafety kingSafety = generateKingSafety(position);
+
+		// Add all moves for each piece type.
+		legalMoves.addAll(generateKingMoves(position, kingSafety));
+
+		// Return the list.
+		return legalMoves;
+	}
+
+	/**
+	 * Generates all legal king moves of a given legal chess position.
+	 *
+	 * @param position   Given legal chess position.
+	 * @param kingSafety King safety corresponding to the position.
+	 * @return A list of legal king moves of the given legal chess position.
+	 */
+	static List<ChessMove> generateKingMoves(ChessPosition position, KingSafety kingSafety)
+	{
+		// Construct the legal moves list.
+		List<ChessMove> legalMoves = new ArrayList<>();
+
 		// Add dummy move to get test coverage.
 		legalMoves.add(new ChessMove(0, 0));
 
