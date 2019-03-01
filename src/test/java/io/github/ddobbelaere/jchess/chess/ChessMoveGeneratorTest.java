@@ -19,6 +19,13 @@ package io.github.ddobbelaere.jchess.chess;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -38,79 +45,79 @@ class ChessMoveGeneratorTest
 	{
 		// Instantiate class once to get full test coverage.
 		ChessMoveGenerator chessMoveGenerator = new ChessMoveGenerator();
+		ChessMoveGenerator.KingSafety kingSafety;
 
 		// Perform some sanity checks on the starting position.
-		ChessMoveGenerator.KingSafety kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.STARTING);
+		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.STARTING);
 
-		assertEquals(kingSafety.attackLines, 0L);
-		assertEquals(kingSafety.pinnedPieces, 0L);
-		assertEquals(kingSafety.accessibleSquares, 0L);
-		assertEquals(kingSafety.isCheck(), false);
-		assertEquals(kingSafety.isDoubleCheck(), false);
+		assertEquals(0L, kingSafety.attackLines);
+		assertEquals(0L, kingSafety.pinnedPieces);
+		assertEquals(0L, kingSafety.accessibleSquares);
+		assertEquals(false, kingSafety.isCheck());
+		assertEquals(false, kingSafety.isDoubleCheck());
 
 		// Check with some more challenging positions.
 		// Rook and bishop give double check.
 		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/1k6/2b5/8/8/8/3r2K1/8 w - - 0 1"));
 
-		assertEquals(kingSafety.attackLines, 0x40810203800L);
-		assertEquals(kingSafety.pinnedPieces, 0L);
-		assertEquals(kingSafety.accessibleSquares,
+		assertEquals(0x40810203800L, kingSafety.attackLines);
+		assertEquals(0L, kingSafety.pinnedPieces);
+		assertEquals(
 				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
-						| ChessBoard.getSquareBitboard("g3") | ChessBoard.getSquareBitboard("h3"));
-		assertEquals(kingSafety.isCheck(), true);
-		assertEquals(kingSafety.isDoubleCheck(), true);
+						| ChessBoard.getSquareBitboard("g3") | ChessBoard.getSquareBitboard("h3"),
+				kingSafety.accessibleSquares);
+		assertEquals(true, kingSafety.isCheck());
+		assertEquals(true, kingSafety.isDoubleCheck());
 
 		// No check, but queen is pinned.
 		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/1k6/2b5/8/8/5Q2/6K1/8 w - - 0 1"));
 
-		assertEquals(kingSafety.attackLines, 0L);
-		assertEquals(kingSafety.pinnedPieces, ChessBoard.getSquareBitboard("f3"));
-		assertEquals(kingSafety.accessibleSquares,
-				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
-						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
-						| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("g3")
-						| ChessBoard.getSquareBitboard("h3"));
-		assertEquals(kingSafety.isCheck(), false);
-		assertEquals(kingSafety.isDoubleCheck(), false);
+		assertEquals(0L, kingSafety.attackLines);
+		assertEquals(ChessBoard.getSquareBitboard("f3"), kingSafety.pinnedPieces);
+		assertEquals(ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+				| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
+				| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("g3")
+				| ChessBoard.getSquareBitboard("h3"), kingSafety.accessibleSquares);
+		assertEquals(false, kingSafety.isCheck());
+		assertEquals(false, kingSafety.isDoubleCheck());
 
 		// Knight and rook give double check.
 		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/1k6/8/8/8/8/1r4K1/4n3 w - - 0 1"));
 
-		assertEquals(kingSafety.attackLines, 0x3E10L);
-		assertEquals(kingSafety.pinnedPieces, 0L);
-		assertEquals(kingSafety.accessibleSquares,
-				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
-						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("g3")
-						| ChessBoard.getSquareBitboard("h3"));
-		assertEquals(kingSafety.isCheck(), true);
-		assertEquals(kingSafety.isDoubleCheck(), true);
+		assertEquals(0x3E10L, kingSafety.attackLines);
+		assertEquals(0L, kingSafety.pinnedPieces);
+		assertEquals(ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+				| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("g3")
+				| ChessBoard.getSquareBitboard("h3"), kingSafety.accessibleSquares);
+		assertEquals(true, kingSafety.isCheck());
+		assertEquals(true, kingSafety.isDoubleCheck());
 
 		// Pawn gives check.
 		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/1k6/8/8/8/5p2/6K1/8 w - - 0 1"));
 
-		assertEquals(kingSafety.attackLines, 0x200000L);
-		assertEquals(kingSafety.pinnedPieces, 0L);
-		assertEquals(kingSafety.accessibleSquares,
+		assertEquals(0x200000L, kingSafety.attackLines);
+		assertEquals(0L, kingSafety.pinnedPieces);
+		assertEquals(
 				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
 						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
 						| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("f3")
-						| ChessBoard.getSquareBitboard("g3") | ChessBoard.getSquareBitboard("h3"));
-		assertEquals(kingSafety.isCheck(), true);
-		assertEquals(kingSafety.isDoubleCheck(), false);
+						| ChessBoard.getSquareBitboard("g3") | ChessBoard.getSquareBitboard("h3"),
+				kingSafety.accessibleSquares);
+		assertEquals(true, kingSafety.isCheck());
+		assertEquals(false, kingSafety.isDoubleCheck());
 
 		// No checks and no pinned pieces.
 		kingSafety = ChessMoveGenerator
 				.generateKingSafety(ChessPosition.fromFen("8/1k6/2b5/8/4Q3/5Q2/6K1/8 w - - 0 1"));
 
-		assertEquals(kingSafety.attackLines, 0L);
-		assertEquals(kingSafety.pinnedPieces, 0L);
-		assertEquals(kingSafety.accessibleSquares,
-				ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
-						| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
-						| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("g3")
-						| ChessBoard.getSquareBitboard("h3"));
-		assertEquals(kingSafety.isCheck(), false);
-		assertEquals(kingSafety.isDoubleCheck(), false);
+		assertEquals(0L, kingSafety.attackLines);
+		assertEquals(0L, kingSafety.pinnedPieces);
+		assertEquals(ChessBoard.getSquareBitboard("f1") | ChessBoard.getSquareBitboard("g1")
+				| ChessBoard.getSquareBitboard("h1") | ChessBoard.getSquareBitboard("f2")
+				| ChessBoard.getSquareBitboard("h2") | ChessBoard.getSquareBitboard("g3")
+				| ChessBoard.getSquareBitboard("h3"), kingSafety.accessibleSquares);
+		assertEquals(false, kingSafety.isCheck());
+		assertEquals(false, kingSafety.isDoubleCheck());
 
 		// No checks and no pinned pieces, but king movement restricted due to pawn and
 		// opponent's king.
@@ -127,12 +134,24 @@ class ChessMoveGeneratorTest
 		// No checks and no pinned pieces, king in the corner.
 		kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("7K/1k6/8/8/8/8/8/8 w - - 0 1"));
 
-		assertEquals(kingSafety.attackLines, 0L);
-		assertEquals(kingSafety.pinnedPieces, 0L);
-		assertEquals(kingSafety.accessibleSquares, ChessBoard.getSquareBitboard("g7")
-				| ChessBoard.getSquareBitboard("h7") | ChessBoard.getSquareBitboard("g8"));
-		assertEquals(kingSafety.isCheck(), false);
-		assertEquals(kingSafety.isDoubleCheck(), false);
+		assertEquals(0L, kingSafety.attackLines);
+		assertEquals(0L, kingSafety.pinnedPieces);
+		assertEquals(ChessBoard.getSquareBitboard("g7") | ChessBoard.getSquareBitboard("h7")
+				| ChessBoard.getSquareBitboard("g8"), kingSafety.accessibleSquares);
+		assertEquals(false, kingSafety.isCheck());
+		assertEquals(false, kingSafety.isDoubleCheck());
+
+		// Position after 1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6. The king can move to e2 and
+		// f1.
+		kingSafety = ChessMoveGenerator.generateKingSafety(
+				ChessPosition.fromFen("r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4"));
+
+		assertEquals(0L, kingSafety.attackLines);
+		assertEquals(0L, kingSafety.pinnedPieces);
+		assertEquals(ChessBoard.getSquareBitboard("e2") | ChessBoard.getSquareBitboard("f1"),
+				kingSafety.accessibleSquares);
+		assertEquals(false, kingSafety.isCheck());
+		assertEquals(false, kingSafety.isDoubleCheck());
 	}
 
 	/**
@@ -143,6 +162,68 @@ class ChessMoveGeneratorTest
 	void testGenerateLegalMoves()
 	{
 		ChessMoveGenerator.generateLegalMoves(ChessPosition.STARTING);
+	}
+
+	/**
+	 * Test method for
+	 * {@link io.github.ddobbelaere.jchess.chess.ChessMoveGenerator#generateKingMoves(ChessPosition, io.github.ddobbelaere.jchess.chess.ChessMoveGenerator.KingSafety)}.
+	 */
+	@Test
+	void testGenerateKingMoves()
+	{
+		// Add all test positions to a list.
+		List<Pair<ChessPosition, ChessMove[]>> testCases = new ArrayList<>();
+
+		// Starting position, no legal king moves.
+		testCases.add(Pair.of(ChessPosition.STARTING, new ChessMove[] {}));
+
+		// Position after 1. e4 e5. The king can move to e2.
+		testCases.add(Pair.of(ChessPosition.fromFen("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"),
+				new ChessMove[] { new ChessMove("e1e2") }));
+
+		// Position after 1. e4 e5 2. Nf3 Nc6 3. Bb5 Nf6. The king can move to e2 and f1
+		// and castle short.
+		testCases.add(
+				Pair.of(ChessPosition.fromFen("r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4"),
+						new ChessMove[] { new ChessMove("e1e2"), new ChessMove("e1f1"), new ChessMove("e1g1") }));
+
+		// Position after 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 g6 6.Be3 Bg7 7.f3
+		// O-O 8.Qd2 Nc6.
+		// The white king can go to e2, f2 and d1 and castle long.
+		testCases.add(Pair.of(ChessPosition.fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9"),
+				new ChessMove[] { new ChessMove("e1e2"), new ChessMove("e1f2"), new ChessMove("e1d1"),
+						new ChessMove("e1c1") }));
+
+		// Test all positions.
+		for (final Pair<ChessPosition, ChessMove[]> testCase : testCases)
+		{
+			ChessPosition position = testCase.getLeft();
+			List<ChessMove> kingMoves = ChessMoveGenerator.generateKingMoves(position,
+					ChessMoveGenerator.generateKingSafety(position));
+
+			// Compare with reference move list.
+			List<ChessMove> referenceMoves = Arrays.asList(testCase.getRight());
+
+			// Check if each reference move is present in the move list.
+			for (ChessMove referenceMove : referenceMoves)
+			{
+				assertEquals(true, kingMoves.contains(referenceMove),
+						"Expected legal king move " + referenceMove + " in position\n" + position);
+			}
+
+			// Check if each move is present in the reference move list.
+			for (ChessMove kingMove : kingMoves)
+			{
+				assertEquals(true, referenceMoves.contains(kingMove),
+						"King move " + kingMove + " is illegal in position\n" + position);
+			}
+
+			// Check that there are no duplicate moves.
+			Set<ChessMove> uniqueKingMoves = new HashSet<>();
+			uniqueKingMoves.addAll(kingMoves);
+
+			assertEquals(kingMoves.size(), uniqueKingMoves.size(), "Duplicate moves found.");
+		}
 	}
 
 }

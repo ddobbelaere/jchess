@@ -151,4 +151,41 @@ class ChessMove
 	{
 		return promotionPieceType;
 	}
+
+	@Override
+	public String toString()
+	{
+		return ChessBoard.getSquareName(fromSquare) + ChessBoard.getSquareName(toSquare) + promotionPieceType;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		ChessMove other = (ChessMove) obj;
+		if (fromSquare != other.fromSquare)
+		{
+			return false;
+		}
+		if (promotionPieceType != other.promotionPieceType)
+		{
+			return false;
+		}
+		if (toSquare != other.toSquare)
+		{
+			return false;
+		}
+		return true;
+	}
 }

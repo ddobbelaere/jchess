@@ -76,7 +76,7 @@ class ChessPositionTest
 			position.mirror();
 
 			// The mirrored position must be legal.
-			assertEquals(position.isLegal(), true, "Mirrored position \"" + legalFenString + "\" is illegal.");
+			assertEquals(true, position.isLegal(), "Mirrored position \"" + legalFenString + "\" is illegal.");
 		}
 
 		// Test with position where black can no longer castle.
@@ -89,7 +89,7 @@ class ChessPositionTest
 		System.out.printf("Mirrored position:%n%n%s%n", position);
 
 		// Black (we) should not be able to castle.
-		assertEquals(position.weCanCastleShort || position.weCanCastleLong, false,
+		assertEquals(false, position.weCanCastleShort || position.weCanCastleLong,
 				"Invalid mirrored castling information.");
 	}
 

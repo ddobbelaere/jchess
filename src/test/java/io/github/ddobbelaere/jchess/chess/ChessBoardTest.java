@@ -36,13 +36,13 @@ class ChessBoardTest
 	void testStaticMethods()
 	{
 		// Check bitboard methods.
-		assertEquals(ChessBoard.getSquareBitboard("a1"), 1);
+		assertEquals(1, ChessBoard.getSquareBitboard("a1"));
 		assertEquals(ChessBoard.getSquareBitboard("c2"), ChessBoard.getSquareBitboard(1, 2));
 		assertEquals(ChessBoard.getRowBitboard('8'), ChessBoard.getRowBitboard(7));
 		assertEquals(ChessBoard.getColBitboard('h'), ChessBoard.getColBitboard(7));
-		assertEquals(ChessBoard.getDiagsBitboard(0, 0), 0x8040201008040201L);
-		assertEquals(ChessBoard.getDiagsBitboard(0, 7), Long.reverseBytes(0x8040201008040201L));
-		assertEquals(ChessBoard.getBitboardDebugString(1L).contains("x"), true);
+		assertEquals(0x8040201008040201L, ChessBoard.getDiagsBitboard(0, 0));
+		assertEquals(Long.reverseBytes(0x8040201008040201L), ChessBoard.getDiagsBitboard(0, 7));
+		assertEquals(true, ChessBoard.getBitboardDebugString(1L).contains("x"));
 
 		for (int i = 0; i < 8; i++)
 		{

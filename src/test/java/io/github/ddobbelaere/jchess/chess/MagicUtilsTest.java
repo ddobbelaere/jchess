@@ -117,7 +117,7 @@ class MagicUtilsTest
 
 				// Verify that the result of the function under test matches the reference
 				// value.
-				assertEquals(functionUnderTest.apply(square, occupiedSquares), refAttackBitboard);
+				assertEquals(refAttackBitboard, functionUnderTest.apply(square, occupiedSquares));
 			}
 		}
 	}

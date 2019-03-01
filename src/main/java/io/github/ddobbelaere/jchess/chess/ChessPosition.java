@@ -266,9 +266,6 @@ public class ChessPosition
 		}
 	}
 
-	/**
-	 * @return String representation of the chess position.
-	 */
 	@Override
 	public String toString()
 	{

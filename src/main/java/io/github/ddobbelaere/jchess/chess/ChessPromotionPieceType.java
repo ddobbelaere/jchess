@@ -24,5 +24,32 @@ package io.github.ddobbelaere.jchess.chess;
  */
 enum ChessPromotionPieceType
 {
-	NONE, ROOK, KNIGHT, BISHOP, QUEEN
+	NONE, ROOK, KNIGHT, BISHOP, QUEEN;
+
+	@Override
+	public String toString()
+	{
+		String s = "";
+
+		switch (this)
+		{
+		case NONE:
+			s = "";
+			break;
+		case ROOK:
+			s = "R";
+			break;
+		case KNIGHT:
+			s = "N";
+			break;
+		case BISHOP:
+			s = "B";
+			break;
+		case QUEEN:
+			s = "Q";
+			break;
+		}
+
+		return s;
+	}
 }

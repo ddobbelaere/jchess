@@ -70,6 +70,41 @@ class ChessBoard
 	private static final long BB_A1A8 = 0x0101010101010101L;
 
 	/**
+	 * Bitboard representation of the c1-square.
+	 */
+	static final long BB_C1 = getSquareBitboard("c1");
+
+	/**
+	 * Bitboard representation of the d1-square.
+	 */
+	static final long BB_D1 = getSquareBitboard("d1");
+
+	/**
+	 * Bitboard representation of the f1-square.
+	 */
+	static final long BB_F1 = getSquareBitboard("f1");
+
+	/**
+	 * Bitboard representation of the g1-square.
+	 */
+	static final long BB_G1 = getSquareBitboard("g1");
+
+	/**
+	 * Square representation of the c1-square.
+	 */
+	static final int SQUARE_C1 = getSquare("c1");
+
+	/**
+	 * Square representation of the e1-square.
+	 */
+	static final int SQUARE_E1 = getSquare("e1");
+
+	/**
+	 * Square representation of the g1-square.
+	 */
+	static final int SQUARE_G1 = getSquare("g1");
+
+	/**
 	 * Mirror the board.
 	 */
 	public void mirror()

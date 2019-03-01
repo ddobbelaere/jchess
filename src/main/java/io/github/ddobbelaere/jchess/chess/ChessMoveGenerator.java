@@ -361,8 +361,24 @@ class ChessMoveGenerator
 		// Generate king safety.
 		KingSafety kingSafety = generateKingSafety(position);
 
-		// Add all moves for each piece type.
+		// Always add king moves.
 		legalMoves.addAll(generateKingMoves(position, kingSafety));
+
+		if (!kingSafety.isDoubleCheck())
+		{
+			// Only king moves can resolve a double check, so add non-king moves if it's not
+			// double check.
+
+			// Add pawn moves. Require special care (e.g. promotions and en passant).
+
+			// Add knight moves. Allow certain optimizations (e.g. pinned knights can never
+			// move).
+
+			// Add rook and bishop moves. If it's not check, non-pinned pieces are
+			// allowed to move freely, pinned pieces have to stay on the same line w.r.t the
+			// king. Only non-pinned pieces can resolve a check by moving to a square on the
+			// attack line (which also includes capturing the attacking piece).
+		}
 
 		// Return the list.
 		return legalMoves;
@@ -380,8 +396,58 @@ class ChessMoveGenerator
 		// Construct the legal moves list.
 		List<ChessMove> legalMoves = new ArrayList<>();
 
-		// Add dummy move to get test coverage.
-		legalMoves.add(new ChessMove(0, 0));
+		// Calculate the square of our king.
+		final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
+
+		// Add moves to accessible squares.
+		long accessibleSquares = kingSafety.accessibleSquares;
+
+		while (accessibleSquares != 0)
+		{
+			// Add move to list.
+			legalMoves.add(new ChessMove(ourKingSquare, Long.numberOfTrailingZeros(accessibleSquares)));
+
+			// Remove the square from the bitboard.
+			accessibleSquares &= accessibleSquares - 1;
+		}
+
+		// Add castling moves.
+		if (ourKingSquare == ChessBoard.SQUARE_E1 && !kingSafety.isCheck())
+		{
+			// Our king is still on its original square and is not in check.
+
+			// Check if we can castle short.
+			if (position.weCanCastleShort)
+			{
+				// No pieces are allowed to be present on f1 and g1. Moreover, f1 should be an
+				// accessible square and g1 should not be under attack.
+				// Note that we don't have to check if a rook is still present on h1, because
+				// each rook move from h1 invalidates short castling rights.
+				if (((ChessBoard.BB_F1 | ChessBoard.BB_G1)
+						& (position.board.ourPieces | position.board.theirPieces)) == 0
+						&& (kingSafety.accessibleSquares & ChessBoard.BB_F1) != 0
+						&& !squareIsUnderAttack(position, ChessBoard.SQUARE_G1))
+				{
+					legalMoves.add(new ChessMove(ourKingSquare, ChessBoard.SQUARE_G1));
+				}
+			}
+
+			// Check if we can castle long.
+			if (position.weCanCastleLong)
+			{
+				// No pieces are allowed to be present on d1 and c1. Moreover, d1 should be an
+				// accessible square and c1 should not be under attack.
+				// Note that we don't have to check if a rook is still present on a1, because
+				// each rook move from a1 invalidates short castling rights.
+				if (((ChessBoard.BB_D1 | ChessBoard.BB_C1)
+						& (position.board.ourPieces | position.board.theirPieces)) == 0
+						&& (kingSafety.accessibleSquares & ChessBoard.BB_D1) != 0
+						&& !squareIsUnderAttack(position, ChessBoard.SQUARE_C1))
+				{
+					legalMoves.add(new ChessMove(ourKingSquare, ChessBoard.SQUARE_C1));
+				}
+			}
+		}
 
 		// Return the list.
 		return legalMoves;

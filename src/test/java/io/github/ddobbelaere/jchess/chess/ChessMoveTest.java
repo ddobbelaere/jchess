@@ -40,29 +40,34 @@ class ChessMoveTest
 		// Test with normal move.
 		ChessMove move = new ChessMove("d2d4");
 
-		assertEquals(move.getFromSquare(), 11);
-		assertEquals(move.getToSquare(), 27);
-		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.NONE);
+		assertEquals(11, move.getFromSquare());
+		assertEquals(27, move.getToSquare());
+		assertEquals(ChessPromotionPieceType.NONE, move.getPromotionPieceType());
+		assertEquals("d2d4", move.toString());
 
 		// Test with promotion.
 		move = new ChessMove("h7h8Q");
 
-		assertEquals(move.getFromSquare(), 55);
-		assertEquals(move.getToSquare(), 63);
-		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.QUEEN);
+		assertEquals(55, move.getFromSquare());
+		assertEquals(63, move.getToSquare());
+		assertEquals(ChessPromotionPieceType.QUEEN, move.getPromotionPieceType());
+		assertEquals("h7h8Q", move.toString());
 
 		// Test with other promotion piece types.
 		move = new ChessMove("h7h8R");
 
-		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.ROOK);
+		assertEquals(ChessPromotionPieceType.ROOK, move.getPromotionPieceType());
+		assertEquals("h7h8R", move.toString());
 
 		move = new ChessMove("h7h8N");
 
-		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.KNIGHT);
+		assertEquals(ChessPromotionPieceType.KNIGHT, move.getPromotionPieceType());
+		assertEquals("h7h8N", move.toString());
 
 		move = new ChessMove("h7h8B");
 
-		assertEquals(move.getPromotionPieceType(), ChessPromotionPieceType.BISHOP);
+		assertEquals(ChessPromotionPieceType.BISHOP, move.getPromotionPieceType());
+		assertEquals("h7h8B", move.toString());
 
 		// Test with illegal move strings.
 		assertThrows(IllegalArgumentException.class, () -> new ChessMove("e4"));
