@@ -86,7 +86,7 @@ class ChessMoveGenerator
 	 * <p>
 	 * Safety information of <em>our</em> king consisting of
 	 * <li>Pinned pieces.</li>
-	 * <li>Attacked squares around our king.</li>
+	 * <li>Accessible squares around our king.</li>
 	 * <li>If our king is in (double) check.</li>
 	 * <li>Attack lines of pieces that give check (including the pieces
 	 * themselves).</li>
@@ -374,10 +374,8 @@ class ChessMoveGenerator
 			// Add knight moves.
 			legalMoves.addAll(generateKnightMoves(position, kingSafety));
 
-			// Add rook and bishop moves. If it's not check, non-pinned pieces are
-			// allowed to move freely, pinned pieces have to stay on the same line w.r.t the
-			// king. Only non-pinned pieces can resolve a check by moving to a square on the
-			// attack line (which also includes capturing the attacking piece).
+			// Add rook and bishop moves.
+			legalMoves.addAll(generateRookMoves(position, kingSafety));
 		}
 
 		// Return the list.
@@ -499,6 +497,112 @@ class ChessMoveGenerator
 
 			// Remove the knight from the bitboard.
 			ourNonPinnedKnights &= ourNonPinnedKnights - 1;
+		}
+
+		// Return the list.
+		return legalMoves;
+	}
+
+	/**
+	 * Generates all legal rook moves of a given legal chess position (assuming it's
+	 * not double check).
+	 *
+	 * @param position   Given legal chess position.
+	 * @param kingSafety King safety corresponding to the position.
+	 * @return A list of legal rook moves of the given legal chess position.
+	 */
+	static List<ChessMove> generateRookMoves(ChessPosition position, KingSafety kingSafety)
+	{
+		// Construct the legal moves list.
+		List<ChessMove> legalMoves = new ArrayList<>();
+
+		// Cache the occupied squares bitboard.
+		final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
+
+		// Generate all non-pinned rook moves.
+		{
+			// Determine non-pinned rooks.
+			long ourNonPinnedRooks = position.board.ourPieces & position.board.rooks & ~kingSafety.pinnedPieces;
+
+			while (ourNonPinnedRooks != 0)
+			{
+				// Calculate the rook source square.
+				final int rookFromSquare = Long.numberOfTrailingZeros(ourNonPinnedRooks);
+
+				// Determine destination squares bitboard.
+				long rookToSquaresBitboard = MagicUtils.getRookAttackBitboard(rookFromSquare, occupiedSquaresBitboard)
+						& ~position.board.ourPieces;
+
+				// If it's check, only moves to an attack line are allowed (as they certainly
+				// resolve the check by either interposing or capturing the only attacking piece
+				// because this function assumes it's not double check).
+				if (kingSafety.isCheck())
+				{
+					rookToSquaresBitboard &= kingSafety.attackLines;
+				}
+
+				// Add all legal moves.
+				while (rookToSquaresBitboard != 0)
+				{
+					// Add move to list.
+					legalMoves.add(new ChessMove(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
+
+					// Remove the destination square from the bitboard.
+					rookToSquaresBitboard &= rookToSquaresBitboard - 1;
+				}
+
+				// Remove the rook from the bitboard.
+				ourNonPinnedRooks &= ourNonPinnedRooks - 1;
+			}
+		}
+
+		// Generate all pinned rook moves.
+		// Note that no pinned rook can resolve a check.
+		if (!kingSafety.isCheck())
+		{
+			// Determine pinned rooks.
+			long ourPinnedRooks = position.board.ourPieces & position.board.rooks & kingSafety.pinnedPieces;
+
+			// Determine our king square.
+			final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
+			final int ourKingRow = ourKingSquare / 8;
+			final int ourKingCol = ourKingSquare % 8;
+
+			while (ourPinnedRooks != 0)
+			{
+				// Calculate the rook source square.
+				final int rookFromSquare = Long.numberOfTrailingZeros(ourPinnedRooks);
+				final int rookFromRow = rookFromSquare / 8;
+				final int rookFromCol = rookFromSquare % 8;
+
+				if (ourKingCol == rookFromCol || ourKingRow == rookFromRow)
+				{
+					// The rook is pinned by a rook-like piece.
+					// If it would have been pinned by a bishop-like piece, it would not be able to
+					// move.
+					final long sameLineWrtKingMask = MagicUtils.getRookAttackBitboard(ourKingSquare, 0L);
+
+					// Determine destination squares bitboard.
+					// Only consider destination squares that stay on the same line w.r.t. our king
+					// (by applying the precomputed mask).
+					long rookToSquaresBitboard = MagicUtils.getRookAttackBitboard(rookFromSquare,
+							occupiedSquaresBitboard) & ~position.board.ourPieces & sameLineWrtKingMask;
+
+					// Add all legal moves.
+					while (rookToSquaresBitboard != 0)
+					{
+						// Add move to list.
+						legalMoves
+								.add(new ChessMove(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
+
+						// Remove the destination square from the bitboard.
+						rookToSquaresBitboard &= rookToSquaresBitboard - 1;
+					}
+				}
+
+				// Remove the rook from the bitboard.
+				ourPinnedRooks &= ourPinnedRooks - 1;
+			}
 		}
 
 		// Return the list.
