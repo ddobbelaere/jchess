@@ -74,4 +74,22 @@ class ChessMoveTest
 		assertThrows(IllegalArgumentException.class, () -> new ChessMove("h7h8K"));
 	}
 
+	/**
+	 * Test method for
+	 * {@link io.github.ddobbelaere.jchess.chess.ChessMove#equals(Object)}.
+	 */
+	@Test
+	void testEquals()
+	{
+		ChessMove move = new ChessMove("d7d8");
+
+		assertEquals(true, move.equals(move));
+		assertEquals(false, move.equals(null));
+		assertEquals(false, move.equals(new Object()));
+		assertEquals(false, move.equals(new ChessMove("d6d8")));
+		assertEquals(false, move.equals(new ChessMove("d7e8")));
+		assertEquals(false, move.equals(new ChessMove("d7d8Q")));
+		assertEquals(true, move.equals(new ChessMove("d7d8")));
+	}
+
 }
