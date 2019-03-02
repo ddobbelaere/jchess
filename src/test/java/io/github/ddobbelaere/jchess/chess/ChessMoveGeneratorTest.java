@@ -297,9 +297,12 @@ class ChessMoveGeneratorTest
         // We are in check and can only interpose.
         testCases.add(Pair.of(ChessPosition.fromFen("8/1k4r1/8/8/8/2R5/6K1/8 w - -"),
                 new ChessMove[] { new ChessMove("c3g3") }));
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k4r1/8/8/8/2Q5/6K1/8 w - -"),
+                new ChessMove[] { new ChessMove("c3g3") }));
 
-        // The rook is pinned by a bishop and cannot move.
+        // The rook (or queen) is pinned by a bishop and cannot move.
         testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2b5/8/8/5R2/6K1/8 w - -"), new ChessMove[] {}));
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2b5/8/8/5Q2/6K1/8 w - -"), new ChessMove[] {}));
 
         // The rook is pinned by a rook and has to stay on the same line w.r.t. our
         // king.
@@ -318,6 +321,56 @@ class ChessMoveGeneratorTest
 
             // Check generated move list.
             checkGeneratedMoves(referenceMoves, generatedMoves, position, "rook");
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.ChessMoveGenerator#generateBishopMoves(ChessPosition, io.github.ddobbelaere.jchess.chess.ChessMoveGenerator.KingSafety)}.
+     */
+    @Test
+    void testGenerateBishopMoves()
+    {
+        // Add all test positions to a list.
+        List<Pair<ChessPosition, ChessMove[]>> testCases = new ArrayList<>();
+
+        // Starting position.
+        testCases.add(Pair.of(ChessPosition.STARTING, new ChessMove[] {}));
+
+        // Position after 1. e4 e5. The queen on d1 can move to e2, f3, g4 and h5. The
+        // bishop on f1 can move to e2, d3, c4, b5 and a6.
+        testCases.add(Pair.of(ChessPosition.fromFen("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -"),
+                new ChessMove[] { new ChessMove("d1e2"), new ChessMove("d1f3"), new ChessMove("d1g4"),
+                        new ChessMove("d1h5"), new ChessMove("f1e2"), new ChessMove("f1d3"), new ChessMove("f1c4"),
+                        new ChessMove("f1b5"), new ChessMove("f1a6") }));
+
+        // We are in check and can only interpose.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2q5/8/8/8/2B3K1/8 w - -"),
+                new ChessMove[] { new ChessMove("c2e4") }));
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2q5/8/8/8/2Q3K1/8 w - -"),
+                new ChessMove[] { new ChessMove("c2e4") }));
+
+        // The bishop (or queen) is pinned by a rook and cannot move.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k4r1/8/8/8/6B1/6K1/8 w - -"), new ChessMove[] {}));
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k4r1/8/8/8/6Q1/6K1/8 w - -"), new ChessMove[] {}));
+
+        // The bishop is pinned by a bishop and has to stay on the same line w.r.t. our
+        // king.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2q5/8/8/5B2/6K1/8 w - -"),
+                new ChessMove[] { new ChessMove("f3e4"), new ChessMove("f3d5"), new ChessMove("f3c6") }));
+
+        // Test all positions.
+        for (final Pair<ChessPosition, ChessMove[]> testCase : testCases)
+        {
+            ChessPosition position = testCase.getLeft();
+            List<ChessMove> generatedMoves = ChessMoveGenerator.generateBishopMoves(position,
+                    ChessMoveGenerator.generateKingSafety(position));
+
+            // Compare with reference move list.
+            List<ChessMove> referenceMoves = Arrays.asList(testCase.getRight());
+
+            // Check generated move list.
+            checkGeneratedMoves(referenceMoves, generatedMoves, position, "bishop");
         }
     }
 

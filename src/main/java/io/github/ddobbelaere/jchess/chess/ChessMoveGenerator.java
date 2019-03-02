@@ -374,8 +374,11 @@ class ChessMoveGenerator
             // Add knight moves.
             legalMoves.addAll(generateKnightMoves(position, kingSafety));
 
-            // Add rook and bishop moves.
+            // Add rook moves.
             legalMoves.addAll(generateRookMoves(position, kingSafety));
+
+            // Add bishop moves.
+            legalMoves.addAll(generateBishopMoves(position, kingSafety));
         }
 
         // Return the list.
@@ -563,7 +566,7 @@ class ChessMoveGenerator
             // Determine pinned rooks.
             long ourPinnedRooks = position.board.ourPieces & position.board.rooks & kingSafety.pinnedPieces;
 
-            // Determine our king square.
+            // Determine our king's square.
             final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
             final int ourKingRow = ourKingSquare / 8;
             final int ourKingCol = ourKingSquare % 8;
@@ -602,6 +605,113 @@ class ChessMoveGenerator
 
                 // Remove the rook from the bitboard.
                 ourPinnedRooks &= ourPinnedRooks - 1;
+            }
+        }
+
+        // Return the list.
+        return legalMoves;
+    }
+
+    /**
+     * Generates all legal bishop moves of a given legal chess position (assuming
+     * it's not double check).
+     *
+     * @param position   Given legal chess position.
+     * @param kingSafety King safety corresponding to the position.
+     * @return A list of legal bishop moves of the given legal chess position.
+     */
+    static List<ChessMove> generateBishopMoves(ChessPosition position, KingSafety kingSafety)
+    {
+        // Construct the legal moves list.
+        List<ChessMove> legalMoves = new ArrayList<>();
+
+        // Cache the occupied squares bitboard.
+        final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
+
+        // Generate all non-pinned bishop moves.
+        {
+            // Determine non-pinned bishops.
+            long ourNonPinnedBishops = position.board.ourPieces & position.board.bishops & ~kingSafety.pinnedPieces;
+
+            while (ourNonPinnedBishops != 0)
+            {
+                // Calculate the bishop source square.
+                final int bishopFromSquare = Long.numberOfTrailingZeros(ourNonPinnedBishops);
+
+                // Determine destination squares bitboard.
+                long bishopToSquaresBitboard = MagicUtils.getBishopAttackBitboard(bishopFromSquare,
+                        occupiedSquaresBitboard) & ~position.board.ourPieces;
+
+                // If it's check, only moves to an attack line are allowed (as they certainly
+                // resolve the check by either interposing or capturing the only attacking piece
+                // because this function assumes it's not double check).
+                if (kingSafety.isCheck())
+                {
+                    bishopToSquaresBitboard &= kingSafety.attackLines;
+                }
+
+                // Add all legal moves.
+                while (bishopToSquaresBitboard != 0)
+                {
+                    // Add move to list.
+                    legalMoves
+                            .add(new ChessMove(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
+
+                    // Remove the destination square from the bitboard.
+                    bishopToSquaresBitboard &= bishopToSquaresBitboard - 1;
+                }
+
+                // Remove the bishop from the bitboard.
+                ourNonPinnedBishops &= ourNonPinnedBishops - 1;
+            }
+        }
+
+        // Generate all pinned bishop moves.
+        // Note that no pinned bishop can resolve a check.
+        if (!kingSafety.isCheck())
+        {
+            // Determine pinned bishops.
+            long ourPinnedBishops = position.board.ourPieces & position.board.bishops & kingSafety.pinnedPieces;
+
+            // Determine our king's square.
+            final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
+            final int ourKingRow = ourKingSquare / 8;
+            final int ourKingCol = ourKingSquare % 8;
+
+            while (ourPinnedBishops != 0)
+            {
+                // Calculate the bishop source square.
+                final int bishopFromSquare = Long.numberOfTrailingZeros(ourPinnedBishops);
+                final int bishopFromRow = bishopFromSquare / 8;
+                final int bishopFromCol = bishopFromSquare % 8;
+
+                if (ourKingCol != bishopFromCol && ourKingRow != bishopFromRow)
+                {
+                    // The bishop is pinned by a bishop-like piece.
+                    // If it would have been pinned by a rook-like piece, it would not be able to
+                    // move.
+                    final long sameLineWrtKingMask = MagicUtils.getBishopAttackBitboard(ourKingSquare, 0L);
+
+                    // Determine destination squares bitboard.
+                    // Only consider destination squares that stay on the same line w.r.t. our king
+                    // (by applying the precomputed mask).
+                    long bishopToSquaresBitboard = MagicUtils.getBishopAttackBitboard(bishopFromSquare,
+                            occupiedSquaresBitboard) & ~position.board.ourPieces & sameLineWrtKingMask;
+
+                    // Add all legal moves.
+                    while (bishopToSquaresBitboard != 0)
+                    {
+                        // Add move to list.
+                        legalMoves.add(
+                                new ChessMove(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
+
+                        // Remove the destination square from the bitboard.
+                        bishopToSquaresBitboard &= bishopToSquaresBitboard - 1;
+                    }
+                }
+
+                // Remove the bishop from the bitboard.
+                ourPinnedBishops &= ourPinnedBishops - 1;
             }
         }
 
