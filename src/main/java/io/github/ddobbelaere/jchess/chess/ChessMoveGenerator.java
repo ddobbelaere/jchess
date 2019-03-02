@@ -371,8 +371,8 @@ class ChessMoveGenerator
 
 			// Add pawn moves. Require special care (e.g. promotions and en passant).
 
-			// Add knight moves. Allow certain optimizations (e.g. pinned knights can never
-			// move).
+			// Add knight moves.
+			legalMoves.addAll(generateKnightMoves(position, kingSafety));
 
 			// Add rook and bishop moves. If it's not check, non-pinned pieces are
 			// allowed to move freely, pinned pieces have to stay on the same line w.r.t the
@@ -447,6 +447,58 @@ class ChessMoveGenerator
 					legalMoves.add(new ChessMove(ourKingSquare, ChessBoard.SQUARE_C1));
 				}
 			}
+		}
+
+		// Return the list.
+		return legalMoves;
+	}
+
+	/**
+	 * Generates all legal knight moves of a given legal chess position (assuming
+	 * it's not double check).
+	 *
+	 * @param position   Given legal chess position.
+	 * @param kingSafety King safety corresponding to the position.
+	 * @return A list of legal knight moves of the given legal chess position.
+	 */
+	static List<ChessMove> generateKnightMoves(ChessPosition position, KingSafety kingSafety)
+	{
+		// Construct the legal moves list.
+		List<ChessMove> legalMoves = new ArrayList<>();
+
+		// This function is never called for positions in double check.
+		// Loop over all knights that are not pinned (pinned knight can never move).
+		long ourNonPinnedKnights = position.board.ourPieces & ~(position.board.bishops | position.board.kings
+				| position.board.pawns | position.board.rooks | kingSafety.pinnedPieces);
+
+		while (ourNonPinnedKnights != 0)
+		{
+			// Calculate the knight source square.
+			final int knightFromSquare = Long.numberOfTrailingZeros(ourNonPinnedKnights);
+
+			// Determine destination squares bitboard.
+			long knightToSquaresBitboard = knightAttackBitboards[knightFromSquare] & ~position.board.ourPieces;
+
+			// If it's check, only moves to an attack line are allowed (as they certainly
+			// resolve the check by either interposing or capturing the only attacking piece
+			// because this function assumes it's not double check).
+			if (kingSafety.isCheck())
+			{
+				knightToSquaresBitboard &= kingSafety.attackLines;
+			}
+
+			// Add all legal moves.
+			while (knightToSquaresBitboard != 0)
+			{
+				// Add move to list.
+				legalMoves.add(new ChessMove(knightFromSquare, Long.numberOfTrailingZeros(knightToSquaresBitboard)));
+
+				// Remove the destination square from the bitboard.
+				knightToSquaresBitboard &= knightToSquaresBitboard - 1;
+			}
+
+			// Remove the knight from the bitboard.
+			ourNonPinnedKnights &= ourNonPinnedKnights - 1;
 		}
 
 		// Return the list.

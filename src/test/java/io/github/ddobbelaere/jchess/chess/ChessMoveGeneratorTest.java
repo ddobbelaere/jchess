@@ -165,6 +165,39 @@ class ChessMoveGeneratorTest
 	}
 
 	/**
+	 * Check if the reference move list is equal to the generated move list.
+	 *
+	 * @param referenceMoves List of reference moves.
+	 * @param generatedMoves List of generated moves.
+	 * @param position       Chess position (used for debug messages).
+	 * @param moveType       String representation of move type (used for debug
+	 *                       messages).
+	 */
+	private void checkGeneratedMoves(List<ChessMove> referenceMoves, List<ChessMove> generatedMoves,
+			ChessPosition position, String moveType)
+	{
+		// Check if each reference move is present in the move list.
+		for (ChessMove referenceMove : referenceMoves)
+		{
+			assertEquals(true, generatedMoves.contains(referenceMove),
+					"Expected legal " + moveType + " move " + referenceMove + " in position\n" + position);
+		}
+
+		// Check if each move is present in the reference move list.
+		for (ChessMove generatedMove : generatedMoves)
+		{
+			assertEquals(true, referenceMoves.contains(generatedMove),
+					"Illegal generated " + moveType + " move " + generatedMove + "  in position\n" + position);
+		}
+
+		// Check that there are no duplicate moves.
+		Set<ChessMove> uniqueGeneratedMoves = new HashSet<>();
+		uniqueGeneratedMoves.addAll(generatedMoves);
+
+		assertEquals(generatedMoves.size(), uniqueGeneratedMoves.size(), "Duplicate moves found.");
+	}
+
+	/**
 	 * Test method for
 	 * {@link io.github.ddobbelaere.jchess.chess.ChessMoveGenerator#generateKingMoves(ChessPosition, io.github.ddobbelaere.jchess.chess.ChessMoveGenerator.KingSafety)}.
 	 */
@@ -198,31 +231,54 @@ class ChessMoveGeneratorTest
 		for (final Pair<ChessPosition, ChessMove[]> testCase : testCases)
 		{
 			ChessPosition position = testCase.getLeft();
-			List<ChessMove> kingMoves = ChessMoveGenerator.generateKingMoves(position,
+			List<ChessMove> generatedMoves = ChessMoveGenerator.generateKingMoves(position,
 					ChessMoveGenerator.generateKingSafety(position));
 
 			// Compare with reference move list.
 			List<ChessMove> referenceMoves = Arrays.asList(testCase.getRight());
 
-			// Check if each reference move is present in the move list.
-			for (ChessMove referenceMove : referenceMoves)
-			{
-				assertEquals(true, kingMoves.contains(referenceMove),
-						"Expected legal king move " + referenceMove + " in position\n" + position);
-			}
+			// Check if generated move list.
+			checkGeneratedMoves(referenceMoves, generatedMoves, position, "king");
+		}
+	}
 
-			// Check if each move is present in the reference move list.
-			for (ChessMove kingMove : kingMoves)
-			{
-				assertEquals(true, referenceMoves.contains(kingMove),
-						"King move " + kingMove + " is illegal in position\n" + position);
-			}
+	/**
+	 * Test method for
+	 * {@link io.github.ddobbelaere.jchess.chess.ChessMoveGenerator#generateKnightMoves(ChessPosition, io.github.ddobbelaere.jchess.chess.ChessMoveGenerator.KingSafety)}.
+	 */
+	@Test
+	void testGenerateKnightMoves()
+	{
+		// Add all test positions to a list.
+		List<Pair<ChessPosition, ChessMove[]>> testCases = new ArrayList<>();
 
-			// Check that there are no duplicate moves.
-			Set<ChessMove> uniqueKingMoves = new HashSet<>();
-			uniqueKingMoves.addAll(kingMoves);
+		// Starting position.
+		testCases.add(Pair.of(ChessPosition.STARTING, new ChessMove[] { new ChessMove("b1c3"), new ChessMove("b1a3"),
+				new ChessMove("g1f3"), new ChessMove("g1h3") }));
 
-			assertEquals(kingMoves.size(), uniqueKingMoves.size(), "Duplicate moves found.");
+		// We are in check and can either capture the queen or interpose to resolve the
+		// check.
+		testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2q5/8/1N6/8/6K1/8 w - - 0 1"),
+				new ChessMove[] { new ChessMove("b4c6"), new ChessMove("b4d5") }));
+
+		// We are in check but cannot resolve it with a knight move.
+		testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2q5/8/8/1N6/6K1/8 w - - 0 1"), new ChessMove[] {}));
+
+		// The knight is pinned and cannot move.
+		testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2q5/8/4N3/8/6K1/8 w - - 0 1"), new ChessMove[] {}));
+
+		// Test all positions.
+		for (final Pair<ChessPosition, ChessMove[]> testCase : testCases)
+		{
+			ChessPosition position = testCase.getLeft();
+			List<ChessMove> generatedMoves = ChessMoveGenerator.generateKnightMoves(position,
+					ChessMoveGenerator.generateKingSafety(position));
+
+			// Compare with reference move list.
+			List<ChessMove> referenceMoves = Arrays.asList(testCase.getRight());
+
+			// Check if generated move list.
+			checkGeneratedMoves(referenceMoves, generatedMoves, position, "knight");
 		}
 	}
 
