@@ -30,96 +30,96 @@ import org.junit.jupiter.api.Test;
  */
 class MagicUtilsTest
 {
-	/**
-	 * Interface of an operator that yields an attack bitboard.
-	 */
-	private interface GetAttackBitboardOperator
-	{
-		long apply(int a, long b);
-	}
+    /**
+     * Interface of an operator that yields an attack bitboard.
+     */
+    private interface GetAttackBitboardOperator
+    {
+        long apply(int a, long b);
+    }
 
-	/**
-	 * Test static methods.
-	 */
-	@Test
-	void testStaticMethods()
-	{
-		// Instantiate class once to get full test coverage.
-		MagicUtils magicUtils = new MagicUtils();
+    /**
+     * Test static methods.
+     */
+    @Test
+    void testStaticMethods()
+    {
+        // Instantiate class once to get full test coverage.
+        MagicUtils magicUtils = new MagicUtils();
 
-		// Test static methods.
-		final int[][] rookMovements = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-		final int[][] bishopMovements = new int[][] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
+        // Test static methods.
+        final int[][] rookMovements = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        final int[][] bishopMovements = new int[][] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
 
-		testGetAttackBitboardOperator(rookMovements, (a, b) -> MagicUtils.getRookAttackBitboard(a, b));
-		testGetAttackBitboardOperator(bishopMovements, (a, b) -> MagicUtils.getBishopAttackBitboard(a, b));
-	}
+        testGetAttackBitboardOperator(rookMovements, (a, b) -> MagicUtils.getRookAttackBitboard(a, b));
+        testGetAttackBitboardOperator(bishopMovements, (a, b) -> MagicUtils.getBishopAttackBitboard(a, b));
+    }
 
-	/**
-	 * Test the MagicUtils method for getting the attack bitboard for a certain
-	 * sliding piece type (rook or bishop).
-	 *
-	 * @param pieceMovements    Array holding the possible piece movement
-	 *                          directions.
-	 * @param functionUnderTest Static MagicUtils function under test.
-	 */
-	private void testGetAttackBitboardOperator(int[][] pieceMovements, GetAttackBitboardOperator functionUnderTest)
-	{
-		// Instantiate random number generator.
-		Random rng = new Random();
+    /**
+     * Test the MagicUtils method for getting the attack bitboard for a certain
+     * sliding piece type (rook or bishop).
+     *
+     * @param pieceMovements    Array holding the possible piece movement
+     *                          directions.
+     * @param functionUnderTest Static MagicUtils function under test.
+     */
+    private void testGetAttackBitboardOperator(int[][] pieceMovements, GetAttackBitboardOperator functionUnderTest)
+    {
+        // Instantiate random number generator.
+        Random rng = new Random();
 
-		// Number of random bitboards tested per square.
-		final int NUM_RANDOM_BB_PER_SQUARE = 1000;
+        // Number of random bitboards tested per square.
+        final int NUM_RANDOM_BB_PER_SQUARE = 1000;
 
-		for (int square = 0; square < 64; square++)
-		{
-			final int row = square / 8;
-			final int col = square % 8;
+        for (int square = 0; square < 64; square++)
+        {
+            final int row = square / 8;
+            final int col = square % 8;
 
-			// Test with random bitboards of occupied squares.
-			for (int n = 0; n < NUM_RANDOM_BB_PER_SQUARE; n++)
-			{
-				// Generate random bitboard of occupied squares.
-				final long occupiedSquares = rng.nextLong();
+            // Test with random bitboards of occupied squares.
+            for (int n = 0; n < NUM_RANDOM_BB_PER_SQUARE; n++)
+            {
+                // Generate random bitboard of occupied squares.
+                final long occupiedSquares = rng.nextLong();
 
-				// Calculate the attack bitboard in a straightforward (but slow) way.
-				long refAttackBitboard = 0;
+                // Calculate the attack bitboard in a straightforward (but slow) way.
+                long refAttackBitboard = 0;
 
-				for (final int[] pieceMovement : pieceMovements)
-				{
-					// Start at the piece square.
-					int attackedSquareRow = row;
-					int attackedSquareCol = col;
+                for (final int[] pieceMovement : pieceMovements)
+                {
+                    // Start at the piece square.
+                    int attackedSquareRow = row;
+                    int attackedSquareCol = col;
 
-					while (true)
-					{
-						attackedSquareRow += pieceMovement[0];
-						attackedSquareCol += pieceMovement[1];
+                    while (true)
+                    {
+                        attackedSquareRow += pieceMovement[0];
+                        attackedSquareCol += pieceMovement[1];
 
-						if (attackedSquareRow < 0 || attackedSquareRow > 7 || attackedSquareCol < 0
-								|| attackedSquareCol > 7)
-						{
-							// This square falls outside the chess board.
-							break;
-						}
+                        if (attackedSquareRow < 0 || attackedSquareRow > 7 || attackedSquareCol < 0
+                                || attackedSquareCol > 7)
+                        {
+                            // This square falls outside the chess board.
+                            break;
+                        }
 
-						// Add the square to the attack bitboard.
-						refAttackBitboard |= ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol);
+                        // Add the square to the attack bitboard.
+                        refAttackBitboard |= ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol);
 
-						if ((ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol) & occupiedSquares) != 0)
-						{
-							// This square is occupied and hides all other following squares from the
-							// attack.
-							break;
-						}
-					}
-				}
+                        if ((ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol) & occupiedSquares) != 0)
+                        {
+                            // This square is occupied and hides all other following squares from the
+                            // attack.
+                            break;
+                        }
+                    }
+                }
 
-				// Verify that the result of the function under test matches the reference
-				// value.
-				assertEquals(refAttackBitboard, functionUnderTest.apply(square, occupiedSquares));
-			}
-		}
-	}
+                // Verify that the result of the function under test matches the reference
+                // value.
+                assertEquals(refAttackBitboard, functionUnderTest.apply(square, occupiedSquares));
+            }
+        }
+    }
 
 }

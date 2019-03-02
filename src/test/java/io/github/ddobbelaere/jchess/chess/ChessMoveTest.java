@@ -30,66 +30,66 @@ import org.junit.jupiter.api.Test;
 class ChessMoveTest
 {
 
-	/**
-	 * Test method for
-	 * {@link io.github.ddobbelaere.jchess.chess.ChessMove#ChessMove(java.lang.String)}.
-	 */
-	@Test
-	void testChessMoveString()
-	{
-		// Test with normal move.
-		ChessMove move = new ChessMove("d2d4");
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.ChessMove#ChessMove(java.lang.String)}.
+     */
+    @Test
+    void testChessMoveString()
+    {
+        // Test with normal move.
+        ChessMove move = new ChessMove("d2d4");
 
-		assertEquals(11, move.getFromSquare());
-		assertEquals(27, move.getToSquare());
-		assertEquals(ChessPromotionPieceType.NONE, move.getPromotionPieceType());
-		assertEquals("d2d4", move.toString());
+        assertEquals(11, move.getFromSquare());
+        assertEquals(27, move.getToSquare());
+        assertEquals(ChessPromotionPieceType.NONE, move.getPromotionPieceType());
+        assertEquals("d2d4", move.toString());
 
-		// Test with promotion.
-		move = new ChessMove("h7h8Q");
+        // Test with promotion.
+        move = new ChessMove("h7h8Q");
 
-		assertEquals(55, move.getFromSquare());
-		assertEquals(63, move.getToSquare());
-		assertEquals(ChessPromotionPieceType.QUEEN, move.getPromotionPieceType());
-		assertEquals("h7h8Q", move.toString());
+        assertEquals(55, move.getFromSquare());
+        assertEquals(63, move.getToSquare());
+        assertEquals(ChessPromotionPieceType.QUEEN, move.getPromotionPieceType());
+        assertEquals("h7h8Q", move.toString());
 
-		// Test with other promotion piece types.
-		move = new ChessMove("h7h8R");
+        // Test with other promotion piece types.
+        move = new ChessMove("h7h8R");
 
-		assertEquals(ChessPromotionPieceType.ROOK, move.getPromotionPieceType());
-		assertEquals("h7h8R", move.toString());
+        assertEquals(ChessPromotionPieceType.ROOK, move.getPromotionPieceType());
+        assertEquals("h7h8R", move.toString());
 
-		move = new ChessMove("h7h8N");
+        move = new ChessMove("h7h8N");
 
-		assertEquals(ChessPromotionPieceType.KNIGHT, move.getPromotionPieceType());
-		assertEquals("h7h8N", move.toString());
+        assertEquals(ChessPromotionPieceType.KNIGHT, move.getPromotionPieceType());
+        assertEquals("h7h8N", move.toString());
 
-		move = new ChessMove("h7h8B");
+        move = new ChessMove("h7h8B");
 
-		assertEquals(ChessPromotionPieceType.BISHOP, move.getPromotionPieceType());
-		assertEquals("h7h8B", move.toString());
+        assertEquals(ChessPromotionPieceType.BISHOP, move.getPromotionPieceType());
+        assertEquals("h7h8B", move.toString());
 
-		// Test with illegal move strings.
-		assertThrows(IllegalArgumentException.class, () -> new ChessMove("e4"));
-		assertThrows(IllegalArgumentException.class, () -> new ChessMove("h7h8K"));
-	}
+        // Test with illegal move strings.
+        assertThrows(IllegalArgumentException.class, () -> new ChessMove("e4"));
+        assertThrows(IllegalArgumentException.class, () -> new ChessMove("h7h8K"));
+    }
 
-	/**
-	 * Test method for
-	 * {@link io.github.ddobbelaere.jchess.chess.ChessMove#equals(Object)}.
-	 */
-	@Test
-	void testEquals()
-	{
-		ChessMove move = new ChessMove("d7d8");
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.ChessMove#equals(Object)}.
+     */
+    @Test
+    void testEquals()
+    {
+        ChessMove move = new ChessMove("d7d8");
 
-		assertEquals(true, move.equals(move));
-		assertEquals(false, move.equals(null));
-		assertEquals(false, move.equals(new Object()));
-		assertEquals(false, move.equals(new ChessMove("d6d8")));
-		assertEquals(false, move.equals(new ChessMove("d7e8")));
-		assertEquals(false, move.equals(new ChessMove("d7d8Q")));
-		assertEquals(true, move.equals(new ChessMove("d7d8")));
-	}
+        assertEquals(true, move.equals(move));
+        assertEquals(false, move.equals(null));
+        assertEquals(false, move.equals(new Object()));
+        assertEquals(false, move.equals(new ChessMove("d6d8")));
+        assertEquals(false, move.equals(new ChessMove("d7e8")));
+        assertEquals(false, move.equals(new ChessMove("d7d8Q")));
+        assertEquals(true, move.equals(new ChessMove("d7d8")));
+    }
 
 }
