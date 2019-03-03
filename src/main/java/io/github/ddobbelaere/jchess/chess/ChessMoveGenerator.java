@@ -206,20 +206,23 @@ class ChessMoveGenerator
                         // Add the square bitboard to the attack line.
                         attackLine |= squareBitboard;
 
-                        if ((squareBitboard & attackingPieces) != 0)
+                        if ((squareBitboard & position.board.theirPieces) != 0)
                         {
-                            // One of their attacking pieces is present.
-                            if (possiblePinnedPieceFound)
+                            if ((squareBitboard & attackingPieces) != 0)
                             {
-                                // The attacking pieces doesn't give check, so only update the pinned pieces
-                                // bitboard.
-                                kingSafety.pinnedPieces |= possiblePinnedPieceBitboard;
-                            }
-                            else
-                            {
-                                // No pinned piece, which means that the attacking piece gives check.
-                                kingSafety.attackLines |= attackLine;
-                                numCheckingPieces++;
+                                // One of their attacking pieces is present.
+                                if (possiblePinnedPieceFound)
+                                {
+                                    // The attacking pieces doesn't give check, so only update the pinned pieces
+                                    // bitboard.
+                                    kingSafety.pinnedPieces |= possiblePinnedPieceBitboard;
+                                }
+                                else
+                                {
+                                    // No pinned piece, which means that the attacking piece gives check.
+                                    kingSafety.attackLines |= attackLine;
+                                    numCheckingPieces++;
+                                }
                             }
 
                             break;
@@ -369,8 +372,6 @@ class ChessMoveGenerator
             // Only king moves can resolve a double check, so add non-king moves if it's not
             // double check.
 
-            // Add pawn moves. Require special care (e.g. promotions and en passant).
-
             // Add knight moves.
             legalMoves.addAll(generateKnightMoves(position, kingSafety));
 
@@ -379,6 +380,9 @@ class ChessMoveGenerator
 
             // Add bishop moves.
             legalMoves.addAll(generateBishopMoves(position, kingSafety));
+
+            // Add pawn moves.
+            legalMoves.addAll(generatePawnMoves(position, kingSafety));
         }
 
         // Return the list.
@@ -716,6 +720,192 @@ class ChessMoveGenerator
         }
 
         // Return the list.
+        return legalMoves;
+    }
+
+    /**
+     * Generates all legal pawn moves of a given legal chess position (assuming it's
+     * not double check).
+     *
+     * @param position   Given legal chess position.
+     * @param kingSafety King safety corresponding to the position.
+     * @return A list of legal pawn moves of the given legal chess position.
+     */
+    static List<ChessMove> generatePawnMoves(ChessPosition position, KingSafety kingSafety)
+    {
+        // Construct the legal moves list.
+        List<ChessMove> legalMoves = new ArrayList<>();
+
+        // This function is never called for positions in double check.
+        // Loop over all pawns.
+        long ourPawns = position.board.ourPieces & position.board.pawns;
+
+        // Determine our king's square.
+        final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
+        final int ourKingRow = ourKingSquare / 8;
+        final int ourKingCol = ourKingSquare % 8;
+
+        // Cache the occupied squares bitboard.
+        final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
+
+        // Cache their pieces including the en passant square.
+        final long theirPiecesAndEnPassantBitboard = position.board.theirPieces
+                | (1L << position.enPassantCaptureSquare);
+
+        while (ourPawns != 0)
+        {
+            // Calculate the pawn source square.
+            final int pawnFromSquare = Long.numberOfTrailingZeros(ourPawns);
+            final int pawnFromRow = pawnFromSquare / 8;
+            final int pawnFromCol = pawnFromSquare % 8;
+
+            // Cache the pawn source bitboard.
+            final long pawnFromBitboard = 1L << pawnFromSquare;
+
+            // Check if the pawn is pinned.
+            final boolean isPinned = (pawnFromBitboard & kingSafety.pinnedPieces) != 0;
+
+            // Forward pawn moves.
+            // If it is not pinned, it can possibly move.
+            // If it is pinned, it has to stay on the same line w.r.t. the king, which means
+            // the king has to be on the same column of the pawn.
+            if (!isPinned || pawnFromCol == ourKingCol)
+            {
+                if (((pawnFromBitboard << 8) & occupiedSquaresBitboard) == 0)
+                {
+                    // No piece is present one square in front of the pawn.
+                    final int pawnToSquare = pawnFromSquare + 8;
+
+                    // Only continue if
+                    // - It's not check or
+                    // - It's check (but not double check, as assumed earlier) and the pawn moves to
+                    // an attacking line (either interposing or capturing the only attacking piece).
+                    if (!kingSafety.isCheck() || ((pawnFromBitboard << 8) & kingSafety.attackLines) != 0)
+                    {
+                        if (pawnFromRow != 6)
+                        {
+                            // Normal move.
+                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare));
+                        }
+                        else
+                        {
+                            // Promotion.
+                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.BISHOP));
+                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.KNIGHT));
+                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.QUEEN));
+                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.ROOK));
+                        }
+                    }
+
+                    // Two moves forward.
+                    // If the pawn starts from its initial square, moving two squares forward is
+                    // be possible if no piece is present on the destination square.
+                    if (pawnFromRow == 1 && ((pawnFromBitboard << 16) & occupiedSquaresBitboard) == 0)
+                    {
+                        // Only continue if
+                        // - It's not check or
+                        // - It's check (but not double check, as assumed earlier) and the pawn moves to
+                        // an attacking line (either interposing or capturing the only attacking piece).
+                        if (!kingSafety.isCheck() || ((pawnFromBitboard << 16) & kingSafety.attackLines) != 0)
+                        {
+
+                            legalMoves.add(new ChessMove(pawnFromSquare, pawnFromSquare + 16));
+                        }
+
+                    }
+                }
+            }
+
+            // Captures.
+            for (final int direction : new int[] { -1, 1 })
+            {
+                // Cache destination square parameters.
+                final int pawnToSquare = pawnFromSquare + 8 + direction;
+                final int pawnToCol = pawnFromCol + direction;
+                final long pawnToBitboard = ChessBoard.getSquareBitboard(pawnToSquare);
+
+                if (pawnToCol >= 0 && pawnToCol <= 7)
+                {
+                    if ((pawnToBitboard & theirPiecesAndEnPassantBitboard) != 0)
+                    {
+                        // One of their pieces is present on the destination square (possibly en
+                        // passant).
+                        // If it is not pinned, it can possibly capture.
+                        // If it is pinned, it has to stay on the same line w.r.t. the king, which means
+                        // the king has to be on the same diagonal of the pawn's source and destination
+                        // square.
+                        if (!isPinned || pawnFromCol - ourKingCol == direction * (pawnFromRow - ourKingRow))
+                        {
+                            boolean enPassantCheckPasses = true;
+                            boolean checkingEnPassantPawnCaptured = false;
+
+                            // Handle en passant captures.
+                            if (pawnToSquare == position.enPassantCaptureSquare)
+                            {
+                                // Do a check for en passant captures. It is possible that our pawn is not
+                                // pinned, but still cannot capture in the following situation:
+                                // K . . . P p . r.
+                                // Capturing the en passant pawn would leave the king in check from the
+                                // opponent's rook.
+                                // Check if we are under check from a rook if the two pawns are removed.
+                                if (pawnFromRow == ourKingRow && (MagicUtils.getRookAttackBitboard(ourKingSquare,
+                                        occupiedSquaresBitboard & ~(pawnFromBitboard
+                                                | ChessBoard.getSquareBitboard(pawnFromRow, pawnToCol)))
+                                        & position.board.theirPieces & position.board.rooks) != 0)
+                                {
+                                    enPassantCheckPasses = false;
+                                }
+
+                                // Determine if we capture an en passant pawn that gives check.
+                                // This is the case if our king is behind our pawn.
+                                if (ourKingSquare == pawnFromSquare - 8)
+                                {
+                                    checkingEnPassantPawnCaptured = true;
+                                }
+                            }
+
+                            // Only continue if en passant check passes.
+                            if (enPassantCheckPasses)
+                            {
+                                // Only continue if
+                                // - It's not check or
+                                // - It's check (but not double check, as assumed earlier) and the pawn moves to
+                                // an attacking line (either interposing or capturing the only attacking piece)
+                                // or a checking en passant pawn is captured. Note that this pawn can never
+                                // expose the king to other checks once removed, as then our king would have
+                                // been in check on the previous move.
+                                if (!kingSafety.isCheck() || (pawnToBitboard & kingSafety.attackLines) != 0
+                                        || checkingEnPassantPawnCaptured)
+                                {
+                                    if (pawnFromRow != 6)
+                                    {
+                                        // Normal move.
+                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare));
+                                    }
+                                    else
+                                    {
+                                        // Promotion.
+                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
+                                                ChessPromotionPieceType.BISHOP));
+                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
+                                                ChessPromotionPieceType.KNIGHT));
+                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
+                                                ChessPromotionPieceType.QUEEN));
+                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
+                                                ChessPromotionPieceType.ROOK));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Remove the pawn from the bitboard.
+            ourPawns &= ourPawns - 1;
+        }
+
+// Return the list.
         return legalMoves;
     }
 }

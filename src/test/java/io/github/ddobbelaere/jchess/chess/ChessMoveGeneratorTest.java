@@ -120,13 +120,14 @@ class ChessMoveGeneratorTest
         // opponent's king.
         kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/8/8/3p4/8/4K3/8/4k3 w - -"));
 
-        assertEquals(kingSafety.attackLines, 0L);
-        assertEquals(kingSafety.pinnedPieces, 0L);
-        assertEquals(kingSafety.accessibleSquares,
+        assertEquals(0L, kingSafety.attackLines);
+        assertEquals(0L, kingSafety.pinnedPieces);
+        assertEquals(
                 ChessBoard.getSquareBitboard("d3") | ChessBoard.getSquareBitboard("d4")
-                        | ChessBoard.getSquareBitboard("f3") | ChessBoard.getSquareBitboard("f4"));
-        assertEquals(kingSafety.isCheck(), false);
-        assertEquals(kingSafety.isDoubleCheck(), false);
+                        | ChessBoard.getSquareBitboard("f3") | ChessBoard.getSquareBitboard("f4"),
+                kingSafety.accessibleSquares);
+        assertEquals(false, kingSafety.isCheck());
+        assertEquals(false, kingSafety.isDoubleCheck());
 
         // No checks and no pinned pieces, king in the corner.
         kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("7K/1k6/8/8/8/8/8/8 w - -"));
@@ -147,6 +148,17 @@ class ChessMoveGeneratorTest
         assertEquals(0L, kingSafety.pinnedPieces);
         assertEquals(ChessBoard.getSquareBitboard("e2") | ChessBoard.getSquareBitboard("f1"),
                 kingSafety.accessibleSquares);
+        assertEquals(false, kingSafety.isCheck());
+        assertEquals(false, kingSafety.isDoubleCheck());
+
+        // No checks and no pinned pieces.
+        kingSafety = ChessMoveGenerator.generateKingSafety(ChessPosition.fromFen("8/1k6/8/r3pP1K/8/8/8/8 w - e6"));
+
+        assertEquals(0L, kingSafety.attackLines);
+        assertEquals(0L, kingSafety.pinnedPieces);
+        assertEquals(ChessBoard.getSquareBitboard("g4") | ChessBoard.getSquareBitboard("g5")
+                | ChessBoard.getSquareBitboard("g6") | ChessBoard.getSquareBitboard("h4")
+                | ChessBoard.getSquareBitboard("h6"), kingSafety.accessibleSquares);
         assertEquals(false, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
     }
@@ -371,6 +383,106 @@ class ChessMoveGeneratorTest
 
             // Check generated move list.
             checkGeneratedMoves(referenceMoves, generatedMoves, position, "bishop");
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.ChessMoveGenerator#generatePawnMoves(ChessPosition, io.github.ddobbelaere.jchess.chess.ChessMoveGenerator.KingSafety)}.
+     */
+    @Test
+    void testGeneratePawnMoves()
+    {
+        // Add all test positions to a list.
+        List<Pair<ChessPosition, ChessMove[]>> testCases = new ArrayList<>();
+
+        // Starting position.
+        testCases.add(Pair.of(ChessPosition.STARTING,
+                new ChessMove[] { new ChessMove("a2a3"), new ChessMove("a2a4"), new ChessMove("b2b3"),
+                        new ChessMove("b2b4"), new ChessMove("c2c3"), new ChessMove("c2c4"), new ChessMove("d2d3"),
+                        new ChessMove("d2d4"), new ChessMove("e2e3"), new ChessMove("e2e4"), new ChessMove("f2f3"),
+                        new ChessMove("f2f4"), new ChessMove("g2g3"), new ChessMove("g2g4"), new ChessMove("h2h3"),
+                        new ChessMove("h2h4") }));
+
+        // Position after 1. d4 d5 2. c4 e5.
+        testCases.add(Pair.of(ChessPosition.fromFen("rnbqkbnr/ppp2ppp/8/3pp3/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -"),
+                new ChessMove[] { new ChessMove("a2a3"), new ChessMove("a2a4"), new ChessMove("b2b3"),
+                        new ChessMove("b2b4"), new ChessMove("c4c5"), new ChessMove("c4d5"), new ChessMove("d4e5"),
+                        new ChessMove("e2e3"), new ChessMove("e2e4"), new ChessMove("f2f3"), new ChessMove("f2f4"),
+                        new ChessMove("g2g3"), new ChessMove("g2g4"), new ChessMove("h2h3"), new ChessMove("h2h4") }));
+
+        // Position after 1. d4 d5 2. c4 e5. 3. c5 b5 (en passant capture to the left
+        // possible).
+        testCases.add(Pair.of(ChessPosition.fromFen("rnbqkbnr/p1p2ppp/8/1pPpp3/3P4/8/PP2PPPP/RNBQKBNR w KQkq b6"),
+                new ChessMove[] { new ChessMove("a2a3"), new ChessMove("a2a4"), new ChessMove("b2b3"),
+                        new ChessMove("b2b4"), new ChessMove("c5c6"), new ChessMove("c5b6"), new ChessMove("d4e5"),
+                        new ChessMove("e2e3"), new ChessMove("e2e4"), new ChessMove("f2f3"), new ChessMove("f2f4"),
+                        new ChessMove("g2g3"), new ChessMove("g2g4"), new ChessMove("h2h3"), new ChessMove("h2h4") }));
+
+        // Position after 1. d4 d5 2. c4 e5. 3. c5 b5 4. dxe5 f5 (en passant capture to
+        // the right
+        // possible).
+        testCases.add(Pair.of(ChessPosition.fromFen("rnbqkbnr/p1p3pp/8/1pPpPp2/8/8/PP2PPPP/RNBQKBNR w KQkq f6"),
+                new ChessMove[] { new ChessMove("a2a3"), new ChessMove("a2a4"), new ChessMove("b2b3"),
+                        new ChessMove("b2b4"), new ChessMove("c5c6"), new ChessMove("e5e6"), new ChessMove("e5f6"),
+                        new ChessMove("e2e3"), new ChessMove("e2e4"), new ChessMove("f2f3"), new ChessMove("f2f4"),
+                        new ChessMove("g2g3"), new ChessMove("g2g4"), new ChessMove("h2h3"), new ChessMove("h2h4") }));
+
+        // Pawn promotion possible on g8.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k4P1/8/8/8/8/6K1/8 w - -"), new ChessMove[] {
+                new ChessMove("g7g8B"), new ChessMove("g7g8N"), new ChessMove("g7g8R"), new ChessMove("g7g8Q") }));
+
+        // Pawn promotion possible by capturing on f8 or h8.
+        testCases.add(Pair.of(ChessPosition.fromFen("5bRq/1k4P1/8/8/8/8/6K1/8 w - -"),
+                new ChessMove[] { new ChessMove("g7f8B"), new ChessMove("g7f8N"), new ChessMove("g7f8R"),
+                        new ChessMove("g7f8Q"), new ChessMove("g7h8B"), new ChessMove("g7h8N"), new ChessMove("g7h8R"),
+                        new ChessMove("g7h8Q") }));
+
+        // Pawn is pinned and can only move forward.
+        testCases.add(Pair.of(ChessPosition.fromFen("6q1/1k6/8/5b1r/6P1/8/6K1/8 w - -"),
+                new ChessMove[] { new ChessMove("g4g5") }));
+
+        // Pawn is pinned and can only capture.
+        testCases.add(Pair.of(ChessPosition.fromFen("6q1/1k6/8/5b2/6P1/7K/8/8 w - -"),
+                new ChessMove[] { new ChessMove("g4f5") }));
+        testCases.add(Pair.of(ChessPosition.fromFen("6q1/1k6/8/7b/6P1/5K2/8/8 w - -"),
+                new ChessMove[] { new ChessMove("g4h5") }));
+
+        // En passant capture is not possible as it would leave the king check.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/8/r3pP1K/8/8/8/8 w - e6"),
+                new ChessMove[] { new ChessMove("f5f6") }));
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/8/r4PpK/8/8/8/8 w - g6"),
+                new ChessMove[] { new ChessMove("f5f6") }));
+
+        // En passant capture is possible.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/8/r2bpP1K/8/8/8/8 w - e6"),
+                new ChessMove[] { new ChessMove("f5f6"), new ChessMove("f5e6") }));
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/8/r2b1PpK/8/8/8/8 w - g6"),
+                new ChessMove[] { new ChessMove("f5f6"), new ChessMove("f5g6") }));
+
+        // Our king is in check by an en passant pawn.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/3k4/8/3Pp3/3K4/8/8/8 w - e6"),
+                new ChessMove[] { new ChessMove("d5e6") }));
+
+        // No pawn moves can resolve the check.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/P2k4/1P6/2P4P/4P1P1/3P1P2/8/2q1K3 w - -"), new ChessMove[] {}));
+
+        // We are in check, the checking piece can be interposed or captured.
+        testCases.add(Pair.of(ChessPosition.fromFen("8/1k6/2b5/1P6/8/8/P1PPPPKP/8 w - -"),
+                new ChessMove[] { new ChessMove("b5c6"), new ChessMove("e2e4"), new ChessMove("f2f3") }));
+
+        // Test all positions.
+        for (final Pair<ChessPosition, ChessMove[]> testCase : testCases)
+        {
+            ChessPosition position = testCase.getLeft();
+            List<ChessMove> generatedMoves = ChessMoveGenerator.generatePawnMoves(position,
+                    ChessMoveGenerator.generateKingSafety(position));
+
+            // Compare with reference move list.
+            List<ChessMove> referenceMoves = Arrays.asList(testCase.getRight());
+
+            // Check generated move list.
+            checkGeneratedMoves(referenceMoves, generatedMoves, position, "pawn");
         }
     }
 
