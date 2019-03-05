@@ -335,11 +335,10 @@ public class ChessPosition
             return false;
         }
 
-        // TODO: Check that the king of the side that is not to move is not in check.
-
         // Castling availability must pass some obvious sanity checks.
-        boolean ourKingOnOriginalSquare = (board.kings & board.ourPieces) == ChessBoard.getSquareBitboard("e1");
-        boolean theirKingOnOriginalSquare = (board.kings & board.theirPieces) == ChessBoard.getSquareBitboard("e8");
+        final boolean ourKingOnOriginalSquare = (board.kings & board.ourPieces) == ChessBoard.getSquareBitboard("e1");
+        final boolean theirKingOnOriginalSquare = (board.kings & board.theirPieces) == ChessBoard
+                .getSquareBitboard("e8");
 
         // Castling is not possible if the king has moved.
         if (((weCanCastleShort || weCanCastleLong) && !ourKingOnOriginalSquare)
@@ -349,8 +348,8 @@ public class ChessPosition
         }
 
         // Castling is not possible if the rook has moved.
-        long ourRooks = board.rooks & ~board.bishops & board.ourPieces;
-        long theirRooks = board.rooks & ~board.bishops & board.theirPieces;
+        final long ourRooks = board.rooks & ~board.bishops & board.ourPieces;
+        final long theirRooks = board.rooks & ~board.bishops & board.theirPieces;
 
         if ((weCanCastleShort && (ourRooks & ChessBoard.getSquareBitboard("h1")) == 0)
                 || (weCanCastleLong && (ourRooks & ChessBoard.getSquareBitboard("a1")) == 0)
@@ -378,6 +377,23 @@ public class ChessPosition
 
         // Check that pawns are not at the back ranks.
         if ((board.pawns & (ChessBoard.getRowBitboard(0) | ChessBoard.getRowBitboard(7))) != 0)
+        {
+            return false;
+        }
+
+        // Now mirror the position.
+        mirror();
+
+        // Determine if the their is in check (or, equivalently, if our king is in check
+        // in the mirrored position).
+        final boolean theirKingInCheck = ChessMoveGenerator.squareIsUnderAttack(this,
+                Long.numberOfTrailingZeros(board.kings & board.ourPieces));
+
+        // Mirror the position back to its original state.
+        mirror();
+
+        // Check that the king of the side that is not to move is not in check.
+        if (theirKingInCheck)
         {
             return false;
         }

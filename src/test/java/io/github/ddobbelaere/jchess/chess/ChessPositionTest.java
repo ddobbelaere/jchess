@@ -141,6 +141,8 @@ class ChessPositionTest
         illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1");
         illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQ1BNR w - - 0 1");
         illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
+        // Opponent's king is in check.
+        illegalFenStrings.add("8/1k4R1/8/8/8/8/6K1/8 w - - 0 1");
         // No castling availability.
         illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w");
         // Illegal character in piece placement string.

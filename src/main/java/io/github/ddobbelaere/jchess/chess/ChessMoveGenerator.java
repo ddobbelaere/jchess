@@ -799,7 +799,7 @@ class ChessMoveGenerator
 
                     // Two moves forward.
                     // If the pawn starts from its initial square, moving two squares forward is
-                    // be possible if no piece is present on the destination square.
+                    // possible if no piece is present on the destination square.
                     if (pawnFromRow == 1 && ((pawnFromBitboard << 16) & occupiedSquaresBitboard) == 0)
                     {
                         // Only continue if
@@ -905,7 +905,7 @@ class ChessMoveGenerator
             ourPawns &= ourPawns - 1;
         }
 
-// Return the list.
+        // Return the list.
         return legalMoves;
     }
 }
