@@ -105,6 +105,31 @@ class Board
     static final int SQUARE_G1 = getSquare("g1");
 
     /**
+     * Default constructor.
+     */
+    Board()
+    {
+
+    }
+
+    /**
+     * Copy constructor.
+     *
+     * @param board Board that is to be copied.
+     */
+    Board(Board board)
+    {
+        // Copy all the fields.
+        ourPieces = board.ourPieces;
+        theirPieces = board.theirPieces;
+        pawns = board.pawns;
+        rooks = board.rooks;
+        bishops = board.bishops;
+        kings = board.kings;
+        isMirrored = board.isMirrored;
+    }
+
+    /**
      * Mirror the board.
      */
     public void mirror()

@@ -50,10 +50,8 @@ class PositionTest
         for (String illegalFenString : getIllegalFenStrings())
         {
             // Check that the right exception is thrown.
-            assertThrows(IllegalFenException.class, () ->
-            {
-                Position.fromFen(illegalFenString);
-            }, "Illegal FEN string \"" + illegalFenString + "\" should cause an exception.");
+            assertThrows(IllegalFenException.class, () -> Position.fromFen(illegalFenString),
+                    "Illegal FEN string \"" + illegalFenString + "\" should cause an exception.");
         }
     }
 
@@ -104,6 +102,30 @@ class PositionTest
             System.out.printf("FEN string: %s%nPosition string representation:%n%n%s%n", legalFenString,
                     Position.fromFen(legalFenString));
         }
+    }
+
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.Position#getLegalMoves()}.
+     */
+    @Test
+    void testGetLegalMoves()
+    {
+        List<Move> legalMoves = Position.STARTING.getLegalMoves();
+
+        assertEquals(20, legalMoves.size());
+    }
+
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.Position#applyMove()}.
+     */
+    @Test
+    void testApplyMove()
+    {
+        Position position = Position.STARTING.applyMove(new Move("e2e4"));
+
+        assertThrows(IllegalMoveException.class, () -> Position.STARTING.applyMove(new Move("e2e5")));
     }
 
     /**

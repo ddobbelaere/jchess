@@ -17,6 +17,9 @@
  */
 package io.github.ddobbelaere.jchess.chess;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Legal chess position.
  *
@@ -88,9 +91,40 @@ public class Position
     int numGameMoves;
 
     /**
+     * List of legal moves.
+     */
+    List<Move> legalMoves;
+
+    /**
      * Starting position.
      */
     public static final Position STARTING = fromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+
+    /**
+     * Default constructor.
+     */
+    Position()
+    {
+
+    }
+
+    /**
+     * Copy constructor.
+     *
+     * @param position Position that is to be copied.
+     */
+    Position(Position position)
+    {
+        // Copy all the fields.
+        board = new Board(position.board);
+        weCanCastleShort = position.weCanCastleShort;
+        weCanCastleLong = position.weCanCastleLong;
+        theyCanCastleShort = position.theyCanCastleShort;
+        theyCanCastleLong = position.theyCanCastleLong;
+        numNoCaptureOrPawnAdvancePlies = position.numNoCaptureOrPawnAdvancePlies;
+        numGameMoves = position.numGameMoves;
+        legalMoves = position.legalMoves;
+    }
 
     /**
      * Create a legal chess position from a FEN string.
@@ -265,6 +299,9 @@ public class Position
         {
             enPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8) + (enPassantCaptureSquare & 0b111));
         }
+
+        // Invalidate the list of legal moves.
+        legalMoves = null;
     }
 
     @Override
@@ -315,8 +352,8 @@ public class Position
         {
             byte mirroredEnPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8)
                     + (enPassantCaptureSquare & 0b111));
-            sb.append(System.lineSeparator() + "e.p. capture square: " + Board
-                    .getSquareName(board.isMirrored ? mirroredEnPassantCaptureSquare : enPassantCaptureSquare));
+            sb.append(System.lineSeparator() + "e.p. capture square: "
+                    + Board.getSquareName(board.isMirrored ? mirroredEnPassantCaptureSquare : enPassantCaptureSquare));
         }
 
         // Add line break.
@@ -338,8 +375,7 @@ public class Position
 
         // Castling availability must pass some obvious sanity checks.
         final boolean ourKingOnOriginalSquare = (board.kings & board.ourPieces) == Board.getSquareBitboard("e1");
-        final boolean theirKingOnOriginalSquare = (board.kings & board.theirPieces) == Board
-                .getSquareBitboard("e8");
+        final boolean theirKingOnOriginalSquare = (board.kings & board.theirPieces) == Board.getSquareBitboard("e8");
 
         // Castling is not possible if the king has moved.
         if (((weCanCastleShort || weCanCastleLong) && !ourKingOnOriginalSquare)
@@ -404,6 +440,23 @@ public class Position
     }
 
     /**
+     * Get a list of all legal moves in the position.
+     *
+     * @return List of all legal moves in the position.
+     */
+    public List<Move> getLegalMoves()
+    {
+        if (legalMoves == null)
+        {
+            // Cache list of legal moves.
+            legalMoves = MoveGenerator.generateLegalMoves(this);
+        }
+
+        // Return an unmodifiable view of the list.
+        return Collections.unmodifiableList(legalMoves);
+    }
+
+    /**
      * Apply the move and return the resulting position.
      *
      * @param move Given move.
@@ -412,7 +465,21 @@ public class Position
      */
     public Position applyMove(Move move)
     {
-        // TODO: Implement this method.
-        return this;
+        if (legalMoves == null)
+        {
+            // Cache list of legal moves.
+            legalMoves = MoveGenerator.generateLegalMoves(this);
+        }
+
+        // Check if the move is legal.
+        if (!legalMoves.contains(move))
+        {
+            throw new IllegalMoveException("Move " + move + " is illegal in the position " + this);
+        }
+
+        // TODO: Apply the move.
+        Position position = new Position(this);
+
+        return position;
     }
 }

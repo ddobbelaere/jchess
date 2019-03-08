@@ -79,16 +79,16 @@ public class Move
     }
 
     /**
-     * <p>
      * Construct with given string of the form:
+     * <ul>
      * <li>Two-character source square (e.g. d2).</li>
      * <li>Two-character destination square (e.g. d4).</li>
      * <li>Optional single-character promotion piece type (B, N, Q or R).</li>
-     * </p>
+     * </ul>
      *
      * @param moveString Descriptive move string.
      */
-    Move(String moveString)
+    public Move(String moveString)
     {
         // Check move string length.
         int len = moveString.length();
