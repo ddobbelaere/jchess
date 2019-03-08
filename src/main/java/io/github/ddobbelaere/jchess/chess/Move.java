@@ -18,24 +18,24 @@
 package io.github.ddobbelaere.jchess.chess;
 
 /**
+ * Chess move.
+ *
  * <p>
- * Chess move encoded by
+ * It is encoded by
  * <ul>
  * <li>Source square of the moved piece.</li>
  * <li>Destination square of the moved piece.</li>
  * <li>Promotion piece type ({@code NONE} if the move is no pawn
  * promotion).</li>
  * </ul>
- * </p>
  *
  * <p>
  * Note that castling moves have no special encoding. E.g. white castling short
  * is encoded by the move e1-g1.
- * </p>
  *
  * @author Dieter Dobbelaere
  */
-class Move
+public class Move
 {
     /**
      * Source square of the moved piece.
@@ -131,7 +131,7 @@ class Move
     /**
      * @return Source square of the moved piece.
      */
-    public int getFromSquare()
+    int getFromSquare()
     {
         return fromSquare;
     }
@@ -139,7 +139,7 @@ class Move
     /**
      * @return Destination square of the moved piece.
      */
-    public int getToSquare()
+    int getToSquare()
     {
         return toSquare;
     }
@@ -147,7 +147,7 @@ class Move
     /**
      * @return Promotion piece type.
      */
-    public PromotionPieceType getPromotionPieceType()
+    PromotionPieceType getPromotionPieceType()
     {
         return promotionPieceType;
     }
