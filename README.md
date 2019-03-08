@@ -5,6 +5,10 @@
 
 JChess is a pure Java chess library.
 
+### API
+
+The public API of the library is available at [https://ddobbelaere.github.io/jchess/apidocs/](https://ddobbelaere.github.io/jchess/apidocs/).
+
 ### Currently Implemented
 
 - [x] Board representation.
