@@ -146,9 +146,9 @@ class MagicUtils
         initMasks();
 
         // Initialize lookup tables for rooks and bishops.
-        initLookupTables(rookMagicNumbers, rookMagicParameters, ChessMoveGenerator.rookMoveDirections,
+        initLookupTables(rookMagicNumbers, rookMagicParameters, MoveGenerator.rookMoveDirections,
                 rookAttackBitboards);
-        initLookupTables(bishopMagicNumbers, bishopMagicParameters, ChessMoveGenerator.bishopMoveDirections,
+        initLookupTables(bishopMagicNumbers, bishopMagicParameters, MoveGenerator.bishopMoveDirections,
                 bishopAttackBitboards);
     }
 
@@ -158,8 +158,8 @@ class MagicUtils
     private static void initMasks()
     {
         // Store the chess board's edges in a temporary bitboard.
-        long boardEdgesBitboard = ChessBoard.getRowBitboard(0) | ChessBoard.getRowBitboard(7)
-                | ChessBoard.getColBitboard(0) | ChessBoard.getColBitboard(7);
+        long boardEdgesBitboard = Board.getRowBitboard(0) | Board.getRowBitboard(7)
+                | Board.getColBitboard(0) | Board.getColBitboard(7);
 
         for (int square = 0; square < 64; square++)
         {
@@ -169,15 +169,15 @@ class MagicUtils
             // Rook masks are obtained by adding the row and column bitboards and
             // subtracting the rook square itself and the squares at the row and column's
             // edges.
-            rookMagicParameters[square].mask = (ChessBoard.getRowBitboard(row) | ChessBoard.getColBitboard(col))
-                    & ~(ChessBoard.getSquareBitboard(square) | ChessBoard.getSquareBitboard(0, col)
-                            | ChessBoard.getSquareBitboard(7, col) | ChessBoard.getSquareBitboard(row, 0)
-                            | ChessBoard.getSquareBitboard(row, 7));
+            rookMagicParameters[square].mask = (Board.getRowBitboard(row) | Board.getColBitboard(col))
+                    & ~(Board.getSquareBitboard(square) | Board.getSquareBitboard(0, col)
+                            | Board.getSquareBitboard(7, col) | Board.getSquareBitboard(row, 0)
+                            | Board.getSquareBitboard(row, 7));
 
             // Bishop masks are obtained by/ subtracting the bishop square itself and the
             // squares at the board's edges from the diagonals bitboard.
-            bishopMagicParameters[square].mask = ChessBoard.getDiagsBitboard(row, col)
-                    & ~(ChessBoard.getSquareBitboard(square) | boardEdgesBitboard);
+            bishopMagicParameters[square].mask = Board.getDiagsBitboard(row, col)
+                    & ~(Board.getSquareBitboard(square) | boardEdgesBitboard);
         }
     }
 
@@ -256,9 +256,9 @@ class MagicUtils
                         }
 
                         // Add the square to the attack bitboard.
-                        attackBitboard |= ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol);
+                        attackBitboard |= Board.getSquareBitboard(attackedSquareRow, attackedSquareCol);
 
-                        if ((ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol)
+                        if ((Board.getSquareBitboard(attackedSquareRow, attackedSquareCol)
                                 & relevantOccupiedSquares) != 0)
                         {
                             // This square is occupied and hides all other following squares from the

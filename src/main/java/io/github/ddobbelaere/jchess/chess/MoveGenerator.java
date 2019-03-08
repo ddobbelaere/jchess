@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Dieter Dobbelaere
  */
-class ChessMoveGenerator
+class MoveGenerator
 {
     /**
      * Array of all rook move directions. Each direction is a two element array of
@@ -139,7 +139,7 @@ class ChessMoveGenerator
      * @param position Given legal chess position.
      * @return King safety information of the given legal chess position.
      */
-    static KingSafety generateKingSafety(ChessPosition position)
+    static KingSafety generateKingSafety(Position position)
     {
         // Construct king safety object.
         KingSafety kingSafety = new KingSafety();
@@ -185,7 +185,7 @@ class ChessMoveGenerator
                             break;
                         }
 
-                        long squareBitboard = ChessBoard.getSquareBitboard(row, col);
+                        long squareBitboard = Board.getSquareBitboard(row, col);
 
                         if ((squareBitboard & position.board.ourPieces) != 0)
                         {
@@ -268,7 +268,7 @@ class ChessMoveGenerator
                 continue;
             }
 
-            final long squareBitboard = ChessBoard.getSquareBitboard(row, col);
+            final long squareBitboard = Board.getSquareBitboard(row, col);
 
             if ((squareBitboard & position.board.ourPieces) != 0)
             {
@@ -303,7 +303,7 @@ class ChessMoveGenerator
      * @param square   Given square (between 0 and 63).
      * @return The square is under attack.
      */
-    static boolean squareIsUnderAttack(ChessPosition position, int square)
+    static boolean squareIsUnderAttack(Position position, int square)
     {
         // Check rooks.
         if ((MagicUtils.getRookAttackBitboard(square,
@@ -356,10 +356,10 @@ class ChessMoveGenerator
      * @param position Given legal chess position.
      * @return A list of legal moves of the given legal chess position.
      */
-    static List<ChessMove> generateLegalMoves(ChessPosition position)
+    static List<Move> generateLegalMoves(Position position)
     {
         // Construct the legal moves list.
-        List<ChessMove> legalMoves = new ArrayList<>();
+        List<Move> legalMoves = new ArrayList<>();
 
         // Generate king safety.
         KingSafety kingSafety = generateKingSafety(position);
@@ -396,10 +396,10 @@ class ChessMoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @return A list of legal king moves of the given legal chess position.
      */
-    static List<ChessMove> generateKingMoves(ChessPosition position, KingSafety kingSafety)
+    static List<Move> generateKingMoves(Position position, KingSafety kingSafety)
     {
         // Construct the legal moves list.
-        List<ChessMove> legalMoves = new ArrayList<>();
+        List<Move> legalMoves = new ArrayList<>();
 
         // Calculate the square of our king.
         final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
@@ -410,14 +410,14 @@ class ChessMoveGenerator
         while (accessibleSquares != 0)
         {
             // Add move to list.
-            legalMoves.add(new ChessMove(ourKingSquare, Long.numberOfTrailingZeros(accessibleSquares)));
+            legalMoves.add(new Move(ourKingSquare, Long.numberOfTrailingZeros(accessibleSquares)));
 
             // Remove the square from the bitboard.
             accessibleSquares &= accessibleSquares - 1;
         }
 
         // Add castling moves.
-        if (ourKingSquare == ChessBoard.SQUARE_E1 && !kingSafety.isCheck())
+        if (ourKingSquare == Board.SQUARE_E1 && !kingSafety.isCheck())
         {
             // Our king is still on its original square and is not in check.
 
@@ -428,12 +428,12 @@ class ChessMoveGenerator
                 // accessible square and g1 should not be under attack.
                 // Note that we don't have to check if a rook is still present on h1, because
                 // each rook move from h1 invalidates short castling rights.
-                if (((ChessBoard.BB_F1 | ChessBoard.BB_G1)
+                if (((Board.BB_F1 | Board.BB_G1)
                         & (position.board.ourPieces | position.board.theirPieces)) == 0
-                        && (kingSafety.accessibleSquares & ChessBoard.BB_F1) != 0
-                        && !squareIsUnderAttack(position, ChessBoard.SQUARE_G1))
+                        && (kingSafety.accessibleSquares & Board.BB_F1) != 0
+                        && !squareIsUnderAttack(position, Board.SQUARE_G1))
                 {
-                    legalMoves.add(new ChessMove(ourKingSquare, ChessBoard.SQUARE_G1));
+                    legalMoves.add(new Move(ourKingSquare, Board.SQUARE_G1));
                 }
             }
 
@@ -444,12 +444,12 @@ class ChessMoveGenerator
                 // accessible square and c1 should not be under attack.
                 // Note that we don't have to check if a rook is still present on a1, because
                 // each rook move from a1 invalidates short castling rights.
-                if (((ChessBoard.BB_D1 | ChessBoard.BB_C1)
+                if (((Board.BB_D1 | Board.BB_C1)
                         & (position.board.ourPieces | position.board.theirPieces)) == 0
-                        && (kingSafety.accessibleSquares & ChessBoard.BB_D1) != 0
-                        && !squareIsUnderAttack(position, ChessBoard.SQUARE_C1))
+                        && (kingSafety.accessibleSquares & Board.BB_D1) != 0
+                        && !squareIsUnderAttack(position, Board.SQUARE_C1))
                 {
-                    legalMoves.add(new ChessMove(ourKingSquare, ChessBoard.SQUARE_C1));
+                    legalMoves.add(new Move(ourKingSquare, Board.SQUARE_C1));
                 }
             }
         }
@@ -466,10 +466,10 @@ class ChessMoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @return A list of legal knight moves of the given legal chess position.
      */
-    static List<ChessMove> generateKnightMoves(ChessPosition position, KingSafety kingSafety)
+    static List<Move> generateKnightMoves(Position position, KingSafety kingSafety)
     {
         // Construct the legal moves list.
-        List<ChessMove> legalMoves = new ArrayList<>();
+        List<Move> legalMoves = new ArrayList<>();
 
         // This function is never called for positions in double check.
         // Loop over all knights that are not pinned (pinned knight can never move).
@@ -496,7 +496,7 @@ class ChessMoveGenerator
             while (knightToSquaresBitboard != 0)
             {
                 // Add move to list.
-                legalMoves.add(new ChessMove(knightFromSquare, Long.numberOfTrailingZeros(knightToSquaresBitboard)));
+                legalMoves.add(new Move(knightFromSquare, Long.numberOfTrailingZeros(knightToSquaresBitboard)));
 
                 // Remove the destination square from the bitboard.
                 knightToSquaresBitboard &= knightToSquaresBitboard - 1;
@@ -518,10 +518,10 @@ class ChessMoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @return A list of legal rook moves of the given legal chess position.
      */
-    static List<ChessMove> generateRookMoves(ChessPosition position, KingSafety kingSafety)
+    static List<Move> generateRookMoves(Position position, KingSafety kingSafety)
     {
         // Construct the legal moves list.
-        List<ChessMove> legalMoves = new ArrayList<>();
+        List<Move> legalMoves = new ArrayList<>();
 
         // Cache the occupied squares bitboard.
         final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
@@ -552,7 +552,7 @@ class ChessMoveGenerator
                 while (rookToSquaresBitboard != 0)
                 {
                     // Add move to list.
-                    legalMoves.add(new ChessMove(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
+                    legalMoves.add(new Move(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
 
                     // Remove the destination square from the bitboard.
                     rookToSquaresBitboard &= rookToSquaresBitboard - 1;
@@ -600,7 +600,7 @@ class ChessMoveGenerator
                     {
                         // Add move to list.
                         legalMoves
-                                .add(new ChessMove(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
+                                .add(new Move(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
 
                         // Remove the destination square from the bitboard.
                         rookToSquaresBitboard &= rookToSquaresBitboard - 1;
@@ -624,10 +624,10 @@ class ChessMoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @return A list of legal bishop moves of the given legal chess position.
      */
-    static List<ChessMove> generateBishopMoves(ChessPosition position, KingSafety kingSafety)
+    static List<Move> generateBishopMoves(Position position, KingSafety kingSafety)
     {
         // Construct the legal moves list.
-        List<ChessMove> legalMoves = new ArrayList<>();
+        List<Move> legalMoves = new ArrayList<>();
 
         // Cache the occupied squares bitboard.
         final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
@@ -659,7 +659,7 @@ class ChessMoveGenerator
                 {
                     // Add move to list.
                     legalMoves
-                            .add(new ChessMove(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
+                            .add(new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
 
                     // Remove the destination square from the bitboard.
                     bishopToSquaresBitboard &= bishopToSquaresBitboard - 1;
@@ -707,7 +707,7 @@ class ChessMoveGenerator
                     {
                         // Add move to list.
                         legalMoves.add(
-                                new ChessMove(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
+                                new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
 
                         // Remove the destination square from the bitboard.
                         bishopToSquaresBitboard &= bishopToSquaresBitboard - 1;
@@ -731,10 +731,10 @@ class ChessMoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @return A list of legal pawn moves of the given legal chess position.
      */
-    static List<ChessMove> generatePawnMoves(ChessPosition position, KingSafety kingSafety)
+    static List<Move> generatePawnMoves(Position position, KingSafety kingSafety)
     {
         // Construct the legal moves list.
-        List<ChessMove> legalMoves = new ArrayList<>();
+        List<Move> legalMoves = new ArrayList<>();
 
         // This function is never called for positions in double check.
         // Loop over all pawns.
@@ -785,15 +785,15 @@ class ChessMoveGenerator
                         if (pawnFromRow != 6)
                         {
                             // Normal move.
-                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare));
+                            legalMoves.add(new Move(pawnFromSquare, pawnToSquare));
                         }
                         else
                         {
                             // Promotion.
-                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.BISHOP));
-                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.KNIGHT));
-                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.QUEEN));
-                            legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare, ChessPromotionPieceType.ROOK));
+                            legalMoves.add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.BISHOP));
+                            legalMoves.add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.KNIGHT));
+                            legalMoves.add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.QUEEN));
+                            legalMoves.add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.ROOK));
                         }
                     }
 
@@ -809,7 +809,7 @@ class ChessMoveGenerator
                         if (!kingSafety.isCheck() || ((pawnFromBitboard << 16) & kingSafety.attackLines) != 0)
                         {
 
-                            legalMoves.add(new ChessMove(pawnFromSquare, pawnFromSquare + 16));
+                            legalMoves.add(new Move(pawnFromSquare, pawnFromSquare + 16));
                         }
 
                     }
@@ -822,7 +822,7 @@ class ChessMoveGenerator
                 // Cache destination square parameters.
                 final int pawnToSquare = pawnFromSquare + 8 + direction;
                 final int pawnToCol = pawnFromCol + direction;
-                final long pawnToBitboard = ChessBoard.getSquareBitboard(pawnToSquare);
+                final long pawnToBitboard = Board.getSquareBitboard(pawnToSquare);
 
                 if (pawnToCol >= 0 && pawnToCol <= 7)
                 {
@@ -850,7 +850,7 @@ class ChessMoveGenerator
                                 // Check if we are under check from a rook if the two pawns are removed.
                                 if (pawnFromRow == ourKingRow && (MagicUtils.getRookAttackBitboard(ourKingSquare,
                                         occupiedSquaresBitboard & ~(pawnFromBitboard
-                                                | ChessBoard.getSquareBitboard(pawnFromRow, pawnToCol)))
+                                                | Board.getSquareBitboard(pawnFromRow, pawnToCol)))
                                         & position.board.theirPieces & position.board.rooks) != 0)
                                 {
                                     enPassantCheckPasses = false;
@@ -880,19 +880,19 @@ class ChessMoveGenerator
                                     if (pawnFromRow != 6)
                                     {
                                         // Normal move.
-                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare));
+                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare));
                                     }
                                     else
                                     {
                                         // Promotion.
-                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
-                                                ChessPromotionPieceType.BISHOP));
-                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
-                                                ChessPromotionPieceType.KNIGHT));
-                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
-                                                ChessPromotionPieceType.QUEEN));
-                                        legalMoves.add(new ChessMove(pawnFromSquare, pawnToSquare,
-                                                ChessPromotionPieceType.ROOK));
+                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
+                                                PromotionPieceType.BISHOP));
+                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
+                                                PromotionPieceType.KNIGHT));
+                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
+                                                PromotionPieceType.QUEEN));
+                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
+                                                PromotionPieceType.ROOK));
                                     }
                                 }
                             }

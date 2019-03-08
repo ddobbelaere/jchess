@@ -35,7 +35,7 @@ package io.github.ddobbelaere.jchess.chess;
  *
  * @author Dieter Dobbelaere
  */
-class ChessMove
+class Move
 {
     /**
      * Source square of the moved piece.
@@ -50,7 +50,7 @@ class ChessMove
     /**
      * Promotion piece type.
      */
-    private ChessPromotionPieceType promotionPieceType = ChessPromotionPieceType.NONE;
+    private PromotionPieceType promotionPieceType = PromotionPieceType.NONE;
 
     /**
      * Construct with given source and destinations squares and promotion piece
@@ -60,7 +60,7 @@ class ChessMove
      * @param toSquare           Destination square of the moved piece.
      * @param promotionPieceType Promotion piece type.
      */
-    ChessMove(int fromSquare, int toSquare, ChessPromotionPieceType promotionPieceType)
+    Move(int fromSquare, int toSquare, PromotionPieceType promotionPieceType)
     {
         this.fromSquare = (byte) fromSquare;
         this.toSquare = (byte) toSquare;
@@ -73,9 +73,9 @@ class ChessMove
      * @param fromSquare Source square of the moved piece.
      * @param toSquare   Destination square of the moved piece.
      */
-    ChessMove(int fromSquare, int toSquare)
+    Move(int fromSquare, int toSquare)
     {
-        this(fromSquare, toSquare, ChessPromotionPieceType.NONE);
+        this(fromSquare, toSquare, PromotionPieceType.NONE);
     }
 
     /**
@@ -88,7 +88,7 @@ class ChessMove
      *
      * @param moveString Descriptive move string.
      */
-    ChessMove(String moveString)
+    Move(String moveString)
     {
         // Check move string length.
         int len = moveString.length();
@@ -99,7 +99,7 @@ class ChessMove
                     "Move string " + moveString + " should contain either 4 or 5 characters.");
         }
 
-        ChessPromotionPieceType promotionPieceType = ChessPromotionPieceType.NONE;
+        PromotionPieceType promotionPieceType = PromotionPieceType.NONE;
 
         if (len == 5)
         {
@@ -107,24 +107,24 @@ class ChessMove
             switch (moveString.charAt(4))
             {
             case 'B':
-                promotionPieceType = ChessPromotionPieceType.BISHOP;
+                promotionPieceType = PromotionPieceType.BISHOP;
                 break;
             case 'N':
-                promotionPieceType = ChessPromotionPieceType.KNIGHT;
+                promotionPieceType = PromotionPieceType.KNIGHT;
                 break;
             case 'Q':
-                promotionPieceType = ChessPromotionPieceType.QUEEN;
+                promotionPieceType = PromotionPieceType.QUEEN;
                 break;
             case 'R':
-                promotionPieceType = ChessPromotionPieceType.ROOK;
+                promotionPieceType = PromotionPieceType.ROOK;
                 break;
             default:
                 throw new IllegalArgumentException("Illegal promotion piece type in move string " + moveString + ".");
             }
         }
 
-        this.fromSquare = (byte) ChessBoard.getSquare(moveString.substring(0, 2));
-        this.toSquare = (byte) ChessBoard.getSquare(moveString.substring(2, 4));
+        this.fromSquare = (byte) Board.getSquare(moveString.substring(0, 2));
+        this.toSquare = (byte) Board.getSquare(moveString.substring(2, 4));
         this.promotionPieceType = promotionPieceType;
     }
 
@@ -147,7 +147,7 @@ class ChessMove
     /**
      * @return Promotion piece type.
      */
-    public ChessPromotionPieceType getPromotionPieceType()
+    public PromotionPieceType getPromotionPieceType()
     {
         return promotionPieceType;
     }
@@ -155,7 +155,7 @@ class ChessMove
     @Override
     public String toString()
     {
-        return ChessBoard.getSquareName(fromSquare) + ChessBoard.getSquareName(toSquare) + promotionPieceType;
+        return Board.getSquareName(fromSquare) + Board.getSquareName(toSquare) + promotionPieceType;
     }
 
     @Override
@@ -173,7 +173,7 @@ class ChessMove
         {
             return false;
         }
-        ChessMove other = (ChessMove) obj;
+        Move other = (Move) obj;
         if (fromSquare != other.fromSquare)
         {
             return false;

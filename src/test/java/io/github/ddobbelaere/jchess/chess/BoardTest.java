@@ -22,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 /**
- * ChessBoard test.
+ * Board test.
  *
  * @author Dieter Dobbelaere
  */
-class ChessBoardTest
+class BoardTest
 {
 
     /**
@@ -36,13 +36,13 @@ class ChessBoardTest
     void testStaticMethods()
     {
         // Check bitboard methods.
-        assertEquals(1, ChessBoard.getSquareBitboard("a1"));
-        assertEquals(ChessBoard.getSquareBitboard("c2"), ChessBoard.getSquareBitboard(1, 2));
-        assertEquals(ChessBoard.getRowBitboard('8'), ChessBoard.getRowBitboard(7));
-        assertEquals(ChessBoard.getColBitboard('h'), ChessBoard.getColBitboard(7));
-        assertEquals(0x8040201008040201L, ChessBoard.getDiagsBitboard(0, 0));
-        assertEquals(Long.reverseBytes(0x8040201008040201L), ChessBoard.getDiagsBitboard(0, 7));
-        assertEquals(true, ChessBoard.getBitboardDebugString(1L).contains("x"));
+        assertEquals(1, Board.getSquareBitboard("a1"));
+        assertEquals(Board.getSquareBitboard("c2"), Board.getSquareBitboard(1, 2));
+        assertEquals(Board.getRowBitboard('8'), Board.getRowBitboard(7));
+        assertEquals(Board.getColBitboard('h'), Board.getColBitboard(7));
+        assertEquals(0x8040201008040201L, Board.getDiagsBitboard(0, 0));
+        assertEquals(Long.reverseBytes(0x8040201008040201L), Board.getDiagsBitboard(0, 7));
+        assertEquals(true, Board.getBitboardDebugString(1L).contains("x"));
 
         for (int i = 0; i < 8; i++)
         {
@@ -53,13 +53,13 @@ class ChessBoardTest
             for (int j = 0; j < 8; j++)
             {
                 // Add square to expected row and column bitboards.
-                rowBitboard |= ChessBoard.getSquareBitboard(i, j);
-                colBitboard |= ChessBoard.getSquareBitboard(j, i);
+                rowBitboard |= Board.getSquareBitboard(i, j);
+                colBitboard |= Board.getSquareBitboard(j, i);
             }
 
             // Check if they match the output of the dedicated static methods.
-            assertEquals(rowBitboard, ChessBoard.getRowBitboard(i));
-            assertEquals(colBitboard, ChessBoard.getColBitboard(i));
+            assertEquals(rowBitboard, Board.getRowBitboard(i));
+            assertEquals(colBitboard, Board.getColBitboard(i));
         }
     }
 

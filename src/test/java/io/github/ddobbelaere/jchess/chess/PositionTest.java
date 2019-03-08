@@ -26,16 +26,16 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * ChessPosition test.
+ * Position test.
  *
  * @author Dieter Dobbelaere.
  */
-class ChessPositionTest
+class PositionTest
 {
 
     /**
      * Test method for
-     * {@link io.github.ddobbelaere.jchess.chess.ChessPosition#fromFen(java.lang.String)}.
+     * {@link io.github.ddobbelaere.jchess.chess.Position#fromFen(java.lang.String)}.
      */
     @Test
     void testFromFen()
@@ -43,7 +43,7 @@ class ChessPositionTest
         // Test legal FEN strings.
         for (String legalFenString : getLegalFenStrings())
         {
-            ChessPosition.fromFen(legalFenString);
+            Position.fromFen(legalFenString);
         }
 
         // Test illegal FEN strings.
@@ -52,14 +52,13 @@ class ChessPositionTest
             // Check that the right exception is thrown.
             assertThrows(IllegalFenException.class, () ->
             {
-                ChessPosition.fromFen(illegalFenString);
+                Position.fromFen(illegalFenString);
             }, "Illegal FEN string \"" + illegalFenString + "\" should cause an exception.");
         }
     }
 
     /**
-     * Test method for
-     * {@link io.github.ddobbelaere.jchess.chess.ChessPosition#mirror()}.
+     * Test method for {@link io.github.ddobbelaere.jchess.chess.Position#mirror()}.
      */
     @Test
     void testMirror()
@@ -67,7 +66,7 @@ class ChessPositionTest
         // List legal FEN strings.
         for (String legalFenString : getLegalFenStrings())
         {
-            ChessPosition position = ChessPosition.fromFen(legalFenString);
+            Position position = Position.fromFen(legalFenString);
 
             // Clear en passant information.
             position.enPassantCaptureSquare = 0;
@@ -80,8 +79,7 @@ class ChessPositionTest
         }
 
         // Test with position where black can no longer castle.
-        ChessPosition position = ChessPosition
-                .fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9");
+        Position position = Position.fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9");
         System.out.printf("Position:%n%n%s%n", position);
 
         // The mirrored position is from black's perspective.
@@ -95,7 +93,7 @@ class ChessPositionTest
 
     /**
      * Test method for
-     * {@link io.github.ddobbelaere.jchess.chess.ChessPosition#toString()}.
+     * {@link io.github.ddobbelaere.jchess.chess.Position#toString()}.
      */
     @Test
     void testToString()
@@ -104,7 +102,7 @@ class ChessPositionTest
         for (String legalFenString : getLegalFenStrings())
         {
             System.out.printf("FEN string: %s%nPosition string representation:%n%n%s%n", legalFenString,
-                    ChessPosition.fromFen(legalFenString));
+                    Position.fromFen(legalFenString));
         }
     }
 

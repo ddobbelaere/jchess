@@ -18,38 +18,19 @@
 package io.github.ddobbelaere.jchess.chess;
 
 /**
- * Chess promotion piece type.
+ * Illegal chess move exception.
  *
  * @author Dieter Dobbelaere
+ *
  */
-enum ChessPromotionPieceType
+@SuppressWarnings("serial")
+public class IllegalMoveException extends RuntimeException
 {
-    NONE, ROOK, KNIGHT, BISHOP, QUEEN;
-
-    @Override
-    public String toString()
+    /**
+     * @see RuntimeException#RuntimeException(String)
+     */
+    public IllegalMoveException(String message)
     {
-        String s = "";
-
-        switch (this)
-        {
-        case NONE:
-            s = "";
-            break;
-        case ROOK:
-            s = "R";
-            break;
-        case KNIGHT:
-            s = "N";
-            break;
-        case BISHOP:
-            s = "B";
-            break;
-        case QUEEN:
-            s = "Q";
-            break;
-        }
-
-        return s;
+        super(message);
     }
 }

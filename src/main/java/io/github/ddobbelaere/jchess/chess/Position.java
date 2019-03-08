@@ -18,8 +18,10 @@
 package io.github.ddobbelaere.jchess.chess;
 
 /**
+ * Legal chess position.
+ *
  * <p>
- * Legal chess position that consists of
+ * It consists of
  * <ul>
  * <li>Board state (how pieces are positioned on the chess board).</li>
  * <li>Color of side to move.</li>
@@ -28,7 +30,7 @@ package io.github.ddobbelaere.jchess.chess;
  * <li>Number of plies since the last capture or pawn advance.</li>
  * <li>Number of full moves since the start of the game.</li>
  * </ul>
- * </p>
+ *
  * <p>
  * <em>Legal</em> means that
  * <ul>
@@ -39,16 +41,15 @@ package io.github.ddobbelaere.jchess.chess;
  * <li>En passant information passes obvious sanity checks.</li>
  * <li>Pawns cannot be at the back ranks.</li>
  * </ul>
- * </p>
  *
  * @author Dieter Dobbelaere
  */
-public class ChessPosition
+public class Position
 {
     /**
      * Chess board corresponding to the position.
      */
-    ChessBoard board = new ChessBoard();
+    Board board = new Board();
 
     /**
      * Active player still has short castling rights.
@@ -89,7 +90,7 @@ public class ChessPosition
     /**
      * Starting position.
      */
-    public static final ChessPosition STARTING = fromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    public static final Position STARTING = fromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
     /**
      * Create a legal chess position from a FEN string.
@@ -99,7 +100,7 @@ public class ChessPosition
      * @throws IllegalFenException If the FEN string is invalid or represents an
      *                             illegal position.
      */
-    public static ChessPosition fromFen(String fen)
+    public static Position fromFen(String fen)
     {
         // Split FEN into different parts (assuming whitespace delimiters).
         String[] fenParts = fen.split("\\s+");
@@ -111,7 +112,7 @@ public class ChessPosition
         }
 
         // Construct returned object.
-        ChessPosition position = new ChessPosition();
+        Position position = new Position();
 
         // Process piece placement string.
         byte col = 0;
@@ -139,7 +140,7 @@ public class ChessPosition
                     throw new IllegalFenException("Invalid piece placement string.");
                 }
 
-                long squareBitboard = ChessBoard.getSquareBitboard(row, col);
+                long squareBitboard = Board.getSquareBitboard(row, col);
 
                 if (Character.isUpperCase(c))
                 {
@@ -314,7 +315,7 @@ public class ChessPosition
         {
             byte mirroredEnPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8)
                     + (enPassantCaptureSquare & 0b111));
-            sb.append(System.lineSeparator() + "e.p. capture square: " + ChessBoard
+            sb.append(System.lineSeparator() + "e.p. capture square: " + Board
                     .getSquareName(board.isMirrored ? mirroredEnPassantCaptureSquare : enPassantCaptureSquare));
         }
 
@@ -336,8 +337,8 @@ public class ChessPosition
         }
 
         // Castling availability must pass some obvious sanity checks.
-        final boolean ourKingOnOriginalSquare = (board.kings & board.ourPieces) == ChessBoard.getSquareBitboard("e1");
-        final boolean theirKingOnOriginalSquare = (board.kings & board.theirPieces) == ChessBoard
+        final boolean ourKingOnOriginalSquare = (board.kings & board.ourPieces) == Board.getSquareBitboard("e1");
+        final boolean theirKingOnOriginalSquare = (board.kings & board.theirPieces) == Board
                 .getSquareBitboard("e8");
 
         // Castling is not possible if the king has moved.
@@ -351,10 +352,10 @@ public class ChessPosition
         final long ourRooks = board.rooks & ~board.bishops & board.ourPieces;
         final long theirRooks = board.rooks & ~board.bishops & board.theirPieces;
 
-        if ((weCanCastleShort && (ourRooks & ChessBoard.getSquareBitboard("h1")) == 0)
-                || (weCanCastleLong && (ourRooks & ChessBoard.getSquareBitboard("a1")) == 0)
-                || (theyCanCastleShort && (theirRooks & ChessBoard.getSquareBitboard("h8")) == 0)
-                || (theyCanCastleLong && (theirRooks & ChessBoard.getSquareBitboard("a8")) == 0))
+        if ((weCanCastleShort && (ourRooks & Board.getSquareBitboard("h1")) == 0)
+                || (weCanCastleLong && (ourRooks & Board.getSquareBitboard("a1")) == 0)
+                || (theyCanCastleShort && (theirRooks & Board.getSquareBitboard("h8")) == 0)
+                || (theyCanCastleLong && (theirRooks & Board.getSquareBitboard("a8")) == 0))
         {
             return false;
         }
@@ -369,14 +370,14 @@ public class ChessPosition
             }
 
             // Check that there is an opponent's pawn in front of the capture square.
-            if (((ChessBoard.getSquareBitboard(enPassantCaptureSquare) >> 8) & board.pawns & board.theirPieces) == 0)
+            if (((Board.getSquareBitboard(enPassantCaptureSquare) >> 8) & board.pawns & board.theirPieces) == 0)
             {
                 return false;
             }
         }
 
         // Check that pawns are not at the back ranks.
-        if ((board.pawns & (ChessBoard.getRowBitboard(0) | ChessBoard.getRowBitboard(7))) != 0)
+        if ((board.pawns & (Board.getRowBitboard(0) | Board.getRowBitboard(7))) != 0)
         {
             return false;
         }
@@ -386,7 +387,7 @@ public class ChessPosition
 
         // Determine if the their is in check (or, equivalently, if our king is in check
         // in the mirrored position).
-        final boolean theirKingInCheck = ChessMoveGenerator.squareIsUnderAttack(this,
+        final boolean theirKingInCheck = MoveGenerator.squareIsUnderAttack(this,
                 Long.numberOfTrailingZeros(board.kings & board.ourPieces));
 
         // Mirror the position back to its original state.
@@ -400,5 +401,18 @@ public class ChessPosition
 
         // If we get here, the position is considered legal.
         return true;
+    }
+
+    /**
+     * Apply the move and return the resulting position.
+     *
+     * @param move Given move.
+     * @return Resulting position after the given move is applied.
+     * @throws IllegalMoveException If the move is illegal.
+     */
+    public Position applyMove(Move move)
+    {
+        // TODO: Implement this method.
+        return this;
     }
 }

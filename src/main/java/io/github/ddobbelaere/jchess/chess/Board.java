@@ -22,7 +22,7 @@ package io.github.ddobbelaere.jchess.chess;
  *
  * @author Dieter Dobbelaere
  */
-class ChessBoard
+class Board
 {
     /**
      * Active player's pieces bitboard.
@@ -235,7 +235,7 @@ class ChessBoard
                 if (Math.abs(row - i) == Math.abs(col - j))
                 {
                     // The square (i,j) lies on a diagonal through (row,col).
-                    diagsBitboard |= ChessBoard.getSquareBitboard(i, j);
+                    diagsBitboard |= Board.getSquareBitboard(i, j);
                 }
             }
         }

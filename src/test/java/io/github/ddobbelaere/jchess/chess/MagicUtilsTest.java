@@ -104,9 +104,9 @@ class MagicUtilsTest
                         }
 
                         // Add the square to the attack bitboard.
-                        refAttackBitboard |= ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol);
+                        refAttackBitboard |= Board.getSquareBitboard(attackedSquareRow, attackedSquareCol);
 
-                        if ((ChessBoard.getSquareBitboard(attackedSquareRow, attackedSquareCol) & occupiedSquares) != 0)
+                        if ((Board.getSquareBitboard(attackedSquareRow, attackedSquareCol) & occupiedSquares) != 0)
                         {
                             // This square is occupied and hides all other following squares from the
                             // attack.
