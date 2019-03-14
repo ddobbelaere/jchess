@@ -19,6 +19,7 @@ package io.github.ddobbelaere.jchess.chess;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Legal chess position.
@@ -477,9 +478,186 @@ public class Position
             throw new IllegalMoveException("Move " + move + " is illegal in the position " + this);
         }
 
-        // TODO: Apply the move.
+        // Construct the returned position.
         Position position = new Position(this);
 
+        // Calculate source and destination square bitboards.
+        final long fromSquareBitboard = Board.getSquareBitboard(move.getFromSquare());
+        final long toSquareBitboard = Board.getSquareBitboard(move.getToSquare());
+
+        // Check if it's a pawn move.
+        final boolean isPawnMove = (position.board.pawns & fromSquareBitboard) != 0;
+
+        // Update number of plies since the last capture or pawn advance.
+        if (isPawnMove || (position.board.theirPieces & toSquareBitboard) != 0)
+        {
+            // This is either a pawn move or a piece capture, reset the counter.
+            position.numNoCaptureOrPawnAdvancePlies = 0;
+        }
+        else
+        {
+            // Increment counter.
+            position.numNoCaptureOrPawnAdvancePlies++;
+        }
+
+        // Increment number of moves after black's move.
+        if (position.board.isMirrored)
+        {
+            position.numGameMoves++;
+        }
+
+        // Move our piece.
+        position.board.ourPieces &= ~fromSquareBitboard;
+        position.board.ourPieces |= toSquareBitboard;
+
+        // Remove captured piece.
+        position.board.theirPieces &= ~toSquareBitboard;
+        position.board.bishops &= ~toSquareBitboard;
+        position.board.pawns &= ~toSquareBitboard;
+        position.board.rooks &= ~toSquareBitboard;
+
+        // Clear en passant capture square.
+        position.enPassantCaptureSquare = 0;
+
+        // Handle pawn moves.
+        if (isPawnMove)
+        {
+            // Remove en passant captured pawn.
+            if (move.getToSquare() == enPassantCaptureSquare)
+            {
+                position.board.theirPieces &= ~(toSquareBitboard >> 8);
+                position.board.pawns &= ~(toSquareBitboard >> 8);
+            }
+
+            // Handle promotion.
+            switch (move.getPromotionPieceType())
+            {
+            case NONE:
+                position.board.pawns |= toSquareBitboard;
+                break;
+            case QUEEN:
+                position.board.rooks |= toSquareBitboard;
+                position.board.bishops |= toSquareBitboard;
+                break;
+            case ROOK:
+                position.board.rooks |= toSquareBitboard;
+                break;
+            case BISHOP:
+                position.board.bishops |= toSquareBitboard;
+                break;
+            case KNIGHT:
+                break;
+            }
+
+            // Set en passant capture square (it there is an opponent's pawn that can
+            // capture it).
+            if (move.getToSquare() - move.getFromSquare() == 16 && (position.board.theirPieces & position.board.pawns
+                    & ((toSquareBitboard << 1) | (toSquareBitboard >> 1)) & Board.BB_A4H4) != 0)
+            {
+                position.enPassantCaptureSquare = (byte) (move.getFromSquare() + 8);
+            }
+
+            // Remove the pawn from its source square.
+            position.board.pawns &= ~fromSquareBitboard;
+        }
+
+        // Handle king moves.
+        if ((position.board.kings & fromSquareBitboard) != 0)
+        {
+            // Handle castlings.
+            if (move.equals(Move.SHORT_CASTLING))
+            {
+                // Short castling.
+                // Move the rook from h1 to f1.
+                position.board.rooks &= ~Board.BB_H1;
+                position.board.rooks |= Board.BB_F1;
+
+                position.board.ourPieces &= ~Board.BB_H1;
+                position.board.ourPieces |= Board.BB_F1;
+
+                // Invalidate castling rights.
+                position.weCanCastleShort = false;
+                position.weCanCastleLong = false;
+            }
+            else if (move.equals(Move.LONG_CASTLING))
+            {
+                // Long castling.
+                // Move the rook from a1 to d1.
+                position.board.rooks &= ~Board.BB_A1;
+                position.board.rooks |= Board.BB_D1;
+
+                position.board.ourPieces &= ~Board.BB_A1;
+                position.board.ourPieces |= Board.BB_D1;
+
+                // Invalidate castling rights.
+                position.weCanCastleShort = false;
+                position.weCanCastleLong = false;
+            }
+
+            // Perform the actual move.
+            position.board.kings &= ~fromSquareBitboard;
+            position.board.kings |= toSquareBitboard;
+        }
+
+        // Handle rook moves.
+        if ((position.board.rooks & fromSquareBitboard) != 0)
+        {
+            // Invalidate castling rights if a rook (or queen) moves from a1 or h1.
+            if (fromSquareBitboard == Board.BB_A1)
+            {
+                position.weCanCastleLong = false;
+            }
+            else if (fromSquareBitboard == Board.BB_H1)
+            {
+                position.weCanCastleShort = false;
+            }
+
+            // Perform the actual move.
+            position.board.rooks &= ~fromSquareBitboard;
+            position.board.rooks |= toSquareBitboard;
+        }
+
+        // Handle bishop moves.
+        if ((position.board.bishops & fromSquareBitboard) != 0)
+        {
+            // Perform the actual move.
+            position.board.bishops &= ~fromSquareBitboard;
+            position.board.bishops |= toSquareBitboard;
+        }
+
+        // Note that knight moves require no special actions.
+
+        // Now mirror the position to change the side to move.
+        position.mirror();
+
+        // Return resulting position.
         return position;
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+
+        if (obj == null)
+        {
+            return false;
+        }
+
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+
+        Position other = (Position) obj;
+        return Objects.equals(board, other.board) && enPassantCaptureSquare == other.enPassantCaptureSquare
+                && numGameMoves == other.numGameMoves
+                && numNoCaptureOrPawnAdvancePlies == other.numNoCaptureOrPawnAdvancePlies
+                && theyCanCastleLong == other.theyCanCastleLong && theyCanCastleShort == other.theyCanCastleShort
+                && weCanCastleLong == other.weCanCastleLong && weCanCastleShort == other.weCanCastleShort;
+    }
+
 }

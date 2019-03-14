@@ -62,12 +62,22 @@ class Board
     /**
      * Bitboard representation of the first rank (aka row 0).
      */
-    private static final long BB_A1H1 = 0xFFL;
+    static final long BB_A1H1 = 0xFFL;
+
+    /**
+     * Bitboard representation of the fourth rank (aka row 3).
+     */
+    static final long BB_A4H4 = 0xFF000000L;
 
     /**
      * Bitboard representation of the a-file (aka column 0).
      */
-    private static final long BB_A1A8 = 0x0101010101010101L;
+    static final long BB_A1A8 = 0x0101010101010101L;
+
+    /**
+     * Bitboard representation of the a1-square.
+     */
+    static final long BB_A1 = getSquareBitboard("a1");
 
     /**
      * Bitboard representation of the c1-square.
@@ -88,6 +98,11 @@ class Board
      * Bitboard representation of the g1-square.
      */
     static final long BB_G1 = getSquareBitboard("g1");
+
+    /**
+     * Bitboard representation of the h1-square.
+     */
+    static final long BB_H1 = getSquareBitboard("h1");
 
     /**
      * Square representation of the c1-square.
@@ -410,5 +425,29 @@ class Board
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+
+        if (obj == null)
+        {
+            return false;
+        }
+
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+
+        Board other = (Board) obj;
+        return bishops == other.bishops && isMirrored == other.isMirrored && kings == other.kings
+                && ourPieces == other.ourPieces && pawns == other.pawns && rooks == other.rooks
+                && theirPieces == other.theirPieces;
     }
 }

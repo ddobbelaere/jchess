@@ -13,7 +13,7 @@ The public API of the library is available at [https://ddobbelaere.github.io/jch
 
 - [x] Board representation.
 - [x] Magic bitboards.
-- [ ] Move generator.
+- [x] Move generation.
 
 ### Feature Wishlist
 

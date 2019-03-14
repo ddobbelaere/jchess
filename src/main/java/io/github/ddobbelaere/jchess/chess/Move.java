@@ -53,6 +53,16 @@ public class Move
     private PromotionPieceType promotionPieceType = PromotionPieceType.NONE;
 
     /**
+     * Short castling move (from our perspective).
+     */
+    final static Move SHORT_CASTLING = new Move("e1g1");
+
+    /**
+     * Long castling move (from our perspective).
+     */
+    final static Move LONG_CASTLING = new Move("e1c1");
+
+    /**
      * Construct with given source and destinations squares and promotion piece
      * type.
      *
@@ -165,27 +175,19 @@ public class Move
         {
             return true;
         }
+
         if (obj == null)
         {
             return false;
         }
+
         if (getClass() != obj.getClass())
         {
             return false;
         }
+
         Move other = (Move) obj;
-        if (fromSquare != other.fromSquare)
-        {
-            return false;
-        }
-        if (promotionPieceType != other.promotionPieceType)
-        {
-            return false;
-        }
-        if (toSquare != other.toSquare)
-        {
-            return false;
-        }
-        return true;
+        return fromSquare == other.fromSquare && promotionPieceType == other.promotionPieceType
+                && toSquare == other.toSquare;
     }
 }
