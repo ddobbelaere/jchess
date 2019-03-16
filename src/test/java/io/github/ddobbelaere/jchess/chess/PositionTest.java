@@ -181,6 +181,18 @@ class PositionTest
         moveSequence.add(Pair.of(Position.fromFen("3RB3/1k6/8/8/8/8/6K1/3n4 b - - 0 10"), null));
         moveSequences.add(moveSequence);
 
+        // Test loss of opponent's castling rights because a piece captures the rook on
+        // a8 or h8.
+        moveSequence = new ArrayList<>();
+        moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pppppppp/1N4N1/8/8/8/PPPPPPPP/R1BQKB1R w KQkq - 0 1"),
+                new Move("b6a8")));
+        moveSequence.add(Pair.of(Position.fromFen("Nnbqkbnr/pppppppp/6N1/8/8/8/PPPPPPPP/R1BQKB1R b KQk - 0 1"),
+                new Move("e2e4")));
+        moveSequence.add(Pair.of(Position.fromFen("Nnbqkbnr/pppp1ppp/6N1/4p3/8/8/PPPPPPPP/R1BQKB1R w KQk - 0 2"),
+                new Move("g6h8")));
+        moveSequence.add(Pair.of(Position.fromFen("NnbqkbnN/pppp1ppp/8/4p3/8/8/PPPPPPPP/R1BQKB1R b KQ - 0 2"), null));
+        moveSequences.add(moveSequence);
+
         // Test all move sequences.
         for (List<Pair<Position, Move>> moveSequenceUnderTest : moveSequences)
         {
@@ -213,6 +225,22 @@ class PositionTest
 
         // Check that an illegal move throws an exception.
         assertThrows(IllegalMoveException.class, () -> Position.STARTING.applyMove(new Move("e2e5")));
+    }
+
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.Position#equals(Object)}.
+     */
+    @Test
+    void testEquals()
+    {
+        Position position = Position.STARTING;
+
+        assertEquals(true, position.equals(Position.STARTING));
+        assertEquals(false, position.equals(null));
+        assertEquals(false, position.equals(new Object()));
+        assertEquals(true,
+                position.equals(Position.fromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")));
     }
 
     /**

@@ -63,4 +63,19 @@ class BoardTest
         }
     }
 
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.Board#equals(Object)}.
+     */
+    @Test
+    void testEquals()
+    {
+        Board board = new Board();
+
+        assertEquals(true, board.equals(board));
+        assertEquals(false, board.equals(null));
+        assertEquals(false, board.equals(new Object()));
+        assertEquals(true, board.equals(new Board()));
+    }
+
 }
