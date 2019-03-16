@@ -80,6 +80,11 @@ class Board
     static final long BB_A1 = getSquareBitboard("a1");
 
     /**
+     * Bitboard representation of the b1-square.
+     */
+    static final long BB_B1 = getSquareBitboard("b1");
+
+    /**
      * Bitboard representation of the c1-square.
      */
     static final long BB_C1 = getSquareBitboard("c1");
@@ -118,6 +123,16 @@ class Board
      * Square representation of the g1-square.
      */
     static final int SQUARE_G1 = getSquare("g1");
+
+    /**
+     * Square representation of the a8-square.
+     */
+    static final int SQUARE_A8 = getSquare("a8");
+
+    /**
+     * Square representation of the h8-square.
+     */
+    static final int SQUARE_H8 = getSquare("h8");
 
     /**
      * Default constructor.

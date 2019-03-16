@@ -519,6 +519,16 @@ public class Position
         // Clear en passant capture square.
         position.enPassantCaptureSquare = 0;
 
+        // Invalidate opponent's castling rights if the piece moves to a8 or h8.
+        if (move.getToSquare() == Board.SQUARE_A8)
+        {
+            position.theyCanCastleLong = false;
+        }
+        else if (move.getToSquare() == Board.SQUARE_H8)
+        {
+            position.theyCanCastleShort = false;
+        }
+
         // Handle pawn moves.
         if (isPawnMove)
         {
@@ -574,10 +584,6 @@ public class Position
 
                 position.board.ourPieces &= ~Board.BB_H1;
                 position.board.ourPieces |= Board.BB_F1;
-
-                // Invalidate castling rights.
-                position.weCanCastleShort = false;
-                position.weCanCastleLong = false;
             }
             else if (move.equals(Move.LONG_CASTLING))
             {
@@ -588,11 +594,11 @@ public class Position
 
                 position.board.ourPieces &= ~Board.BB_A1;
                 position.board.ourPieces |= Board.BB_D1;
-
-                // Invalidate castling rights.
-                position.weCanCastleShort = false;
-                position.weCanCastleLong = false;
             }
+
+            // Invalidate castling rights.
+            position.weCanCastleShort = false;
+            position.weCanCastleLong = false;
 
             // Perform the actual move.
             position.board.kings &= ~fromSquareBitboard;

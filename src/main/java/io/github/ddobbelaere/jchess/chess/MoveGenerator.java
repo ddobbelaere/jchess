@@ -428,8 +428,7 @@ class MoveGenerator
                 // accessible square and g1 should not be under attack.
                 // Note that we don't have to check if a rook is still present on h1, because
                 // each rook move from h1 invalidates short castling rights.
-                if (((Board.BB_F1 | Board.BB_G1)
-                        & (position.board.ourPieces | position.board.theirPieces)) == 0
+                if (((Board.BB_F1 | Board.BB_G1) & (position.board.ourPieces | position.board.theirPieces)) == 0
                         && (kingSafety.accessibleSquares & Board.BB_F1) != 0
                         && !squareIsUnderAttack(position, Board.SQUARE_G1))
                 {
@@ -440,11 +439,11 @@ class MoveGenerator
             // Check if we can castle long.
             if (position.weCanCastleLong)
             {
-                // No pieces are allowed to be present on d1 and c1. Moreover, d1 should be an
-                // accessible square and c1 should not be under attack.
+                // No pieces are allowed to be present on b1, c1 and d1. Moreover, d1 should
+                // be an accessible square and c1 should not be under attack.
                 // Note that we don't have to check if a rook is still present on a1, because
                 // each rook move from a1 invalidates short castling rights.
-                if (((Board.BB_D1 | Board.BB_C1)
+                if (((Board.BB_B1 | Board.BB_C1 | Board.BB_D1)
                         & (position.board.ourPieces | position.board.theirPieces)) == 0
                         && (kingSafety.accessibleSquares & Board.BB_D1) != 0
                         && !squareIsUnderAttack(position, Board.SQUARE_C1))
@@ -599,8 +598,7 @@ class MoveGenerator
                     while (rookToSquaresBitboard != 0)
                     {
                         // Add move to list.
-                        legalMoves
-                                .add(new Move(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
+                        legalMoves.add(new Move(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
 
                         // Remove the destination square from the bitboard.
                         rookToSquaresBitboard &= rookToSquaresBitboard - 1;
@@ -658,8 +656,7 @@ class MoveGenerator
                 while (bishopToSquaresBitboard != 0)
                 {
                     // Add move to list.
-                    legalMoves
-                            .add(new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
+                    legalMoves.add(new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
 
                     // Remove the destination square from the bitboard.
                     bishopToSquaresBitboard &= bishopToSquaresBitboard - 1;
@@ -706,8 +703,7 @@ class MoveGenerator
                     while (bishopToSquaresBitboard != 0)
                     {
                         // Add move to list.
-                        legalMoves.add(
-                                new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
+                        legalMoves.add(new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
 
                         // Remove the destination square from the bitboard.
                         bishopToSquaresBitboard &= bishopToSquaresBitboard - 1;
@@ -849,16 +845,17 @@ class MoveGenerator
                                 // opponent's rook.
                                 // Check if we are under check from a rook if the two pawns are removed.
                                 if (pawnFromRow == ourKingRow && (MagicUtils.getRookAttackBitboard(ourKingSquare,
-                                        occupiedSquaresBitboard & ~(pawnFromBitboard
-                                                | Board.getSquareBitboard(pawnFromRow, pawnToCol)))
+                                        occupiedSquaresBitboard
+                                                & ~(pawnFromBitboard | Board.getSquareBitboard(pawnFromRow, pawnToCol)))
                                         & position.board.theirPieces & position.board.rooks) != 0)
                                 {
                                     enPassantCheckPasses = false;
                                 }
 
                                 // Determine if we capture an en passant pawn that gives check.
-                                // This is the case if our king is behind our pawn.
-                                if (ourKingSquare == pawnFromSquare - 8)
+                                // This is the case if the pawn is part of an attack line (and thus gives
+                                // check).
+                                if ((kingSafety.attackLines & Board.getSquareBitboard(pawnFromRow, pawnToCol)) != 0)
                                 {
                                     checkingEnPassantPawnCaptured = true;
                                 }
@@ -885,14 +882,13 @@ class MoveGenerator
                                     else
                                     {
                                         // Promotion.
-                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
-                                                PromotionPieceType.BISHOP));
-                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
-                                                PromotionPieceType.KNIGHT));
-                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
-                                                PromotionPieceType.QUEEN));
-                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare,
-                                                PromotionPieceType.ROOK));
+                                        legalMoves
+                                                .add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.BISHOP));
+                                        legalMoves
+                                                .add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.KNIGHT));
+                                        legalMoves
+                                                .add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.QUEEN));
+                                        legalMoves.add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.ROOK));
                                     }
                                 }
                             }
