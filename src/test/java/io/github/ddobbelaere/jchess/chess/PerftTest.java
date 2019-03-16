@@ -30,11 +30,11 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.Test;
 
 /**
- * MoveGenerator performance test.
+ * Move generation performance test.
  *
  * @author Dieter Dobbelaere
  */
-class MoveGeneratorPerft
+class PerftTest
 {
     /**
      * Generate all positions up to the given maximum depth from the given starting
