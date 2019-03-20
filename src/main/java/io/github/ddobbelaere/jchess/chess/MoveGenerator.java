@@ -134,6 +134,51 @@ class MoveGenerator
     }
 
     /**
+     * <p>
+     * Move generator result consisting of
+     * <li>King safety information.</li>
+     * <li>Legal moves.</li>
+     * </p>
+     */
+    static class MoveGeneratorResult
+    {
+        /**
+         * King safety information.
+         */
+        private KingSafety kingSafety;
+
+        /**
+         * List of legal moves.
+         */
+        List<Move> legalMoves;
+
+        /**
+         * Constructor.
+         */
+        MoveGeneratorResult(KingSafety kingSafety, List<Move> legalMoves)
+        {
+            this.kingSafety = kingSafety;
+            this.legalMoves = legalMoves;
+        }
+
+        /**
+         * @return If it's check.
+         */
+        boolean isCheck()
+        {
+            return kingSafety.isCheck();
+        }
+
+        /**
+         * @return List of legal moves.
+         */
+        List<Move> getLegalMoves()
+        {
+            return legalMoves;
+        }
+    }
+
+    /**
      * Generates king safety information of a given legal chess position.
      *
      * @param position Given legal chess position.
@@ -356,7 +401,7 @@ class MoveGenerator
      * @param position Given legal chess position.
      * @return A list of legal moves of the given legal chess position.
      */
-    static List<Move> generateLegalMoves(Position position)
+    static MoveGeneratorResult generateLegalMoves(Position position)
     {
         // Construct the legal moves list.
         List<Move> legalMoves = new ArrayList<>();
@@ -385,8 +430,8 @@ class MoveGenerator
             legalMoves.addAll(generatePawnMoves(position, kingSafety));
         }
 
-        // Return the list.
-        return legalMoves;
+        // Return the result.
+        return new MoveGeneratorResult(kingSafety, legalMoves);
     }
 
     /**

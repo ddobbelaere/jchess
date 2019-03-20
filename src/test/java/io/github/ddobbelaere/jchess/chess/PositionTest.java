@@ -228,6 +228,48 @@ class PositionTest
     }
 
     /**
+     * Test method for getters.
+     */
+    @Test
+    void testGetters()
+    {
+        Position position = Position.fromFen("r3k2r/ppp2ppp/8/8/8/8/PPP2PPP/R3K2R w Kq - 10 20");
+
+        assertEquals(10, position.getNumNoCaptureOrPawnAdvancePlies());
+        assertEquals(20, position.getMoveNumber());
+        assertEquals(true, position.isWhiteToMove());
+        assertEquals(false, position.isBlackToMove());
+
+        assertEquals(true, position.whiteCanCastleShort());
+        assertEquals(false, position.whiteCanCastleLong());
+        assertEquals(false, position.blackCanCastleShort());
+        assertEquals(true, position.blackCanCastleLong());
+
+        assertEquals(false, position.isCheck());
+        assertEquals(false, position.isCheckmate());
+        assertEquals(false, position.isStalemate());
+
+        position = Position.fromFen("r3k2r/ppp2ppp/8/8/8/8/PPP2PPP/R3K2R b Kq - 10 20");
+
+        assertEquals(true, position.whiteCanCastleShort());
+        assertEquals(false, position.whiteCanCastleLong());
+        assertEquals(false, position.blackCanCastleShort());
+        assertEquals(true, position.blackCanCastleLong());
+
+        position = Position.fromFen("6rk/5Npp/8/8/8/8/8/6K1 b - - 0 2");
+
+        assertEquals(true, position.isCheck());
+        assertEquals(true, position.isCheckmate());
+        assertEquals(false, position.isStalemate());
+
+        position = Position.fromFen("3Q4/pk6/p7/P2P4/8/8/6K1/8 b - - 0 2");
+
+        assertEquals(false, position.isCheck());
+        assertEquals(false, position.isCheckmate());
+        assertEquals(true, position.isStalemate());
+    }
+
+    /**
      * Test method for
      * {@link io.github.ddobbelaere.jchess.chess.Position#equals(Object)}.
      */

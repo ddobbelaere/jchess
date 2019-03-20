@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import io.github.ddobbelaere.jchess.chess.MoveGenerator.MoveGeneratorResult;
+
 /**
  * Legal chess position.
  *
@@ -92,9 +94,9 @@ public class Position
     int numGameMoves;
 
     /**
-     * List of legal moves.
+     * Move generator result.
      */
-    List<Move> legalMoves;
+    MoveGeneratorResult moveGenResult;
 
     /**
      * Starting position.
@@ -124,7 +126,7 @@ public class Position
         theyCanCastleLong = position.theyCanCastleLong;
         numNoCaptureOrPawnAdvancePlies = position.numNoCaptureOrPawnAdvancePlies;
         numGameMoves = position.numGameMoves;
-        legalMoves = position.legalMoves;
+        moveGenResult = position.moveGenResult;
     }
 
     /**
@@ -301,8 +303,8 @@ public class Position
             enPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8) + (enPassantCaptureSquare & 0b111));
         }
 
-        // Invalidate the list of legal moves.
-        legalMoves = null;
+        // Invalidate the move generator result.
+        moveGenResult = null;
     }
 
     @Override
@@ -441,20 +443,29 @@ public class Position
     }
 
     /**
+     * @return The move generator result.
+     */
+    MoveGeneratorResult getMoveGeneratorResult()
+    {
+        // Lazy initialization.
+        if (moveGenResult == null)
+        {
+            // Cache move generator result.
+            moveGenResult = MoveGenerator.generateLegalMoves(this);
+        }
+
+        return moveGenResult;
+    }
+
+    /**
      * Get a list of all legal moves in the position.
      *
      * @return List of all legal moves in the position.
      */
     public List<Move> getLegalMoves()
     {
-        if (legalMoves == null)
-        {
-            // Cache list of legal moves.
-            legalMoves = MoveGenerator.generateLegalMoves(this);
-        }
-
         // Return an unmodifiable view of the list.
-        return Collections.unmodifiableList(legalMoves);
+        return Collections.unmodifiableList(getMoveGeneratorResult().getLegalMoves());
     }
 
     /**
@@ -466,14 +477,8 @@ public class Position
      */
     public Position applyMove(Move move)
     {
-        if (legalMoves == null)
-        {
-            // Cache list of legal moves.
-            legalMoves = MoveGenerator.generateLegalMoves(this);
-        }
-
         // Check if the move is legal.
-        if (!legalMoves.contains(move))
+        if (!getLegalMoves().contains(move))
         {
             throw new IllegalMoveException("Move " + move + " is illegal in the position " + this);
         }
@@ -638,6 +643,122 @@ public class Position
 
         // Return resulting position.
         return position;
+    }
+
+    /**
+     * @return {@code true} if and only if it's white to move.
+     */
+    public boolean isWhiteToMove()
+    {
+        return !board.isMirrored;
+    }
+
+    /**
+     * @return {@code true} if and only if it's black to move.
+     */
+    public boolean isBlackToMove()
+    {
+        return board.isMirrored;
+    }
+
+    /**
+     * @return {@code true} if and only if white can castle short.
+     */
+    public boolean whiteCanCastleShort()
+    {
+        if (isWhiteToMove())
+        {
+            return weCanCastleShort;
+        }
+        else
+        {
+            return theyCanCastleShort;
+        }
+    }
+
+    /**
+     * @return {@code true} if and only if black can castle short.
+     */
+    public boolean blackCanCastleShort()
+    {
+        if (isWhiteToMove())
+        {
+            return theyCanCastleShort;
+        }
+        else
+        {
+            return weCanCastleShort;
+        }
+    }
+
+    /**
+     * @return {@code true} if and only if white can castle long.
+     */
+    public boolean whiteCanCastleLong()
+    {
+        if (isWhiteToMove())
+        {
+            return weCanCastleLong;
+        }
+        else
+        {
+            return theyCanCastleLong;
+        }
+    }
+
+    /**
+     * @return {@code true} if and only if black can castle long.
+     */
+    public boolean blackCanCastleLong()
+    {
+        if (isWhiteToMove())
+        {
+            return theyCanCastleLong;
+        }
+        else
+        {
+            return weCanCastleLong;
+        }
+    }
+
+    /**
+     * @return Number of full moves since the start of the game.
+     */
+    public int getMoveNumber()
+    {
+        return numGameMoves;
+    }
+
+    /**
+     * @return Number of plies since the last capture or pawn advance.
+     */
+    public int getNumNoCaptureOrPawnAdvancePlies()
+    {
+        return numNoCaptureOrPawnAdvancePlies;
+    }
+
+    /**
+     * @return {@code true} if and only if it's check.
+     */
+    public boolean isCheck()
+    {
+        return getMoveGeneratorResult().isCheck();
+    }
+
+    /**
+     * @return {@code true} if and only if it's checkmate.
+     */
+    public boolean isCheckmate()
+    {
+        return getMoveGeneratorResult().getLegalMoves().isEmpty() && isCheck();
+    }
+
+    /**
+     * @return {@code true} if and only if it's stalemate.
+     */
+    public boolean isStalemate()
+    {
+        return getMoveGeneratorResult().getLegalMoves().isEmpty() && !isCheck();
     }
 
     @Override
