@@ -483,6 +483,13 @@ public class Position
             throw new IllegalMoveException("Move " + move + " is illegal in the position " + this);
         }
 
+        // Mirror the move if it's black to move.
+        if (board.isMirrored)
+        {
+            move = new Move(move);
+            move.mirror();
+        }
+
         // Construct the returned position.
         Position position = new Position(this);
 

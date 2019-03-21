@@ -131,35 +131,35 @@ class PositionTest
         List<Pair<Position, Move>> moveSequence = new ArrayList<>();
         moveSequence.add(Pair.of(Position.STARTING, new Move("e2e4")));
         moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"),
-                new Move("c2c4")));
+                new Move("c7c5")));
         moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"),
                 new Move("e4e5")));
         moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp1ppppp/8/2p1P3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2"),
-                new Move("d2d4")));
+                new Move("d7d5")));
         moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp2pppp/8/2ppP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3"),
                 new Move("e5d6")));
         moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp2pppp/3P4/2p5/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 3"),
-                new Move("c1f4")));
+                new Move("c8f5")));
         moveSequence.add(Pair.of(Position.fromFen("rn1qkbnr/pp2pppp/3P4/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 4"),
                 new Move("d6e7")));
         moveSequence.add(Pair.of(Position.fromFen("rn1qkbnr/pp2Pppp/8/2p2b2/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 4"),
-                new Move("b1c3")));
+                new Move("b8c6")));
         moveSequence.add(Pair.of(Position.fromFen("r2qkbnr/pp2Pppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 5"),
                 new Move("e7d8Q")));
         moveSequence.add(Pair.of(Position.fromFen("r2Qkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 5"),
-                new Move("a1d1")));
+                new Move("a8d8")));
         moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQk - 0 6"),
                 new Move("g1f3")));
         moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3ppp/2n5/2p2b2/8/5N2/PPPP1PPP/RNBQKB1R b KQk - 1 6"),
-                new Move("h2h4")));
+                new Move("h7h5")));
         moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3pp1/2n5/2p2b1p/8/5N2/PPPP1PPP/RNBQKB1R w KQk - 0 7"),
                 new Move("f1d3")));
         moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3pp1/2n5/2p2b1p/8/3B1N2/PPPP1PPP/RNBQK2R b KQk - 1 7"),
-                new Move("h1h3")));
+                new Move("h8h6")));
         moveSequence.add(Pair.of(Position.fromFen("3rkbn1/pp3pp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQK2R w KQ - 2 8"),
                 new Move("e1g1")));
         moveSequence.add(Pair.of(Position.fromFen("3rkbn1/pp3pp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 b - - 3 8"),
-                new Move("e1e2")));
+                new Move("e8e7")));
         moveSequence
                 .add(Pair.of(Position.fromFen("3r1bn1/pp2kpp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 w - - 4 9"), null));
         moveSequences.add(moveSequence);
@@ -176,7 +176,7 @@ class PositionTest
         // move sequence).
         moveSequence = new ArrayList<>();
         moveSequence.add(Pair.of(Position.fromFen("8/1k1PP3/8/8/8/8/3p2K1/8 w - - 4 9"), new Move("d7d8R")));
-        moveSequence.add(Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/3p2K1/8 b - - 0 9"), new Move("d7d8N")));
+        moveSequence.add(Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/3p2K1/8 b - - 0 9"), new Move("d2d1N")));
         moveSequence.add(Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/6K1/3n4 w - - 0 10"), new Move("e7e8B")));
         moveSequence.add(Pair.of(Position.fromFen("3RB3/1k6/8/8/8/8/6K1/3n4 b - - 0 10"), null));
         moveSequences.add(moveSequence);
@@ -187,7 +187,7 @@ class PositionTest
         moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pppppppp/1N4N1/8/8/8/PPPPPPPP/R1BQKB1R w KQkq - 0 1"),
                 new Move("b6a8")));
         moveSequence.add(Pair.of(Position.fromFen("Nnbqkbnr/pppppppp/6N1/8/8/8/PPPPPPPP/R1BQKB1R b KQk - 0 1"),
-                new Move("e2e4")));
+                new Move("e7e5")));
         moveSequence.add(Pair.of(Position.fromFen("Nnbqkbnr/pppp1ppp/6N1/4p3/8/8/PPPPPPPP/R1BQKB1R w KQk - 0 2"),
                 new Move("g6h8")));
         moveSequence.add(Pair.of(Position.fromFen("NnbqkbnN/pppp1ppp/8/4p3/8/8/PPPPPPPP/R1BQKB1R b KQ - 0 2"), null));

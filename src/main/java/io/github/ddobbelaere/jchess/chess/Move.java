@@ -89,6 +89,16 @@ public class Move
     }
 
     /**
+     * Copy constructor.
+     *
+     * @param move Move to copy.
+     */
+    Move(Move move)
+    {
+        this(move.fromSquare, move.toSquare, move.promotionPieceType);
+    }
+
+    /**
      * Construct with given string of the form:
      * <ul>
      * <li>Two-character source square (e.g. d2).</li>
@@ -160,6 +170,16 @@ public class Move
     PromotionPieceType getPromotionPieceType()
     {
         return promotionPieceType;
+    }
+
+    /**
+     * Mirror the move (change side to move), e.g. d7d8Q becomes d2d1Q.
+     */
+    void mirror()
+    {
+        // Mirror source and destination square, promotion piece type stays the same.
+        fromSquare ^= 0b111000;
+        toSquare ^= 0b111000;
     }
 
     @Override

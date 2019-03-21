@@ -430,6 +430,15 @@ class MoveGenerator
             legalMoves.addAll(generatePawnMoves(position, kingSafety));
         }
 
+        // If it's black to move, mirror all moves.
+        if (position.board.isMirrored)
+        {
+            for (Move move : legalMoves)
+            {
+                move.mirror();
+            }
+        }
+
         // Return the result.
         return new MoveGeneratorResult(kingSafety, legalMoves);
     }
