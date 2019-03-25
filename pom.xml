@@ -7,7 +7,7 @@
 
 	<groupId>io.github.ddobbelaere</groupId>
 	<artifactId>jchess</artifactId>
-	<version>0.1</version>
+	<version>0.1.0</version>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -48,10 +48,18 @@
 				<version>3.1.0</version>
 				<configuration>
 					<additionalOptions>
-						<!--<option>-Xdoclint:none</option>-->
+						<!--<option>-Xdoclint:none</option> -->
 					</additionalOptions>
 					<show>public</show>
 				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
