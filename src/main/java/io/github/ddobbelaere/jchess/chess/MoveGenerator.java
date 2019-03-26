@@ -410,7 +410,7 @@ class MoveGenerator
         KingSafety kingSafety = generateKingSafety(position);
 
         // Always add king moves.
-        legalMoves.addAll(generateKingMoves(position, kingSafety));
+        generateKingMoves(position, kingSafety, legalMoves);
 
         if (!kingSafety.isDoubleCheck())
         {
@@ -418,16 +418,16 @@ class MoveGenerator
             // double check.
 
             // Add knight moves.
-            legalMoves.addAll(generateKnightMoves(position, kingSafety));
+            generateKnightMoves(position, kingSafety, legalMoves);
 
             // Add rook moves.
-            legalMoves.addAll(generateRookMoves(position, kingSafety));
+            generateRookMoves(position, kingSafety, legalMoves);
 
             // Add bishop moves.
-            legalMoves.addAll(generateBishopMoves(position, kingSafety));
+            generateBishopMoves(position, kingSafety, legalMoves);
 
             // Add pawn moves.
-            legalMoves.addAll(generatePawnMoves(position, kingSafety));
+            generatePawnMoves(position, kingSafety, legalMoves);
         }
 
         // If it's black to move, mirror all moves.
@@ -448,13 +448,10 @@ class MoveGenerator
      *
      * @param position   Given legal chess position.
      * @param kingSafety King safety corresponding to the position.
-     * @return A list of legal king moves of the given legal chess position.
+     * @param legalMoves List of moves to which the legal king moves are appended.
      */
-    static List<Move> generateKingMoves(Position position, KingSafety kingSafety)
+    static void generateKingMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
     {
-        // Construct the legal moves list.
-        List<Move> legalMoves = new ArrayList<>();
-
         // Calculate the square of our king.
         final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
 
@@ -496,7 +493,7 @@ class MoveGenerator
                 // No pieces are allowed to be present on b1, c1 and d1. Moreover, d1 should
                 // be an accessible square and c1 should not be under attack.
                 // Note that we don't have to check if a rook is still present on a1, because
-                // each rook move from a1 invalidates short castling rights.
+                // each rook move from a1 invalidates long castling rights.
                 if (((Board.BB_B1 | Board.BB_C1 | Board.BB_D1)
                         & (position.board.ourPieces | position.board.theirPieces)) == 0
                         && (kingSafety.accessibleSquares & Board.BB_D1) != 0
@@ -506,9 +503,6 @@ class MoveGenerator
                 }
             }
         }
-
-        // Return the list.
-        return legalMoves;
     }
 
     /**
@@ -517,13 +511,10 @@ class MoveGenerator
      *
      * @param position   Given legal chess position.
      * @param kingSafety King safety corresponding to the position.
-     * @return A list of legal knight moves of the given legal chess position.
+     * @param legalMoves List of moves to which the legal knight moves are appended.
      */
-    static List<Move> generateKnightMoves(Position position, KingSafety kingSafety)
+    static void generateKnightMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
     {
-        // Construct the legal moves list.
-        List<Move> legalMoves = new ArrayList<>();
-
         // This function is never called for positions in double check.
         // Loop over all knights that are not pinned (pinned knight can never move).
         long ourNonPinnedKnights = position.board.ourPieces & ~(position.board.bishops | position.board.kings
@@ -558,9 +549,6 @@ class MoveGenerator
             // Remove the knight from the bitboard.
             ourNonPinnedKnights &= ourNonPinnedKnights - 1;
         }
-
-        // Return the list.
-        return legalMoves;
     }
 
     /**
@@ -569,13 +557,10 @@ class MoveGenerator
      *
      * @param position   Given legal chess position.
      * @param kingSafety King safety corresponding to the position.
-     * @return A list of legal rook moves of the given legal chess position.
+     * @param legalMoves List of moves to which the legal rook moves are appended.
      */
-    static List<Move> generateRookMoves(Position position, KingSafety kingSafety)
+    static void generateRookMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
     {
-        // Construct the legal moves list.
-        List<Move> legalMoves = new ArrayList<>();
-
         // Cache the occupied squares bitboard.
         final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
 
@@ -663,9 +648,6 @@ class MoveGenerator
                 ourPinnedRooks &= ourPinnedRooks - 1;
             }
         }
-
-        // Return the list.
-        return legalMoves;
     }
 
     /**
@@ -674,13 +656,10 @@ class MoveGenerator
      *
      * @param position   Given legal chess position.
      * @param kingSafety King safety corresponding to the position.
-     * @return A list of legal bishop moves of the given legal chess position.
+     * @param legalMoves List of moves to which the legal bishop moves are appended.
      */
-    static List<Move> generateBishopMoves(Position position, KingSafety kingSafety)
+    static void generateBishopMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
     {
-        // Construct the legal moves list.
-        List<Move> legalMoves = new ArrayList<>();
-
         // Cache the occupied squares bitboard.
         final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
 
@@ -768,9 +747,6 @@ class MoveGenerator
                 ourPinnedBishops &= ourPinnedBishops - 1;
             }
         }
-
-        // Return the list.
-        return legalMoves;
     }
 
     /**
@@ -779,13 +755,10 @@ class MoveGenerator
      *
      * @param position   Given legal chess position.
      * @param kingSafety King safety corresponding to the position.
-     * @return A list of legal pawn moves of the given legal chess position.
+     * @param legalMoves List of moves to which the legal pawn moves are appended.
      */
-    static List<Move> generatePawnMoves(Position position, KingSafety kingSafety)
+    static void generatePawnMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
     {
-        // Construct the legal moves list.
-        List<Move> legalMoves = new ArrayList<>();
-
         // This function is never called for positions in double check.
         // Loop over all pawns.
         long ourPawns = position.board.ourPieces & position.board.pawns;
@@ -954,8 +927,5 @@ class MoveGenerator
             // Remove the pawn from the bitboard.
             ourPawns &= ourPawns - 1;
         }
-
-        // Return the list.
-        return legalMoves;
     }
 }

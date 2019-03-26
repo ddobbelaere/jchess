@@ -60,10 +60,8 @@ class MoveGeneratorTest
 
         assertEquals(0x40810203800L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(
-                Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1")
-                        | Board.getSquareBitboard("g3") | Board.getSquareBitboard("h3"),
-                kingSafety.accessibleSquares);
+        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1") | Board.getSquareBitboard("g3")
+                | Board.getSquareBitboard("h3"), kingSafety.accessibleSquares);
         assertEquals(true, kingSafety.isCheck());
         assertEquals(true, kingSafety.isDoubleCheck());
 
@@ -72,9 +70,8 @@ class MoveGeneratorTest
 
         assertEquals(0L, kingSafety.attackLines);
         assertEquals(Board.getSquareBitboard("f3"), kingSafety.pinnedPieces);
-        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1")
-                | Board.getSquareBitboard("h1") | Board.getSquareBitboard("f2")
-                | Board.getSquareBitboard("h2") | Board.getSquareBitboard("g3")
+        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1") | Board.getSquareBitboard("h1")
+                | Board.getSquareBitboard("f2") | Board.getSquareBitboard("h2") | Board.getSquareBitboard("g3")
                 | Board.getSquareBitboard("h3"), kingSafety.accessibleSquares);
         assertEquals(false, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
@@ -84,9 +81,8 @@ class MoveGeneratorTest
 
         assertEquals(0x3E10L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1")
-                | Board.getSquareBitboard("h1") | Board.getSquareBitboard("g3")
-                | Board.getSquareBitboard("h3"), kingSafety.accessibleSquares);
+        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1") | Board.getSquareBitboard("h1")
+                | Board.getSquareBitboard("g3") | Board.getSquareBitboard("h3"), kingSafety.accessibleSquares);
         assertEquals(true, kingSafety.isCheck());
         assertEquals(true, kingSafety.isDoubleCheck());
 
@@ -95,12 +91,9 @@ class MoveGeneratorTest
 
         assertEquals(0x200000L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(
-                Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1")
-                        | Board.getSquareBitboard("h1") | Board.getSquareBitboard("f2")
-                        | Board.getSquareBitboard("h2") | Board.getSquareBitboard("f3")
-                        | Board.getSquareBitboard("g3") | Board.getSquareBitboard("h3"),
-                kingSafety.accessibleSquares);
+        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1") | Board.getSquareBitboard("h1")
+                | Board.getSquareBitboard("f2") | Board.getSquareBitboard("h2") | Board.getSquareBitboard("f3")
+                | Board.getSquareBitboard("g3") | Board.getSquareBitboard("h3"), kingSafety.accessibleSquares);
         assertEquals(true, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
 
@@ -109,9 +102,8 @@ class MoveGeneratorTest
 
         assertEquals(0L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1")
-                | Board.getSquareBitboard("h1") | Board.getSquareBitboard("f2")
-                | Board.getSquareBitboard("h2") | Board.getSquareBitboard("g3")
+        assertEquals(Board.getSquareBitboard("f1") | Board.getSquareBitboard("g1") | Board.getSquareBitboard("h1")
+                | Board.getSquareBitboard("f2") | Board.getSquareBitboard("h2") | Board.getSquareBitboard("g3")
                 | Board.getSquareBitboard("h3"), kingSafety.accessibleSquares);
         assertEquals(false, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
@@ -122,10 +114,8 @@ class MoveGeneratorTest
 
         assertEquals(0L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(
-                Board.getSquareBitboard("d3") | Board.getSquareBitboard("d4")
-                        | Board.getSquareBitboard("f3") | Board.getSquareBitboard("f4"),
-                kingSafety.accessibleSquares);
+        assertEquals(Board.getSquareBitboard("d3") | Board.getSquareBitboard("d4") | Board.getSquareBitboard("f3")
+                | Board.getSquareBitboard("f4"), kingSafety.accessibleSquares);
         assertEquals(false, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
 
@@ -134,8 +124,8 @@ class MoveGeneratorTest
 
         assertEquals(0L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(Board.getSquareBitboard("g7") | Board.getSquareBitboard("h7")
-                | Board.getSquareBitboard("g8"), kingSafety.accessibleSquares);
+        assertEquals(Board.getSquareBitboard("g7") | Board.getSquareBitboard("h7") | Board.getSquareBitboard("g8"),
+                kingSafety.accessibleSquares);
         assertEquals(false, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
 
@@ -146,8 +136,7 @@ class MoveGeneratorTest
 
         assertEquals(0L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(Board.getSquareBitboard("e2") | Board.getSquareBitboard("f1"),
-                kingSafety.accessibleSquares);
+        assertEquals(Board.getSquareBitboard("e2") | Board.getSquareBitboard("f1"), kingSafety.accessibleSquares);
         assertEquals(false, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
 
@@ -156,9 +145,8 @@ class MoveGeneratorTest
 
         assertEquals(0L, kingSafety.attackLines);
         assertEquals(0L, kingSafety.pinnedPieces);
-        assertEquals(Board.getSquareBitboard("g4") | Board.getSquareBitboard("g5")
-                | Board.getSquareBitboard("g6") | Board.getSquareBitboard("h4")
-                | Board.getSquareBitboard("h6"), kingSafety.accessibleSquares);
+        assertEquals(Board.getSquareBitboard("g4") | Board.getSquareBitboard("g5") | Board.getSquareBitboard("g6")
+                | Board.getSquareBitboard("h4") | Board.getSquareBitboard("h6"), kingSafety.accessibleSquares);
         assertEquals(false, kingSafety.isCheck());
         assertEquals(false, kingSafety.isDoubleCheck());
     }
@@ -182,8 +170,8 @@ class MoveGeneratorTest
      * @param moveType       String representation of move type (used for debug
      *                       messages).
      */
-    private void checkGeneratedMoves(List<Move> referenceMoves, List<Move> generatedMoves,
-            Position position, String moveType)
+    private void checkGeneratedMoves(List<Move> referenceMoves, List<Move> generatedMoves, Position position,
+            String moveType)
     {
         // Check if each reference move is present in the move list.
         for (Move referenceMove : referenceMoves)
@@ -229,15 +217,14 @@ class MoveGeneratorTest
         // O-O 8.Qd2 Nc6.
         // The white king can go to e2, f2 and d1 and castle long.
         testCases.add(Pair.of(Position.fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9"),
-                new Move[] { new Move("e1e2"), new Move("e1f2"), new Move("e1d1"),
-                        new Move("e1c1") }));
+                new Move[] { new Move("e1e2"), new Move("e1f2"), new Move("e1d1"), new Move("e1c1") }));
 
         // Test all positions.
         for (final Pair<Position, Move[]> testCase : testCases)
         {
             Position position = testCase.getLeft();
-            List<Move> generatedMoves = MoveGenerator.generateKingMoves(position,
-                    MoveGenerator.generateKingSafety(position));
+            List<Move> generatedMoves = new ArrayList<>();
+            MoveGenerator.generateKingMoves(position, MoveGenerator.generateKingSafety(position), generatedMoves);
 
             // Compare with reference move list.
             List<Move> referenceMoves = Arrays.asList(testCase.getRight());
@@ -258,8 +245,8 @@ class MoveGeneratorTest
         List<Pair<Position, Move[]>> testCases = new ArrayList<>();
 
         // Starting position.
-        testCases.add(Pair.of(Position.STARTING, new Move[] { new Move("b1c3"), new Move("b1a3"),
-                new Move("g1f3"), new Move("g1h3") }));
+        testCases.add(Pair.of(Position.STARTING,
+                new Move[] { new Move("b1c3"), new Move("b1a3"), new Move("g1f3"), new Move("g1h3") }));
 
         // We are in check and can either capture the queen or interpose to resolve the
         // check.
@@ -276,8 +263,8 @@ class MoveGeneratorTest
         for (final Pair<Position, Move[]> testCase : testCases)
         {
             Position position = testCase.getLeft();
-            List<Move> generatedMoves = MoveGenerator.generateKnightMoves(position,
-                    MoveGenerator.generateKingSafety(position));
+            List<Move> generatedMoves = new ArrayList<>();
+            MoveGenerator.generateKnightMoves(position, MoveGenerator.generateKingSafety(position), generatedMoves);
 
             // Compare with reference move list.
             List<Move> referenceMoves = Arrays.asList(testCase.getRight());
@@ -303,14 +290,11 @@ class MoveGeneratorTest
         // Position after 1. a4 d5 2. h4 e5. The a1-rook can move to a2 and a3. The
         // h1-rook can move to h2 and h3.
         testCases.add(Pair.of(Position.fromFen("rnbqkbnr/ppp2ppp/8/3pp3/P6P/8/1PPPPPP1/RNBQKBNR w KQkq -"),
-                new Move[] { new Move("a1a2"), new Move("a1a3"), new Move("h1h2"),
-                        new Move("h1h3") }));
+                new Move[] { new Move("a1a2"), new Move("a1a3"), new Move("h1h2"), new Move("h1h3") }));
 
         // We are in check and can only interpose.
-        testCases.add(Pair.of(Position.fromFen("8/1k4r1/8/8/8/2R5/6K1/8 w - -"),
-                new Move[] { new Move("c3g3") }));
-        testCases.add(Pair.of(Position.fromFen("8/1k4r1/8/8/8/2Q5/6K1/8 w - -"),
-                new Move[] { new Move("c3g3") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k4r1/8/8/8/2R5/6K1/8 w - -"), new Move[] { new Move("c3g3") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k4r1/8/8/8/2Q5/6K1/8 w - -"), new Move[] { new Move("c3g3") }));
 
         // The rook (or queen) is pinned by a bishop and cannot move.
         testCases.add(Pair.of(Position.fromFen("8/1k6/2b5/8/8/5R2/6K1/8 w - -"), new Move[] {}));
@@ -318,15 +302,15 @@ class MoveGeneratorTest
 
         // The rook is pinned by a rook and has to stay on the same line w.r.t. our
         // king.
-        testCases.add(Pair.of(Position.fromFen("8/1k4r1/8/8/8/6R1/6K1/8 w - -"), new Move[] {
-                new Move("g3g4"), new Move("g3g5"), new Move("g3g6"), new Move("g3g7") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k4r1/8/8/8/6R1/6K1/8 w - -"),
+                new Move[] { new Move("g3g4"), new Move("g3g5"), new Move("g3g6"), new Move("g3g7") }));
 
         // Test all positions.
         for (final Pair<Position, Move[]> testCase : testCases)
         {
             Position position = testCase.getLeft();
-            List<Move> generatedMoves = MoveGenerator.generateRookMoves(position,
-                    MoveGenerator.generateKingSafety(position));
+            List<Move> generatedMoves = new ArrayList<>();
+            MoveGenerator.generateRookMoves(position, MoveGenerator.generateKingSafety(position), generatedMoves);
 
             // Compare with reference move list.
             List<Move> referenceMoves = Arrays.asList(testCase.getRight());
@@ -352,15 +336,12 @@ class MoveGeneratorTest
         // Position after 1. e4 e5. The queen on d1 can move to e2, f3, g4 and h5. The
         // bishop on f1 can move to e2, d3, c4, b5 and a6.
         testCases.add(Pair.of(Position.fromFen("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -"),
-                new Move[] { new Move("d1e2"), new Move("d1f3"), new Move("d1g4"),
-                        new Move("d1h5"), new Move("f1e2"), new Move("f1d3"), new Move("f1c4"),
-                        new Move("f1b5"), new Move("f1a6") }));
+                new Move[] { new Move("d1e2"), new Move("d1f3"), new Move("d1g4"), new Move("d1h5"), new Move("f1e2"),
+                        new Move("f1d3"), new Move("f1c4"), new Move("f1b5"), new Move("f1a6") }));
 
         // We are in check and can only interpose.
-        testCases.add(Pair.of(Position.fromFen("8/1k6/2q5/8/8/8/2B3K1/8 w - -"),
-                new Move[] { new Move("c2e4") }));
-        testCases.add(Pair.of(Position.fromFen("8/1k6/2q5/8/8/8/2Q3K1/8 w - -"),
-                new Move[] { new Move("c2e4") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k6/2q5/8/8/8/2B3K1/8 w - -"), new Move[] { new Move("c2e4") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k6/2q5/8/8/8/2Q3K1/8 w - -"), new Move[] { new Move("c2e4") }));
 
         // The bishop (or queen) is pinned by a rook and cannot move.
         testCases.add(Pair.of(Position.fromFen("8/1k4r1/8/8/8/6B1/6K1/8 w - -"), new Move[] {}));
@@ -375,8 +356,8 @@ class MoveGeneratorTest
         for (final Pair<Position, Move[]> testCase : testCases)
         {
             Position position = testCase.getLeft();
-            List<Move> generatedMoves = MoveGenerator.generateBishopMoves(position,
-                    MoveGenerator.generateKingSafety(position));
+            List<Move> generatedMoves = new ArrayList<>();
+            MoveGenerator.generateBishopMoves(position, MoveGenerator.generateKingSafety(position), generatedMoves);
 
             // Compare with reference move list.
             List<Move> referenceMoves = Arrays.asList(testCase.getRight());
@@ -398,61 +379,51 @@ class MoveGeneratorTest
 
         // Starting position.
         testCases.add(Pair.of(Position.STARTING,
-                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"),
-                        new Move("b2b4"), new Move("c2c3"), new Move("c2c4"), new Move("d2d3"),
-                        new Move("d2d4"), new Move("e2e3"), new Move("e2e4"), new Move("f2f3"),
-                        new Move("f2f4"), new Move("g2g3"), new Move("g2g4"), new Move("h2h3"),
+                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"), new Move("b2b4"), new Move("c2c3"),
+                        new Move("c2c4"), new Move("d2d3"), new Move("d2d4"), new Move("e2e3"), new Move("e2e4"),
+                        new Move("f2f3"), new Move("f2f4"), new Move("g2g3"), new Move("g2g4"), new Move("h2h3"),
                         new Move("h2h4") }));
 
         // Position after 1. d4 d5 2. c4 e5.
         testCases.add(Pair.of(Position.fromFen("rnbqkbnr/ppp2ppp/8/3pp3/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -"),
-                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"),
-                        new Move("b2b4"), new Move("c4c5"), new Move("c4d5"), new Move("d4e5"),
-                        new Move("e2e3"), new Move("e2e4"), new Move("f2f3"), new Move("f2f4"),
-                        new Move("g2g3"), new Move("g2g4"), new Move("h2h3"), new Move("h2h4") }));
+                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"), new Move("b2b4"), new Move("c4c5"),
+                        new Move("c4d5"), new Move("d4e5"), new Move("e2e3"), new Move("e2e4"), new Move("f2f3"),
+                        new Move("f2f4"), new Move("g2g3"), new Move("g2g4"), new Move("h2h3"), new Move("h2h4") }));
 
         // Position after 1. d4 d5 2. c4 e5. 3. c5 b5 (en passant capture to the left
         // possible).
         testCases.add(Pair.of(Position.fromFen("rnbqkbnr/p1p2ppp/8/1pPpp3/3P4/8/PP2PPPP/RNBQKBNR w KQkq b6"),
-                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"),
-                        new Move("b2b4"), new Move("c5c6"), new Move("c5b6"), new Move("d4e5"),
-                        new Move("e2e3"), new Move("e2e4"), new Move("f2f3"), new Move("f2f4"),
-                        new Move("g2g3"), new Move("g2g4"), new Move("h2h3"), new Move("h2h4") }));
+                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"), new Move("b2b4"), new Move("c5c6"),
+                        new Move("c5b6"), new Move("d4e5"), new Move("e2e3"), new Move("e2e4"), new Move("f2f3"),
+                        new Move("f2f4"), new Move("g2g3"), new Move("g2g4"), new Move("h2h3"), new Move("h2h4") }));
 
         // Position after 1. d4 d5 2. c4 e5. 3. c5 b5 4. dxe5 f5 (en passant capture to
         // the right
         // possible).
         testCases.add(Pair.of(Position.fromFen("rnbqkbnr/p1p3pp/8/1pPpPp2/8/8/PP2PPPP/RNBQKBNR w KQkq f6"),
-                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"),
-                        new Move("b2b4"), new Move("c5c6"), new Move("e5e6"), new Move("e5f6"),
-                        new Move("e2e3"), new Move("e2e4"), new Move("f2f3"), new Move("f2f4"),
-                        new Move("g2g3"), new Move("g2g4"), new Move("h2h3"), new Move("h2h4") }));
+                new Move[] { new Move("a2a3"), new Move("a2a4"), new Move("b2b3"), new Move("b2b4"), new Move("c5c6"),
+                        new Move("e5e6"), new Move("e5f6"), new Move("e2e3"), new Move("e2e4"), new Move("f2f3"),
+                        new Move("f2f4"), new Move("g2g3"), new Move("g2g4"), new Move("h2h3"), new Move("h2h4") }));
 
         // Pawn promotion possible on g8.
-        testCases.add(Pair.of(Position.fromFen("8/1k4P1/8/8/8/8/6K1/8 w - -"), new Move[] {
-                new Move("g7g8B"), new Move("g7g8N"), new Move("g7g8R"), new Move("g7g8Q") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k4P1/8/8/8/8/6K1/8 w - -"),
+                new Move[] { new Move("g7g8B"), new Move("g7g8N"), new Move("g7g8R"), new Move("g7g8Q") }));
 
         // Pawn promotion possible by capturing on f8 or h8.
         testCases.add(Pair.of(Position.fromFen("5bRq/1k4P1/8/8/8/8/6K1/8 w - -"),
-                new Move[] { new Move("g7f8B"), new Move("g7f8N"), new Move("g7f8R"),
-                        new Move("g7f8Q"), new Move("g7h8B"), new Move("g7h8N"), new Move("g7h8R"),
-                        new Move("g7h8Q") }));
+                new Move[] { new Move("g7f8B"), new Move("g7f8N"), new Move("g7f8R"), new Move("g7f8Q"),
+                        new Move("g7h8B"), new Move("g7h8N"), new Move("g7h8R"), new Move("g7h8Q") }));
 
         // Pawn is pinned and can only move forward.
-        testCases.add(Pair.of(Position.fromFen("6q1/1k6/8/5b1r/6P1/8/6K1/8 w - -"),
-                new Move[] { new Move("g4g5") }));
+        testCases.add(Pair.of(Position.fromFen("6q1/1k6/8/5b1r/6P1/8/6K1/8 w - -"), new Move[] { new Move("g4g5") }));
 
         // Pawn is pinned and can only capture.
-        testCases.add(Pair.of(Position.fromFen("6q1/1k6/8/5b2/6P1/7K/8/8 w - -"),
-                new Move[] { new Move("g4f5") }));
-        testCases.add(Pair.of(Position.fromFen("6q1/1k6/8/7b/6P1/5K2/8/8 w - -"),
-                new Move[] { new Move("g4h5") }));
+        testCases.add(Pair.of(Position.fromFen("6q1/1k6/8/5b2/6P1/7K/8/8 w - -"), new Move[] { new Move("g4f5") }));
+        testCases.add(Pair.of(Position.fromFen("6q1/1k6/8/7b/6P1/5K2/8/8 w - -"), new Move[] { new Move("g4h5") }));
 
         // En passant capture is not possible as it would leave the king check.
-        testCases.add(Pair.of(Position.fromFen("8/1k6/8/r3pP1K/8/8/8/8 w - e6"),
-                new Move[] { new Move("f5f6") }));
-        testCases.add(Pair.of(Position.fromFen("8/1k6/8/r4PpK/8/8/8/8 w - g6"),
-                new Move[] { new Move("f5f6") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k6/8/r3pP1K/8/8/8/8 w - e6"), new Move[] { new Move("f5f6") }));
+        testCases.add(Pair.of(Position.fromFen("8/1k6/8/r4PpK/8/8/8/8 w - g6"), new Move[] { new Move("f5f6") }));
 
         // En passant capture is possible.
         testCases.add(Pair.of(Position.fromFen("8/1k6/8/r2bpP1K/8/8/8/8 w - e6"),
@@ -461,8 +432,7 @@ class MoveGeneratorTest
                 new Move[] { new Move("f5f6"), new Move("f5g6") }));
 
         // Our king is in check by an en passant pawn.
-        testCases.add(Pair.of(Position.fromFen("8/3k4/8/3Pp3/3K4/8/8/8 w - e6"),
-                new Move[] { new Move("d5e6") }));
+        testCases.add(Pair.of(Position.fromFen("8/3k4/8/3Pp3/3K4/8/8/8 w - e6"), new Move[] { new Move("d5e6") }));
 
         // No pawn moves can resolve the check.
         testCases.add(Pair.of(Position.fromFen("8/P2k4/1P6/2P4P/4P1P1/3P1P2/8/2q1K3 w - -"), new Move[] {}));
@@ -475,8 +445,8 @@ class MoveGeneratorTest
         for (final Pair<Position, Move[]> testCase : testCases)
         {
             Position position = testCase.getLeft();
-            List<Move> generatedMoves = MoveGenerator.generatePawnMoves(position,
-                    MoveGenerator.generateKingSafety(position));
+            List<Move> generatedMoves = new ArrayList<>();
+            MoveGenerator.generatePawnMoves(position, MoveGenerator.generateKingSafety(position), generatedMoves);
 
             // Compare with reference move list.
             List<Move> referenceMoves = Arrays.asList(testCase.getRight());
