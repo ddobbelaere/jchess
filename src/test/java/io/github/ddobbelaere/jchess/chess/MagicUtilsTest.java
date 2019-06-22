@@ -20,6 +20,7 @@ package io.github.ddobbelaere.jchess.chess;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Random;
+import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,14 +31,6 @@ import org.junit.jupiter.api.Test;
  */
 class MagicUtilsTest
 {
-    /**
-     * Interface of an operator that yields an attack bitboard.
-     */
-    private interface GetAttackBitboardOperator
-    {
-        long apply(int a, long b);
-    }
-
     /**
      * Test static methods.
      */
@@ -51,8 +44,8 @@ class MagicUtilsTest
         final int[][] rookMovements = new int[][] { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
         final int[][] bishopMovements = new int[][] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
 
-        testGetAttackBitboardOperator(rookMovements, (a, b) -> MagicUtils.getRookAttackBitboard(a, b));
-        testGetAttackBitboardOperator(bishopMovements, (a, b) -> MagicUtils.getBishopAttackBitboard(a, b));
+        testGetAttackBitboardOperator(rookMovements, MagicUtils::getRookAttackBitboard);
+        testGetAttackBitboardOperator(bishopMovements, MagicUtils::getBishopAttackBitboard);
     }
 
     /**
@@ -63,7 +56,8 @@ class MagicUtilsTest
      *                          directions.
      * @param functionUnderTest Static MagicUtils function under test.
      */
-    private void testGetAttackBitboardOperator(int[][] pieceMovements, GetAttackBitboardOperator functionUnderTest)
+    private void testGetAttackBitboardOperator(int[][] pieceMovements,
+            BiFunction<Integer, Long, Long> functionUnderTest)
     {
         // Instantiate random number generator.
         Random rng = new Random();
@@ -117,7 +111,7 @@ class MagicUtilsTest
 
                 // Verify that the result of the function under test matches the reference
                 // value.
-                assertEquals(refAttackBitboard, functionUnderTest.apply(square, occupiedSquares));
+                assertEquals(refAttackBitboard, functionUnderTest.apply(square, occupiedSquares).longValue());
             }
         }
     }
