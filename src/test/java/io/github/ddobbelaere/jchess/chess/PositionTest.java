@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -128,69 +129,69 @@ class PositionTest
         List<List<Pair<Position, Move>>> moveSequences = new ArrayList<>();
 
         // First move sequence.
-        List<Pair<Position, Move>> moveSequence = new ArrayList<>();
-        moveSequence.add(Pair.of(Position.STARTING, new Move("e2e4")));
-        moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"),
-                new Move("c7c5")));
-        moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"),
-                new Move("e4e5")));
-        moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp1ppppp/8/2p1P3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2"),
-                new Move("d7d5")));
-        moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp2pppp/8/2ppP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3"),
-                new Move("e5d6")));
-        moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pp2pppp/3P4/2p5/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 3"),
-                new Move("c8f5")));
-        moveSequence.add(Pair.of(Position.fromFen("rn1qkbnr/pp2pppp/3P4/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 4"),
-                new Move("d6e7")));
-        moveSequence.add(Pair.of(Position.fromFen("rn1qkbnr/pp2Pppp/8/2p2b2/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 4"),
-                new Move("b8c6")));
-        moveSequence.add(Pair.of(Position.fromFen("r2qkbnr/pp2Pppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 5"),
-                new Move("e7d8Q")));
-        moveSequence.add(Pair.of(Position.fromFen("r2Qkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 5"),
-                new Move("a8d8")));
-        moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQk - 0 6"),
-                new Move("g1f3")));
-        moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3ppp/2n5/2p2b2/8/5N2/PPPP1PPP/RNBQKB1R b KQk - 1 6"),
-                new Move("h7h5")));
-        moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3pp1/2n5/2p2b1p/8/5N2/PPPP1PPP/RNBQKB1R w KQk - 0 7"),
-                new Move("f1d3")));
-        moveSequence.add(Pair.of(Position.fromFen("3rkbnr/pp3pp1/2n5/2p2b1p/8/3B1N2/PPPP1PPP/RNBQK2R b KQk - 1 7"),
-                new Move("h8h6")));
-        moveSequence.add(Pair.of(Position.fromFen("3rkbn1/pp3pp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQK2R w KQ - 2 8"),
-                new Move("e1g1")));
-        moveSequence.add(Pair.of(Position.fromFen("3rkbn1/pp3pp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 b - - 3 8"),
-                new Move("e8e7")));
-        moveSequence.add(
+        List<Pair<Position, Move>> moveSequence = Arrays.asList(Pair.of(Position.STARTING, new Move("e2e4")),
+                Pair.of(Position.fromFen("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"),
+                        new Move("c7c5")),
+                Pair.of(Position.fromFen("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"),
+                        new Move("e4e5")),
+                Pair.of(Position.fromFen("rnbqkbnr/pp1ppppp/8/2p1P3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2"),
+                        new Move("d7d5")),
+                Pair.of(Position.fromFen("rnbqkbnr/pp2pppp/8/2ppP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3"),
+                        new Move("e5d6")),
+                Pair.of(Position.fromFen("rnbqkbnr/pp2pppp/3P4/2p5/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 3"),
+                        new Move("c8f5")),
+                Pair.of(Position.fromFen("rn1qkbnr/pp2pppp/3P4/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 4"),
+                        new Move("d6e7")),
+                Pair.of(Position.fromFen("rn1qkbnr/pp2Pppp/8/2p2b2/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 4"),
+                        new Move("b8c6")),
+                Pair.of(Position.fromFen("r2qkbnr/pp2Pppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 5"),
+                        new Move("e7d8Q")),
+                Pair.of(Position.fromFen("r2Qkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 5"),
+                        new Move("a8d8")),
+                Pair.of(Position.fromFen("3rkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQk - 0 6"),
+                        new Move("g1f3")),
+                Pair.of(Position.fromFen("3rkbnr/pp3ppp/2n5/2p2b2/8/5N2/PPPP1PPP/RNBQKB1R b KQk - 1 6"),
+                        new Move("h7h5")),
+                Pair.of(Position.fromFen("3rkbnr/pp3pp1/2n5/2p2b1p/8/5N2/PPPP1PPP/RNBQKB1R w KQk - 0 7"),
+                        new Move("f1d3")),
+                Pair.of(Position.fromFen("3rkbnr/pp3pp1/2n5/2p2b1p/8/3B1N2/PPPP1PPP/RNBQK2R b KQk - 1 7"),
+                        new Move("h8h6")),
+                Pair.of(Position.fromFen("3rkbn1/pp3pp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQK2R w KQ - 2 8"),
+                        new Move("e1g1")),
+                Pair.of(Position.fromFen("3rkbn1/pp3pp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 b - - 3 8"),
+                        new Move("e8e7")),
                 Pair.of(Position.fromFen("3r1bn1/pp2kpp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 w - - 4 9"), null));
+
         moveSequences.add(moveSequence);
 
         // Test long castling.
-        moveSequence = new ArrayList<>();
-        moveSequence.add(Pair.of(Position.fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9"),
-                new Move("e1c1")));
-        moveSequence.add(
+        moveSequence = Arrays.asList(
+                Pair.of(Position.fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/R3KB1R w KQ - 3 9"),
+                        new Move("e1c1")),
                 Pair.of(Position.fromFen("r1bq1rk1/pp2ppbp/2np1np1/8/3NP3/2N1BP2/PPPQ2PP/2KR1B1R b - - 4 9"), null));
+
         moveSequences.add(moveSequence);
 
         // Test promotions to bishop, rook and knight (queen was already check in first
         // move sequence).
-        moveSequence = new ArrayList<>();
-        moveSequence.add(Pair.of(Position.fromFen("8/1k1PP3/8/8/8/8/3p2K1/8 w - - 4 9"), new Move("d7d8R")));
-        moveSequence.add(Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/3p2K1/8 b - - 0 9"), new Move("d2d1N")));
-        moveSequence.add(Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/6K1/3n4 w - - 0 10"), new Move("e7e8B")));
-        moveSequence.add(Pair.of(Position.fromFen("3RB3/1k6/8/8/8/8/6K1/3n4 b - - 0 10"), null));
+        moveSequence = Arrays.asList(Pair.of(Position.fromFen("8/1k1PP3/8/8/8/8/3p2K1/8 w - - 4 9"), new Move("d7d8R")),
+                Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/3p2K1/8 b - - 0 9"), new Move("d2d1N")),
+                Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/6K1/3n4 w - - 0 10"), new Move("e7e8B")),
+                Pair.of(Position.fromFen("3RB3/1k6/8/8/8/8/6K1/3n4 b - - 0 10"), null));
+
         moveSequences.add(moveSequence);
 
         // Test loss of opponent's castling rights because a piece captures the rook on
         // a8 or h8.
-        moveSequence = new ArrayList<>();
-        moveSequence.add(Pair.of(Position.fromFen("rnbqkbnr/pppppppp/1N4N1/8/8/8/PPPPPPPP/R1BQKB1R w KQkq - 0 1"),
-                new Move("b6a8")));
-        moveSequence.add(Pair.of(Position.fromFen("Nnbqkbnr/pppppppp/6N1/8/8/8/PPPPPPPP/R1BQKB1R b KQk - 0 1"),
-                new Move("e7e5")));
-        moveSequence.add(Pair.of(Position.fromFen("Nnbqkbnr/pppp1ppp/6N1/4p3/8/8/PPPPPPPP/R1BQKB1R w KQk - 0 2"),
-                new Move("g6h8")));
-        moveSequence.add(Pair.of(Position.fromFen("NnbqkbnN/pppp1ppp/8/4p3/8/8/PPPPPPPP/R1BQKB1R b KQ - 0 2"), null));
+        moveSequence = Arrays.asList(
+                Pair.of(Position.fromFen("rnbqkbnr/pppppppp/1N4N1/8/8/8/PPPPPPPP/R1BQKB1R w KQkq - 0 1"),
+                        new Move("b6a8")),
+                Pair.of(Position.fromFen("Nnbqkbnr/pppppppp/6N1/8/8/8/PPPPPPPP/R1BQKB1R b KQk - 0 1"),
+                        new Move("e7e5")),
+                Pair.of(Position.fromFen("Nnbqkbnr/pppp1ppp/6N1/4p3/8/8/PPPPPPPP/R1BQKB1R w KQk - 0 2"),
+                        new Move("g6h8")),
+                Pair.of(Position.fromFen("NnbqkbnN/pppp1ppp/8/4p3/8/8/PPPPPPPP/R1BQKB1R b KQ - 0 2"), null));
+
         moveSequences.add(moveSequence);
 
         // Test all move sequences.
@@ -306,16 +307,13 @@ class PositionTest
      */
     private List<String> getLegalFenStrings()
     {
-        // Construct the list.
-        List<String> legalFenStrings = new ArrayList<>();
+        // Construct and return the list.
+        return Arrays.asList(
+                // En passant capture possible.
+                "rnbqkb1r/pppp1ppp/5n2/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 3",
 
-        // En passant capture possible.
-        legalFenStrings.add("rnbqkb1r/pppp1ppp/5n2/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 3");
-        // En passant capture possible (black to move).
-        legalFenStrings.add("r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b KQ g3 0 11");
-
-        // Return the list.
-        return legalFenStrings;
+                // En passant capture possible (black to move).
+                "r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b KQ g3 0 11");
     }
 
     /**
@@ -325,40 +323,47 @@ class PositionTest
      */
     private List<String> getIllegalFenStrings()
     {
-        // Construct the list.
-        List<String> illegalFenStrings = new ArrayList<>();
+        // Construct and return the list.
+        return Arrays.asList(
+                // No king.
+                "rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1",
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQ1BNR w - - 0 1",
+                "rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1",
 
-        // No king.
-        illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1");
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQ1BNR w - - 0 1");
-        illegalFenStrings.add("rnbq1bnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
-        // Opponent's king is in check.
-        illegalFenStrings.add("8/1k4R1/8/8/8/8/6K1/8 w - - 0 1");
-        // No castling availability.
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w");
-        // Illegal character in piece placement string.
-        illegalFenStrings.add("rnbqkbnr+pppppppp+8+8+8+8+PPPPPPPP+RNBQKBNR w KQkq - 0 1");
-        // Too many rows in piece placement string.
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-        // Invalid en passant square.
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h9 0 1");
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h8 0 1");
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq e6 0 1");
-        // White cannot castle as the king is not on its original square.
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBKQBNR w KQkq - 0 1");
-        // Black cannot castle short as the rook is not on its original square.
-        illegalFenStrings.add("rnbqkbn1/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1");
-        // White cannot castle long at the rook is not on its original square.
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/1NBQKBNR/8 b KQkq - 0 1");
-        // Pawns at the back rank.
-        illegalFenStrings.add("rnbqkbpr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - 0 1");
-        // Illegal number of plies since last capture or pawn advance.
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - - 1");
-        // Illegal number of game moves.
-        illegalFenStrings.add("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - 0 -");
+                // Opponent's king is in check.
+                "8/1k4R1/8/8/8/8/6K1/8 w - - 0 1",
 
-        // Return the list.
-        return illegalFenStrings;
+                // No castling availability.
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w",
+
+                // Illegal character in piece placement string.
+                "rnbqkbnr+pppppppp+8+8+8+8+PPPPPPPP+RNBQKBNR w KQkq - 0 1",
+
+                // Too many rows in piece placement string.
+                "rnbqkbnr/pppppppp/8/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+
+                // Invalid en passant square.
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h9 0 1",
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq h8 0 1",
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq e6 0 1",
+
+                // White cannot castle as the king is not on its original square.
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBKQBNR w KQkq - 0 1",
+
+                // Black cannot castle short as the rook is not on its original square.
+                "rnbqkbn1/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1",
+
+                // White cannot castle long at the rook is not on its original square.
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/1NBQKBNR/8 b KQkq - 0 1",
+
+                // Pawns at the back rank.
+                "rnbqkbpr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - 0 1",
+
+                // Illegal number of plies since last capture or pawn advance.
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - - 1",
+
+                // Illegal number of game moves.
+                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 b KQkq - 0 -");
     }
 
 }
