@@ -10,6 +10,34 @@ JChess is a pure Java chess library.
 
 The public API of the latest release is [available here](https://javadoc.jitpack.io/com/github/ddobbelaere/jchess/latest/javadoc/).
 
+### Examples
+
+```java
+// Play a random game from the starting position.
+Position position = Position.STARTING;
+
+while(true)
+{
+  List<Move> moves = position.getLegalMoves();
+  
+  if(moves.isEmpty())
+  {
+    if(position.isCheckMate())
+    {
+      System.out.println("Checkmate!");
+    }
+    else
+    {
+      System.out.println("Stalemate!");
+    }
+    
+    break;
+  }
+  
+  position = position.applyMove(moves.get(new Random().nextInt(moves.size())));
+}
+```
+
 ### Currently Implemented
 
 - [x] Board representation.
