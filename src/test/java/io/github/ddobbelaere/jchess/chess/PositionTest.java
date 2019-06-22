@@ -160,8 +160,8 @@ class PositionTest
                 new Move("e1g1")));
         moveSequence.add(Pair.of(Position.fromFen("3rkbn1/pp3pp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 b - - 3 8"),
                 new Move("e8e7")));
-        moveSequence
-                .add(Pair.of(Position.fromFen("3r1bn1/pp2kpp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 w - - 4 9"), null));
+        moveSequence.add(
+                Pair.of(Position.fromFen("3r1bn1/pp2kpp1/2n4r/2p2b1p/8/3B1N2/PPPP1PPP/RNBQ1RK1 w - - 4 9"), null));
         moveSequences.add(moveSequence);
 
         // Test long castling.
@@ -267,6 +267,20 @@ class PositionTest
         assertEquals(false, position.isCheck());
         assertEquals(false, position.isCheckmate());
         assertEquals(true, position.isStalemate());
+    }
+
+    /**
+     * Test method for
+     * {@link io.github.ddobbelaere.jchess.chess.Position#equalsIgnoreMoveCounts(Position)}.
+     */
+    @Test
+    void testEqualsIgnoreMoveCounts()
+    {
+        Position position = Position.STARTING;
+
+        assertEquals(true, position.equalsIgnoreMoveCounts(Position.STARTING));
+        assertEquals(true, position.equalsIgnoreMoveCounts(
+                Position.fromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 20 3")));
     }
 
     /**

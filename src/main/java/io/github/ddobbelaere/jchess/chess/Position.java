@@ -768,6 +768,19 @@ public class Position
         return getMoveGeneratorResult().getLegalMoves().isEmpty() && !isCheck();
     }
 
+    /**
+     * @param other Given position.
+     * @return {@code true} if and only if the position is equal to the given
+     *         position, but ignoring move counts (number of game moves and number
+     *         of plies since the last capture or pawn advance).
+     */
+    public boolean equalsIgnoreMoveCounts(Position other)
+    {
+        return Objects.equals(board, other.board) && enPassantCaptureSquare == other.enPassantCaptureSquare
+                && theyCanCastleLong == other.theyCanCastleLong && theyCanCastleShort == other.theyCanCastleShort
+                && weCanCastleLong == other.weCanCastleLong && weCanCastleShort == other.weCanCastleShort;
+    }
+
     @Override
     public boolean equals(Object obj)
     {
@@ -787,11 +800,8 @@ public class Position
         }
 
         Position other = (Position) obj;
-        return Objects.equals(board, other.board) && enPassantCaptureSquare == other.enPassantCaptureSquare
-                && numGameMoves == other.numGameMoves
-                && numNoCaptureOrPawnAdvancePlies == other.numNoCaptureOrPawnAdvancePlies
-                && theyCanCastleLong == other.theyCanCastleLong && theyCanCastleShort == other.theyCanCastleShort
-                && weCanCastleLong == other.weCanCastleLong && weCanCastleShort == other.weCanCastleShort;
+        return equalsIgnoreMoveCounts(other) && numGameMoves == other.numGameMoves
+                && numNoCaptureOrPawnAdvancePlies == other.numNoCaptureOrPawnAdvancePlies;
     }
 
 }
