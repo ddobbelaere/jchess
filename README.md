@@ -14,33 +14,24 @@ The public API of the latest release is [available here](https://javadoc.jitpack
 
 ```java
 // Play a random game from the starting position.
-Position position = Position.STARTING;
+Game game = new Game();
 
 while(true)
 {
-  List<Move> moves = position.getLegalMoves();
+  List<Move> moves = game.getLegalMoves();
   
-  if(moves.isEmpty())
+  if(moves.isEmpty() || game.isThreefoldRepetition())
   {
-    if(position.isCheckMate())
-    {
-      System.out.println("Checkmate!");
-    }
-    else
-    {
-      System.out.println("Stalemate!");
-    }
-    
     break;
   }
   
-  position = position.applyMove(moves.get(new Random().nextInt(moves.size())));
+  game.playMove(moves.get(new Random().nextInt(moves.size())));
 }
 ```
 
 ### Currently Implemented
 
-- [x] Board representation.
+- [x] Board and game representation.
 - [x] Magic bitboards.
 - [x] Move generation.
 
