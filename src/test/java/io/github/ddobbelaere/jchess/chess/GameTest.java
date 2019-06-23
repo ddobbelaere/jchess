@@ -50,6 +50,7 @@ class GameTest
      * Test method for
      * {@link io.github.ddobbelaere.jchess.chess.Game#isThreefoldRepetition()}.
      */
+    @Test
     void testIsThreefoldRepetition()
     {
         assertEquals(false, new Game().isThreefoldRepetition());
