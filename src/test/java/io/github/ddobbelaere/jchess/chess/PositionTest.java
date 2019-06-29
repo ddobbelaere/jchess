@@ -58,6 +58,19 @@ class PositionTest
     }
 
     /**
+     * Test method for {@link io.github.ddobbelaere.jchess.chess.Position#getFen()}.
+     */
+    @Test
+    void testGetFen()
+    {
+        // Test legal FEN strings.
+        for (String legalFenString : getLegalFenStrings())
+        {
+            assertEquals(legalFenString, Position.fromFen(legalFenString).getFen());
+        }
+    }
+
+    /**
      * Test method for {@link io.github.ddobbelaere.jchess.chess.Position#mirror()}.
      */
     @Test
@@ -313,7 +326,10 @@ class PositionTest
                 "rnbqkb1r/pppp1ppp/5n2/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 3",
 
                 // En passant capture possible (black to move).
-                "r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b KQ g3 0 11");
+                "r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b KQ g3 0 11",
+
+                // No castling and en passant capture possible.
+                "r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b - - 3 20");
     }
 
     /**

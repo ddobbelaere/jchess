@@ -353,6 +353,113 @@ class Board
     }
 
     /**
+     * @return FEN piece placement string of the chess board.
+     */
+    String getFenPiecePlacementString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        for (int row = 7; row >= 0; row--)
+        {
+            int numEmptySquares = 0;
+
+            for (int col = 0; col <= 7; col++)
+            {
+                // Determine square bitboard.
+                long squareBitboard;
+                if (!isMirrored)
+                {
+                    // The board is from white's perspective.
+                    squareBitboard = (1L << (8 * row + col));
+                }
+                else
+                {
+                    // The board is from black's perspective.
+                    squareBitboard = (1L << (8 * (7 - row) + col));
+                }
+
+                if (((ourPieces + theirPieces) & squareBitboard) != 0)
+                {
+                    // Determine piece letter.
+                    char pieceLetter;
+
+                    if ((pawns & squareBitboard) != 0)
+                    {
+                        // This is pawn.
+                        pieceLetter = 'p';
+                    }
+                    else if ((kings & squareBitboard) != 0)
+                    {
+                        // This is king.
+                        pieceLetter = 'k';
+                    }
+                    else if ((rooks & squareBitboard) != 0)
+                    {
+                        if ((bishops & squareBitboard) != 0)
+                        {
+                            // This is queen.
+                            pieceLetter = 'q';
+                        }
+                        else
+                        {
+                            // This is rook.
+                            pieceLetter = 'r';
+                        }
+                    }
+                    else if ((bishops & squareBitboard) != 0)
+                    {
+                        // This is bishop.
+                        pieceLetter = 'b';
+                    }
+                    else
+                    {
+                        // This is knight.
+                        pieceLetter = 'n';
+                    }
+
+                    // Change letter for white pieces to uppercase.
+                    if ((!isMirrored && ((ourPieces & squareBitboard) != 0))
+                            || (isMirrored && ((theirPieces & squareBitboard) != 0)))
+                    {
+                        pieceLetter = Character.toUpperCase(pieceLetter);
+                    }
+
+                    // Append number of empty squares to string.
+                    if (numEmptySquares > 0)
+                    {
+                        sb.append(numEmptySquares);
+
+                        // Reset counter.
+                        numEmptySquares = 0;
+                    }
+
+                    // Append piece letter to string.
+                    sb.append(pieceLetter);
+                }
+                else
+                {
+                    // No piece present at the current square.
+                    // Increment counter.
+                    numEmptySquares++;
+                }
+
+                if (col == 7 && row > 0)
+                {
+                    // Append number of empty squares to string.
+                    if (numEmptySquares > 0)
+                    {
+                        sb.append(numEmptySquares);
+                    }
+
+                    sb.append("/");
+                }
+            }
+        }
+
+        return sb.toString();
+    }
+
+    /**
      * @return String representation of the chess board.
      */
     @Override

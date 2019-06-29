@@ -66,7 +66,7 @@ public class Game
      */
     public void playMove(Move move)
     {
-        // The next statement possible throws an IllegalMoveException.
+        // The next statement possibly throws an IllegalMoveException.
         Position nextPosition = getLastPosition().applyMove(move);
 
         // If we get here, the move is legal.
@@ -134,7 +134,7 @@ public class Game
                 return true;
             }
 
-            // Short-circuit if a the move before was zeroing move.
+            // Short-circuit if the move before was zeroing move.
             if (position.getNumNoCaptureOrPawnAdvancePlies() == 0)
             {
                 return false;

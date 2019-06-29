@@ -281,6 +281,64 @@ public class Position
     }
 
     /**
+     * @return FEN string corresponding to the position.
+     */
+    public String getFen()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // Append piece placement string.
+        sb.append(board.getFenPiecePlacementString());
+
+        // Append side to move.
+        sb.append(isWhiteToMove() ? " w" : " b");
+
+        // Append castling availability information.
+        sb.append((weCanCastleShort || weCanCastleLong || theyCanCastleShort || theyCanCastleLong) ? " " : " -");
+
+        if (isWhiteToMove() ? weCanCastleShort : theyCanCastleShort)
+        {
+            sb.append("K");
+        }
+
+        if (isWhiteToMove() ? weCanCastleLong : theyCanCastleLong)
+        {
+            sb.append("Q");
+        }
+
+        if (isWhiteToMove() ? theyCanCastleShort : weCanCastleShort)
+        {
+            sb.append("k");
+        }
+
+        if (isWhiteToMove() ? theyCanCastleLong : weCanCastleLong)
+        {
+            sb.append("q");
+        }
+
+        // Append en passant capture square.
+        if (enPassantCaptureSquare != 0)
+        {
+            byte mirroredEnPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8)
+                    + (enPassantCaptureSquare & 0b111));
+            sb.append(" "
+                    + Board.getSquareName(board.isMirrored ? mirroredEnPassantCaptureSquare : enPassantCaptureSquare));
+        }
+        else
+        {
+            sb.append(" -");
+        }
+
+        // Append number of plies since last capture or pawn advance.
+        sb.append(" " + numNoCaptureOrPawnAdvancePlies);
+
+        // Append number of game moves.
+        sb.append(" " + numGameMoves);
+
+        return sb.toString();
+    }
+
+    /**
      * Mirror the position (change side to move).
      */
     void mirror()
