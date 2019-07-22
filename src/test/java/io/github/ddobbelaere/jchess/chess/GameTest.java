@@ -63,6 +63,24 @@ class GameTest
     }
 
     /**
+     * Test method for game info methods.
+     */
+    @Test
+    void testGameInfoMethods()
+    {
+        Game game = new Game();
+
+        assertEquals(false, game.getWhitePlayerName().isPresent());
+        assertEquals(false, game.getBlackPlayerName().isPresent());
+
+        game.setWhitePlayerName("Carlsen, Magnus");
+        game.setBlackPlayerName("Kasparov, Garry");
+
+        assertEquals("Carlsen, Magnus", game.getWhitePlayerName().get());
+        assertEquals("Kasparov, Garry", game.getBlackPlayerName().get());
+    }
+
+    /**
      * Helper function to easily create a game from a given starting position and
      * moves list.
      *

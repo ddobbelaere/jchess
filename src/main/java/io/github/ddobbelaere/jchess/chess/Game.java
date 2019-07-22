@@ -20,6 +20,7 @@ package io.github.ddobbelaere.jchess.chess;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Chess game.
@@ -37,6 +38,16 @@ public class Game
      * List of positions.
      */
     private List<Position> positions = new ArrayList<>();
+
+    /**
+     * White player's name.
+     */
+    private Optional<String> whitePlayerName = Optional.empty();
+
+    /**
+     * Black player's name.
+     */
+    private Optional<String> blackPlayerName = Optional.empty();
 
     /**
      * Create a game from the standard starting position.
@@ -143,5 +154,41 @@ public class Game
 
         // No threefold if we get here.
         return false;
+    }
+
+    /**
+     * @return The name of the player with the white pieces.
+     */
+    Optional<String> getWhitePlayerName()
+    {
+        return whitePlayerName;
+    }
+
+    /**
+     * @return The name of the player with the black pieces.
+     */
+    Optional<String> getBlackPlayerName()
+    {
+        return blackPlayerName;
+    }
+
+    /**
+     * Set the name of the player with the white pieces.
+     *
+     * @param name Given name.
+     */
+    void setWhitePlayerName(String name)
+    {
+        whitePlayerName = Optional.of(name);
+    }
+
+    /**
+     * Set the name of the player with the black pieces.
+     *
+     * @param name Given name.
+     */
+    void setBlackPlayerName(String name)
+    {
+        blackPlayerName = Optional.of(name);
     }
 }
