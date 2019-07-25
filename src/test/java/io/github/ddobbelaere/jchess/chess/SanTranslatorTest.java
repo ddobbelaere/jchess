@@ -64,6 +64,14 @@ class SanTranslatorTest extends SanTranslator
                 SanTranslator.toSan(new Move("c2e3"), Position.fromFen("4k3/8/8/8/2N3N1/8/2N5/4K3 w - -")));
         assertEquals("Bxf7#", SanTranslator.toSan(new Move("c4f7"),
                 Position.fromFen("r1bqkbnr/pppppppp/n7/7Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 5 4")));
+        assertEquals("Qxf7#", SanTranslator.toSan(new Move("h5f7"),
+                Position.fromFen("r1bqkbnr/pppppppp/n7/7Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 5 4")));
+        assertEquals("Kf1", SanTranslator.toSan(new Move("e1f1"),
+                Position.fromFen("r1bqkbnr/pppppppp/n7/7Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 5 4")));
+        assertEquals("Rg1", SanTranslator.toSan(new Move("h1g1"),
+                Position.fromFen("r1bqkbnr/pppp1ppp/n3p3/7Q/2B1P3/5N2/PPPP1PPP/RNB1K2R w KQkq - 0 5")));
+        assertEquals("exd3e.p.", SanTranslator.toSan(new Move("e4d3"),
+                Position.fromFen("rnbqkbnr/pppp1ppp/8/8/3Pp3/2N2N2/PPP1PPPP/R1BQKB1R b KQkq d3 0 3")));
     }
 
 }
