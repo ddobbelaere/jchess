@@ -70,7 +70,7 @@ class SanTranslator
                 san.append(getDisambiguatingLabel(position, move, position.getLegalMoves(pieceType)));
             }
 
-            // Determine if the move is a capture.
+            // Handle captures.
             if (position.isCapturingMove(move))
             {
                 if (pieceType == PieceType.PAWN)
@@ -84,13 +84,13 @@ class SanTranslator
             // Append the destination square name.
             san.append(Board.getSquareName(move.getToSquare()));
 
-            // Determine if this is an en passant capture.
+            // Handle en passant capture suffix.
             if (pieceType == PieceType.PAWN && position.isEnPassantCaptureSquare(move.getToSquare()))
             {
                 san.append("e.p.");
             }
 
-            // Determine if this is a pawn promotion.
+            // Handle pawn promotion.
             PromotionPieceType promotionPieceType = move.getPromotionPieceType();
 
             if (promotionPieceType != PromotionPieceType.NONE)
@@ -100,7 +100,7 @@ class SanTranslator
             }
         }
 
-        // Determine if a move leads to check or checkmate.
+        // Determine if the move leads to check or checkmate.
         if (nextPosition.isCheck())
         {
             if (nextPosition.isCheckmate())

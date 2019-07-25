@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Dieter Dobbelaere
  */
-class SanTranslatorTest extends SanTranslator
+class SanTranslatorTest
 {
 
     /**
