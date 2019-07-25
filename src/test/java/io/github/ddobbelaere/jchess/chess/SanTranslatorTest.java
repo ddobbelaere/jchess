@@ -36,6 +36,9 @@ class SanTranslatorTest
     @Test
     void testToSan()
     {
+        // Instantiate class once to get full test coverage.
+        SanTranslator sanTranslator = new SanTranslator();
+
         assertEquals("d4", SanTranslator.toSan(new Move("d2d4"), Position.STARTING));
         assertEquals("Nf3", SanTranslator.toSan(new Move("g1f3"), Position.STARTING));
         assertEquals("Nbd7", SanTranslator.toSan(new Move("b8d7"),
