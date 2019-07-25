@@ -17,6 +17,7 @@
  */
 package io.github.ddobbelaere.jchess.chess;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -516,6 +517,120 @@ public class Position
     }
 
     /**
+     * @param square Given square.
+     * @return The given square is an en passant capture square.
+     */
+    boolean isEnPassantCaptureSquare(int square)
+    {
+        if (isWhiteToMove())
+        {
+            return square == enPassantCaptureSquare;
+        }
+        else
+        {
+            return square == (enPassantCaptureSquare ^ 0b111000);
+        }
+    }
+
+    /**
+     * @param move Given move.
+     * @return The given move is a capturing move.
+     */
+    boolean isCapturingMove(Move move)
+    {
+        final long toSquareBitboard = Board.getSquareBitboard(
+                isWhiteToMove() ? move.getToSquare() : (move.getToSquare() ^ 0b111000));
+
+        return ((board.theirPieces & toSquareBitboard) != 0)
+                || (getMovePieceType(move) == PieceType.PAWN && isEnPassantCaptureSquare(move.getToSquare()));
+    }
+
+    /**
+     * @param move Given move.
+     * @return The given move is equal to short castling.
+     */
+    boolean isShortCastlingMove(Move move)
+    {
+        return getMovePieceType(move) == PieceType.KING
+                && (isWhiteToMove() ? move.equals(Move.SHORT_CASTLING_WHITE) : move.equals(Move.SHORT_CASTLING_BLACK));
+    }
+
+    /**
+     * @param move Given move.
+     * @return The given move is equal to long castling.
+     */
+    boolean isLongCastlingMove(Move move)
+    {
+        return getMovePieceType(move) == PieceType.KING
+                && (isWhiteToMove() ? move.equals(Move.LONG_CASTLING_WHITE) : move.equals(Move.LONG_CASTLING_BLACK));
+    }
+
+    /**
+     * Get the piece type corresponding to the given move.
+     *
+     * @param move Given move.
+     * @return Piece type corresponding to the given move.
+     */
+    PieceType getMovePieceType(Move move)
+    {
+        final long fromSquareBitboard = Board.getSquareBitboard(
+                isWhiteToMove() ? move.getFromSquare() : (move.getFromSquare() ^ 0b111000));
+
+        if ((board.pawns & fromSquareBitboard) != 0)
+        {
+            return PieceType.PAWN;
+        }
+        else if ((board.bishops & fromSquareBitboard) != 0)
+        {
+            if ((board.rooks & fromSquareBitboard) != 0)
+            {
+                return PieceType.QUEEN;
+            }
+            else
+            {
+                return PieceType.BISHOP;
+            }
+        }
+        else if ((board.rooks & fromSquareBitboard) != 0)
+        {
+            return PieceType.ROOK;
+        }
+        else if ((board.kings & fromSquareBitboard) != 0)
+        {
+            return PieceType.KING;
+        }
+        else
+        {
+            return PieceType.KNIGHT;
+        }
+    }
+
+    /**
+     * Get a list of all legal moves with to the piece type in the position.
+     *
+     * @param pieceType Given piece type.
+     * @return List of all legal moves with the given piece type in the position.
+     */
+    List<Move> getLegalMoves(PieceType pieceType)
+    {
+        // TODO: Make MoveGenerator non-static and member of Position to allow for
+        // easier caching of moves and on-demand fetching of particular types of moves.
+
+        // Return an unmodifiable view of the list.
+        List<Move> moves = new ArrayList<>();
+
+        for (Move move : getMoveGeneratorResult().getLegalMoves())
+        {
+            if (getMovePieceType(move) == pieceType)
+            {
+                moves.add(move);
+            }
+        }
+
+        return moves;
+    }
+
+    /**
      * Get a list of all legal moves in the position.
      *
      * @return List of all legal moves in the position.
@@ -645,7 +760,7 @@ public class Position
         if ((position.board.kings & fromSquareBitboard) != 0)
         {
             // Handle castlings.
-            if (move.equals(Move.SHORT_CASTLING))
+            if (move.equals(Move.SHORT_CASTLING_WHITE))
             {
                 // Short castling.
                 // Move the rook from h1 to f1.
@@ -655,7 +770,7 @@ public class Position
                 position.board.ourPieces &= ~Board.BB_H1;
                 position.board.ourPieces |= Board.BB_F1;
             }
-            else if (move.equals(Move.LONG_CASTLING))
+            else if (move.equals(Move.LONG_CASTLING_WHITE))
             {
                 // Long castling.
                 // Move the rook from a1 to d1.

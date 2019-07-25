@@ -53,14 +53,24 @@ public class Move
     private PromotionPieceType promotionPieceType = PromotionPieceType.NONE;
 
     /**
-     * Short castling move (from our perspective).
+     * White short castling move.
      */
-    final static Move SHORT_CASTLING = new Move("e1g1");
+    final static Move SHORT_CASTLING_WHITE = new Move("e1g1");
 
     /**
-     * Long castling move (from our perspective).
+     * White long castling move.
      */
-    final static Move LONG_CASTLING = new Move("e1c1");
+    final static Move LONG_CASTLING_WHITE = new Move("e1c1");
+
+    /**
+     * Black short castling move.
+     */
+    final static Move SHORT_CASTLING_BLACK = new Move("e8g8");
+
+    /**
+     * Black long castling move.
+     */
+    final static Move LONG_CASTLING_BLACK = new Move("e8c8");
 
     /**
      * Construct with given source and destinations squares and promotion piece
