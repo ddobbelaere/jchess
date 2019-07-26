@@ -13,6 +13,17 @@ The public API of the latest release is [available here](https://javadoc.jitpack
 ### Examples
 
 ```java
+// Play a game from a given position (as FEN string).
+Game game = new Game("7k/4NK1p/8/8/8/8/8/8 w - -");
+
+// Play a move in standard algebraic notation (SAN).
+game.playMove("Ng6#");
+
+// Print the resulting FEN string.
+System.out.println(game.getLastPosition().getFen());
+```
+
+```java
 // Play a random game from the starting position.
 Game game = new Game();
 

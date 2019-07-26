@@ -1,3 +1,7 @@
+### 0.1.3
+* Get FEN string of position.
+* Apply legal move in position via SAN (standard algebraic notation) string.
+
 ### 0.1.2
 * Added Game class.
 * Added threefold repetition detection.
