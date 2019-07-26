@@ -58,8 +58,8 @@ class GameTest
     void testIsThreefoldRepetition()
     {
         assertEquals(false, new Game().isThreefoldRepetition());
-        assertEquals(false, new Game(Position.fromFen(
-                "rnbqkb1r/pppp1ppp/5n2/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 10 3")).isThreefoldRepetition());
+        assertEquals(false,
+                new Game("rnbqkb1r/pppp1ppp/5n2/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 10 3").isThreefoldRepetition());
         assertEquals(false,
                 createGame(Position.STARTING, "d2d4", "d7d5", "g1f3", "g8f6", "f3g1", "f6g8").isThreefoldRepetition());
         assertEquals(true, createGame(Position.STARTING, "d2d4", "d7d5", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6",

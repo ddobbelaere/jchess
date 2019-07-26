@@ -642,13 +642,13 @@ public class Position
     }
 
     /**
-     * Apply the move and return the resulting position.
+     * Play the move and return the resulting position.
      *
      * @param move Given move.
      * @return Resulting position after the given move is applied.
      * @throws IllegalMoveException If the move is illegal.
      */
-    public Position applyMove(Move move)
+    public Position playMove(Move move)
     {
         // Check if the move is legal.
         if (!getLegalMoves().contains(move))
@@ -826,15 +826,15 @@ public class Position
     }
 
     /**
-     * Apply the move and return the resulting position.
+     * Play the move and return the resulting position.
      *
      * @param move Given move in standard algebraic notation (e.g. Qxd4).
      * @return Resulting position after the given move is applied.
      * @throws IllegalMoveException If the move is illegal.
      */
-    public Position applyMove(String move)
+    public Position playMove(String move)
     {
-        return applyMove(SanTranslator.fromSan(move, this));
+        return playMove(SanTranslator.fromSan(move, this));
     }
 
     /**

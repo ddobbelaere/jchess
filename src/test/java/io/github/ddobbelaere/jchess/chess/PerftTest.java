@@ -86,7 +86,7 @@ class PerftTest
                     @Override
                     public Long call() throws Exception
                     {
-                        return Perft(position.applyMove(move), maxDepth, currentDepth + 1);
+                        return Perft(position.playMove(move), maxDepth, currentDepth + 1);
                     }
                 });
             }
@@ -110,7 +110,7 @@ class PerftTest
         {
             for (Move move : legalMoves)
             {
-                Position resultingPosition = position.applyMove(move);
+                Position resultingPosition = position.playMove(move);
                 // assertEquals(true, resultingPosition.isLegal(), "Illegal position\n" +
                 // resultingPosition
                 // + "found after move " + move + " on position\n" + position);

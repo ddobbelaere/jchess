@@ -169,7 +169,7 @@ class SanTranslator
      */
     static String toSan(Move move, Position position)
     {
-        return toSan(move, position, position.applyMove(move));
+        return toSan(move, position, position.playMove(move));
     }
 
     /**

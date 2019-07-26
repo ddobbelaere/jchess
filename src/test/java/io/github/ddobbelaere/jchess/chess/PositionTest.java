@@ -230,7 +230,7 @@ class PositionTest
 
                 if (moveUnderTest.getRight() != null)
                 {
-                    position = position.applyMove(moveUnderTest.getRight());
+                    position = position.playMove(moveUnderTest.getRight());
                 }
 
                 prevMove = moveUnderTest.getRight();
@@ -238,10 +238,10 @@ class PositionTest
         }
 
         // Check that an illegal move throws an exception.
-        assertThrows(IllegalMoveException.class, () -> Position.STARTING.applyMove(new Move("e2e5")));
+        assertThrows(IllegalMoveException.class, () -> Position.STARTING.playMove(new Move("e2e5")));
 
         // Test applyMove with SAN string.
-        Position.STARTING.applyMove("e4");
+        Position.STARTING.playMove("e4");
     }
 
     /**

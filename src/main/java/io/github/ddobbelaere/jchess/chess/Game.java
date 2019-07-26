@@ -70,6 +70,17 @@ public class Game
     }
 
     /**
+     * Create a game with the given FEN string as starting position.
+     *
+     * @param fen Given FEN string.
+     */
+    public Game(String fen)
+    {
+        Position position = Position.fromFen(fen);
+        positions.add(position);
+    }
+
+    /**
      * Play the given move.
      *
      * @param move Given move.
@@ -78,7 +89,7 @@ public class Game
     public void playMove(Move move)
     {
         // The next statement possibly throws an IllegalMoveException.
-        Position nextPosition = getLastPosition().applyMove(move);
+        Position nextPosition = getLastPosition().playMove(move);
 
         // If we get here, the move is legal.
         // Add the move and position to the lists.
@@ -96,7 +107,7 @@ public class Game
     {
         // The next statement possibly throws an IllegalMoveException.
         Move internalMove = SanTranslator.fromSan(move, getLastPosition());
-        Position nextPosition = getLastPosition().applyMove(internalMove);
+        Position nextPosition = getLastPosition().playMove(internalMove);
 
         // If we get here, the move is legal.
         // Add the move and position to the lists.
@@ -123,7 +134,7 @@ public class Game
     /**
      * @return The last position in the list of positions.
      */
-    private Position getLastPosition()
+    public Position getLastPosition()
     {
         return positions.get(positions.size() - 1);
     }
