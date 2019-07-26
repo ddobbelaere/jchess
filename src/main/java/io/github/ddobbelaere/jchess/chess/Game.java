@@ -73,6 +73,8 @@ public class Game
      * Create a game with the given FEN string as starting position.
      *
      * @param fen Given FEN string.
+     * @throws IllegalFenException If the FEN string is invalid or represents an
+     *                             illegal position.
      */
     public Game(String fen)
     {
