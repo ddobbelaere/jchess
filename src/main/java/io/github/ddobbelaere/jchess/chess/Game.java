@@ -87,6 +87,24 @@ public class Game
     }
 
     /**
+     * Play the given move.
+     *
+     * @param move Given move in standard algebraic notation (e.g. Qxd4).
+     * @throws IllegalMoveException If the given move is illegal.
+     */
+    public void playMove(String move)
+    {
+        // The next statement possibly throws an IllegalMoveException.
+        Move internalMove = SanTranslator.fromSan(move, getLastPosition());
+        Position nextPosition = getLastPosition().applyMove(internalMove);
+
+        // If we get here, the move is legal.
+        // Add the move and position to the lists.
+        positions.add(nextPosition);
+        moves.add(internalMove);
+    }
+
+    /**
      * @return A reference to an unmodifiable view of the list of moves.
      */
     public List<Move> getMoves()

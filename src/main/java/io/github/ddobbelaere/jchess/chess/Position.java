@@ -826,6 +826,18 @@ public class Position
     }
 
     /**
+     * Apply the move and return the resulting position.
+     *
+     * @param move Given move in standard algebraic notation (e.g. Qxd4).
+     * @return Resulting position after the given move is applied.
+     * @throws IllegalMoveException If the move is illegal.
+     */
+    public Position applyMove(String move)
+    {
+        return applyMove(SanTranslator.fromSan(move, this));
+    }
+
+    /**
      * @return {@code true} if and only if it's white to move.
      */
     public boolean isWhiteToMove()

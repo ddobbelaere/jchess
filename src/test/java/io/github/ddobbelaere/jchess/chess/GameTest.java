@@ -44,6 +44,10 @@ class GameTest
         assertEquals(7, game.getPositions().size());
         assertEquals(true, game.getLegalMoves().contains(new Move("d1c2")));
         assertEquals(false, game.isThreefoldRepetition());
+
+        // Test moves from standard algebraic notation.
+        createGameSan(Position.STARTING, "d4", "d5", "c4", "e6", "Nc3", "Nf6", "cxd5", "exd5", "Bg5", "Be7", "e3", "c6",
+                "Bd3", "Nbd7", "Qc2", "O-O");
     }
 
     /**
@@ -96,6 +100,27 @@ class GameTest
         for (String move : moves)
         {
             game.playMove(new Move(move));
+        }
+
+        return game;
+    }
+
+    /**
+     * Helper function to easily create a game from a given starting position and
+     * moves list in standard algebraic notation.
+     *
+     * @param position Starting position.
+     * @param moves    String representation of moves.
+     * @return Game from the given starting position with the given moves played.
+     * @throws IllegalMoveException If one of the moves is illegal.
+     */
+    private static Game createGameSan(Position position, String... moves)
+    {
+        Game game = new Game(position);
+
+        for (String move : moves)
+        {
+            game.playMove(move);
         }
 
         return game;

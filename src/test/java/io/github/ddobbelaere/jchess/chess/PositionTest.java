@@ -239,6 +239,9 @@ class PositionTest
 
         // Check that an illegal move throws an exception.
         assertThrows(IllegalMoveException.class, () -> Position.STARTING.applyMove(new Move("e2e5")));
+
+        // Test applyMove with SAN string.
+        Position.STARTING.applyMove("e4");
     }
 
     /**
