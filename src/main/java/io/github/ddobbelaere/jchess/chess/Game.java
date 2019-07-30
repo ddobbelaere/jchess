@@ -100,7 +100,7 @@ public class Game
     }
 
     /**
-     * Play the given move.
+     * Play the given move in standard algebraic notation.
      *
      * @param move Given move in standard algebraic notation (e.g. Qxd4).
      * @throws IllegalMoveException If the given move is illegal.
@@ -118,6 +118,8 @@ public class Game
     }
 
     /**
+     * Get the list of moves in the order in which they occurred in the game.
+     *
      * @return A reference to an unmodifiable view of the list of moves.
      */
     public List<Move> getMoves()
@@ -126,6 +128,9 @@ public class Game
     }
 
     /**
+     * Get the list of moves in standard algebraic notation in the order in which
+     * they occurred in the game.
+     *
      * @return The list of moves in standard algebraic notation.
      */
     public List<String> getMovesSan()
@@ -141,6 +146,9 @@ public class Game
     }
 
     /**
+     * Get the list of positions in the order in which they occurred in the game
+     * (hence, the last position is equal to the current position).
+     *
      * @return A reference to an unmodifiable view of the list of positions.
      */
     public List<Position> getPositions()
@@ -149,16 +157,31 @@ public class Game
     }
 
     /**
+     * Get the current position.
+     *
+     * @return The current position.
+     */
+    public Position getCurrentPosition()
+    {
+        return getLastPosition();
+    }
+
+    /**
+     * Get the last position.
+     *
      * @return The last position in the list of positions.
      */
-    public Position getLastPosition()
+    Position getLastPosition()
     {
         return positions.get(positions.size() - 1);
     }
 
     /**
-     * @return A list of legal moves that can be played in the last position of the
-     *         game.
+     * Get a list of legal moves that can be played in the current position of the
+     * game.
+     *
+     * @return A list of legal moves that can be played in the current position of
+     *         the game.
      */
     public List<Move> getLegalMoves()
     {
@@ -166,8 +189,11 @@ public class Game
     }
 
     /**
-     * @return A list of legal moves that can be played in the last position of the
-     *         game in standard algebraic notation.
+     * Get a list of legal moves that can be played in the current position of the
+     * game in standard algebraic notation.
+     *
+     * @return A list of legal moves that can be played in the current position of
+     *         the game in standard algebraic notation.
      */
     public List<String> getLegalMovesSan()
     {
@@ -185,7 +211,9 @@ public class Game
     }
 
     /**
-     * @return {@code true} if and only if the last position is a threefold
+     * Check if the current position is a threefold repetition.
+     *
+     * @return {@code true} if and only if the current position is a threefold
      *         repetition.
      */
     public boolean isThreefoldRepetition()

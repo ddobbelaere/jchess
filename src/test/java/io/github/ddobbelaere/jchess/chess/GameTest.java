@@ -45,6 +45,7 @@ class GameTest
         assertEquals(6, game.getMoves().size());
         assertEquals(6, game.getMovesSan().size());
         assertEquals(7, game.getPositions().size());
+        assertEquals(game.getCurrentPosition(), game.getLastPosition());
         assertEquals(true, game.getLegalMoves().contains(new Move("d1c2")));
         assertEquals(true, game.getLegalMovesSan().contains("Qc2"));
         assertEquals(false, game.isThreefoldRepetition());
