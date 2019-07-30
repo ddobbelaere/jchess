@@ -20,6 +20,8 @@ package io.github.ddobbelaere.jchess.chess;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -41,13 +43,17 @@ class GameTest
 
         // Perform some checks.
         assertEquals(6, game.getMoves().size());
+        assertEquals(6, game.getMovesSan().size());
         assertEquals(7, game.getPositions().size());
         assertEquals(true, game.getLegalMoves().contains(new Move("d1c2")));
+        assertEquals(true, game.getLegalMovesSan().contains("Qc2"));
         assertEquals(false, game.isThreefoldRepetition());
 
         // Test moves from standard algebraic notation.
-        createGameSan(Position.STARTING, "d4", "d5", "c4", "e6", "Nc3", "Nf6", "cxd5", "exd5", "Bg5", "Be7", "e3", "c6",
-                "Bd3", "Nbd7", "Qc2", "O-O");
+        String[] moves = new String[] { "d4", "d5", "c4", "e6", "Nc3", "Nf6", "cxd5", "exd5", "Bg5", "Be7", "e3", "c6",
+                "Bd3", "Nbd7", "Qc2", "O-O" };
+        Game anotherGame = createGameSan(Position.STARTING, moves);
+        assertEquals(Arrays.asList(moves), anotherGame.getMovesSan());
     }
 
     /**

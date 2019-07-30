@@ -126,6 +126,21 @@ public class Game
     }
 
     /**
+     * @return The list of moves in standard algebraic notation.
+     */
+    public List<String> getMovesSan()
+    {
+        List<String> movesSan = new ArrayList<>(moves.size());
+
+        for (int i = 0; i < moves.size(); i++)
+        {
+            movesSan.add(SanTranslator.toSan(moves.get(i), positions.get(i), positions.get(i + 1)));
+        }
+
+        return movesSan;
+    }
+
+    /**
      * @return A reference to an unmodifiable view of the list of positions.
      */
     public List<Position> getPositions()
@@ -148,6 +163,25 @@ public class Game
     public List<Move> getLegalMoves()
     {
         return getLastPosition().getLegalMoves();
+    }
+
+    /**
+     * @return A list of legal moves that can be played in the last position of the
+     *         game in standard algebraic notation.
+     */
+    public List<String> getLegalMovesSan()
+    {
+        final Position lastPosition = getLastPosition();
+        final List<Move> legalMoves = lastPosition.getLegalMoves();
+
+        List<String> legalMovesSan = new ArrayList<>(legalMoves.size());
+
+        for (int i = 0; i < legalMoves.size(); i++)
+        {
+            legalMovesSan.add(SanTranslator.toSan(legalMoves.get(i), lastPosition));
+        }
+
+        return legalMovesSan;
     }
 
     /**
