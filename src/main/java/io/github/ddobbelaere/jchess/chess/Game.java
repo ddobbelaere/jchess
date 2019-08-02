@@ -83,38 +83,45 @@ public class Game
     }
 
     /**
-     * Play the given move.
+     * Play the moves in the order in which they are given.
      *
-     * @param move Given move.
-     * @throws IllegalMoveException If the given move is illegal.
+     * @param moves Given moves.
+     * @throws IllegalMoveException If an illegal move is encountered.
      */
-    public void playMove(Move move)
+    public void playMoves(Move... moves)
     {
-        // The next statement possibly throws an IllegalMoveException.
-        Position nextPosition = getLastPosition().playMove(move);
+        for (Move move : moves)
+        {
+            // The next statement possibly throws an IllegalMoveException.
+            Position nextPosition = getLastPosition().playMove(move);
 
-        // If we get here, the move is legal.
-        // Add the move and position to the lists.
-        positions.add(nextPosition);
-        moves.add(move);
+            // If we get here, the move is legal.
+            // Add the move and position to the lists.
+            positions.add(nextPosition);
+            this.moves.add(move);
+        }
     }
 
     /**
-     * Play the given move in standard algebraic notation.
+     * Play the given move in standard algebraic notation in the order in which they
+     * are given.
      *
-     * @param move Given move in standard algebraic notation (e.g. Qxd4).
-     * @throws IllegalMoveException If the given move is illegal.
+     * @param move Given moves in standard algebraic notation (e.g. Qxd4).
+     * @throws IllegalMoveException If an illegal move is encountered.
      */
-    public void playMove(String move)
+    public void playMoves(String... moves)
     {
-        // The next statement possibly throws an IllegalMoveException.
-        Move internalMove = SanTranslator.fromSan(move, getLastPosition());
-        Position nextPosition = getLastPosition().playMove(internalMove);
+        for (String move : moves)
+        {
+            // The next statement possibly throws an IllegalMoveException.
+            Move internalMove = SanTranslator.fromSan(move, getLastPosition());
+            Position nextPosition = getLastPosition().playMove(internalMove);
 
-        // If we get here, the move is legal.
-        // Add the move and position to the lists.
-        positions.add(nextPosition);
-        moves.add(internalMove);
+            // If we get here, the move is legal.
+            // Add the move and position to the lists.
+            positions.add(nextPosition);
+            this.moves.add(internalMove);
+        }
     }
 
     /**

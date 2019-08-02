@@ -39,7 +39,7 @@ class GameTest
         Game game = createGame(Position.STARTING, "d2d4", "g8f6", "c2c4", "e7e6", "b1c3", "f8b4");
 
         // Try to play an illegal move.
-        assertThrows(IllegalMoveException.class, () -> game.playMove(new Move("b1c3")));
+        assertThrows(IllegalMoveException.class, () -> game.playMoves(new Move("b1c3")));
 
         // Perform some checks.
         assertEquals(6, game.getMoves().size());
@@ -106,7 +106,7 @@ class GameTest
 
         for (String move : moves)
         {
-            game.playMove(new Move(move));
+            game.playMoves(new Move(move));
         }
 
         return game;
@@ -127,7 +127,7 @@ class GameTest
 
         for (String move : moves)
         {
-            game.playMove(move);
+            game.playMoves(move);
         }
 
         return game;

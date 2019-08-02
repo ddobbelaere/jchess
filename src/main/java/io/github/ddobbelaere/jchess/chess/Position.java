@@ -117,7 +117,7 @@ public class Position
      *
      * @param position Position that is to be copied.
      */
-    Position(Position position)
+    public Position(Position position)
     {
         // Copy all the fields.
         board = new Board(position.board);
@@ -282,6 +282,8 @@ public class Position
     }
 
     /**
+     * Get the FEN string corresponding to the position.
+     *
      * @return FEN string corresponding to the position.
      */
     public String getFen()
@@ -826,7 +828,8 @@ public class Position
     }
 
     /**
-     * Play the move and return the resulting position.
+     * Play the move in standard algebraic notation and return the resulting
+     * position.
      *
      * @param move Given move in standard algebraic notation (e.g. Qxd4).
      * @return Resulting position after the given move is applied.
@@ -838,6 +841,8 @@ public class Position
     }
 
     /**
+     * Check if it's white to move.
+     *
      * @return {@code true} if and only if it's white to move.
      */
     public boolean isWhiteToMove()
@@ -846,6 +851,8 @@ public class Position
     }
 
     /**
+     * Check if it's black to move.
+     *
      * @return {@code true} if and only if it's black to move.
      */
     public boolean isBlackToMove()
@@ -854,6 +861,8 @@ public class Position
     }
 
     /**
+     * Check if white can castle short.
+     *
      * @return {@code true} if and only if white can castle short.
      */
     public boolean whiteCanCastleShort()
@@ -869,6 +878,8 @@ public class Position
     }
 
     /**
+     * Check if black can castle short.
+     *
      * @return {@code true} if and only if black can castle short.
      */
     public boolean blackCanCastleShort()
@@ -884,6 +895,8 @@ public class Position
     }
 
     /**
+     * Check if white can castle long.
+     *
      * @return {@code true} if and only if white can castle long.
      */
     public boolean whiteCanCastleLong()
@@ -899,6 +912,8 @@ public class Position
     }
 
     /**
+     * Check if black can castle long.
+     *
      * @return {@code true} if and only if black can castle long.
      */
     public boolean blackCanCastleLong()
@@ -914,6 +929,8 @@ public class Position
     }
 
     /**
+     * Get the number of full moves since the start of the game.
+     *
      * @return Number of full moves since the start of the game.
      */
     public int getMoveNumber()
@@ -922,6 +939,8 @@ public class Position
     }
 
     /**
+     * Get the number of plies since the last capture or pawn advance.
+     *
      * @return Number of plies since the last capture or pawn advance.
      */
     public int getNumNoCaptureOrPawnAdvancePlies()
@@ -930,6 +949,8 @@ public class Position
     }
 
     /**
+     * Return {@code true} if and only if it's check.
+     *
      * @return {@code true} if and only if it's check.
      */
     public boolean isCheck()
@@ -938,6 +959,8 @@ public class Position
     }
 
     /**
+     * Return {@code true} if and only if it's checkmate.
+     *
      * @return {@code true} if and only if it's checkmate.
      */
     public boolean isCheckmate()
@@ -946,6 +969,8 @@ public class Position
     }
 
     /**
+     * Return {@code true} if and only if it's stalemate.
+     *
      * @return {@code true} if and only if it's stalemate.
      */
     public boolean isStalemate()
@@ -954,6 +979,8 @@ public class Position
     }
 
     /**
+     * Check if the position is equal to another position, ignoring move counts.
+     * 
      * @param other Given position.
      * @return {@code true} if and only if the position is equal to the given
      *         position, but ignoring move counts (number of game moves and number
