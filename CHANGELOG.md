@@ -1,3 +1,6 @@
+### 0.1.4
+* Improved public API + javadoc.
+
 ### 0.1.3
 * Get FEN string of position.
 * Apply legal move in position via SAN (standard algebraic notation) string.
