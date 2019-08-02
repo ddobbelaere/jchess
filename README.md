@@ -17,10 +17,10 @@ The public API of the latest release is [available here](https://javadoc.jitpack
 Game game = new Game("7k/4NK1p/8/8/8/8/8/8 w - -");
 
 // Play a move in standard algebraic notation (SAN).
-game.playMove("Ng6#");
+game.playMoves("Ng6#");
 
 // Print the resulting FEN string.
-System.out.println(game.getLastPosition().getFen());
+System.out.println(game.getCurrentPosition().getFen());
 ```
 
 ```java
@@ -36,7 +36,7 @@ while(true)
     break;
   }
   
-  game.playMove(moves.get(new Random().nextInt(moves.size())));
+  game.playMoves(moves.get(new Random().nextInt(moves.size())));
 }
 ```
 

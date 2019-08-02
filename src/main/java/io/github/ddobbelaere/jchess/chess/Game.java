@@ -103,10 +103,10 @@ public class Game
     }
 
     /**
-     * Play the given move in standard algebraic notation in the order in which they
-     * are given.
+     * Play the given moves in standard algebraic notation in the order in which
+     * they are given.
      *
-     * @param move Given moves in standard algebraic notation (e.g. Qxd4).
+     * @param moves Given moves in standard algebraic notation (e.g. Qxd4).
      * @throws IllegalMoveException If an illegal move is encountered.
      */
     public void playMoves(String... moves)
