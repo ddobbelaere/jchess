@@ -13,17 +13,20 @@ The public API of the latest release is [available here](https://javadoc.jitpack
 ### Examples
 
 ```java
+/* EXAMPLE 1 */
 // Play a game from a given position (as FEN string).
-Game game = new Game("7k/4NK1p/8/8/8/8/8/8 w - -");
+Game game = new Game("8/8/8/8/8/p7/2K1N3/k7 w - -");
 
-// Play a move in standard algebraic notation (SAN).
-game.playMoves("Ng6#");
+// Play some moves.
+game.playMoves("Nc1", "a2", "Nb3#");
 
 // Print the resulting FEN string.
 System.out.println(game.getCurrentPosition().getFen());
+// Prints "8/8/8/8/8/1N6/p1K5/k b - - 1 1".
 ```
 
 ```java
+/* EXAMPLE 2 */
 // Play a random game from the starting position.
 Game game = new Game();
 
@@ -45,6 +48,7 @@ while(true)
 - [x] Board and game representation.
 - [x] Magic bitboards.
 - [x] Move generation.
+- [x] Moves in standard algebraic notation (SAN).
 
 ### Feature Wishlist
 
@@ -52,6 +56,10 @@ while(true)
 - [ ] UCI engine interface.
 - [ ] Chess game analysis.
 - [ ] Chess problem extractor.
+
+### Installation
+
+All release versions and latest snapshots are hosted by [JitPack](https://jitpack.io/#ddobbelaere/jchess).
 
 ### Acknowledgments
 
