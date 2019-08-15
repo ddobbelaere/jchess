@@ -6,11 +6,11 @@
 
 JChess is a pure Java chess library.
 
-### API
+## API
 
 The public API of the latest release is [available here](https://javadoc.jitpack.io/com/github/ddobbelaere/jchess/latest/javadoc/).
 
-### Examples
+## Examples
 
 ```java
 /* EXAMPLE 1 */
@@ -43,24 +43,24 @@ while(true)
 }
 ```
 
-### Currently Implemented
+## Currently Implemented
 
 - [x] Board and game representation.
 - [x] Magic bitboards.
 - [x] Move generation.
 - [x] Moves in standard algebraic notation (SAN).
 
-### Feature Wishlist
+## Feature Wishlist
 
 - [ ] Scalable PGN reader/writer.
 - [ ] UCI engine interface.
 - [ ] Chess game analysis.
 - [ ] Chess problem extractor.
 
-### Installation
+## Installation
 
 All release versions and latest snapshots are hosted by [JitPack](https://jitpack.io/#ddobbelaere/jchess).
 
-### Acknowledgments
+## Acknowledgments
 
 - Board representation inspired by [lc0](https://github.com/LeelaChessZero/lc0).
