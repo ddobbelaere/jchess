@@ -433,14 +433,14 @@ class MoveGeneratorTest {
 
                 // Pawn promotion possible on g8.
                 testCases.add(Pair.of(Position.fromFen("8/1k4P1/8/8/8/8/6K1/8 w - -"),
-                                new Move[] { new Move("g7g8B"), new Move("g7g8N"), new Move("g7g8R"),
-                                                new Move("g7g8Q") }));
+                                new Move[] { new Move("g7g8b"), new Move("g7g8n"), new Move("g7g8r"),
+                                                new Move("g7g8q") }));
 
                 // Pawn promotion possible by capturing on f8 or h8.
                 testCases.add(Pair.of(Position.fromFen("5bRq/1k4P1/8/8/8/8/6K1/8 w - -"),
-                                new Move[] { new Move("g7f8B"), new Move("g7f8N"), new Move("g7f8R"), new Move("g7f8Q"),
-                                                new Move("g7h8B"), new Move("g7h8N"), new Move("g7h8R"),
-                                                new Move("g7h8Q") }));
+                                new Move[] { new Move("g7f8b"), new Move("g7f8n"), new Move("g7f8r"), new Move("g7f8q"),
+                                                new Move("g7h8b"), new Move("g7h8n"), new Move("g7h8r"),
+                                                new Move("g7h8q") }));
 
                 // Pawn is pinned and can only move forward.
                 testCases.add(Pair.of(Position.fromFen("6q1/1k6/8/5b1r/6P1/8/6K1/8 w - -"),

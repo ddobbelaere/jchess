@@ -44,32 +44,32 @@ class MoveTest {
         assertEquals("d2d4", move.toString());
 
         // Test with promotion.
-        move = new Move("h7h8Q");
+        move = new Move("h7h8q");
 
         assertEquals(55, move.getFromSquare());
         assertEquals(63, move.getToSquare());
         assertEquals(PromotionPieceType.QUEEN, move.getPromotionPieceType());
-        assertEquals("h7h8Q", move.toString());
+        assertEquals("h7h8q", move.toString());
 
         // Test with other promotion piece types.
-        move = new Move("h7h8R");
+        move = new Move("h7h8r");
 
         assertEquals(PromotionPieceType.ROOK, move.getPromotionPieceType());
-        assertEquals("h7h8R", move.toString());
+        assertEquals("h7h8r", move.toString());
 
-        move = new Move("h7h8N");
+        move = new Move("h7h8n");
 
         assertEquals(PromotionPieceType.KNIGHT, move.getPromotionPieceType());
-        assertEquals("h7h8N", move.toString());
+        assertEquals("h7h8n", move.toString());
 
-        move = new Move("h7h8B");
+        move = new Move("h7h8b");
 
         assertEquals(PromotionPieceType.BISHOP, move.getPromotionPieceType());
-        assertEquals("h7h8B", move.toString());
+        assertEquals("h7h8b", move.toString());
 
         // Test with illegal move strings.
         assertThrows(IllegalArgumentException.class, () -> new Move("e4"));
-        assertThrows(IllegalArgumentException.class, () -> new Move("h7h8K"));
+        assertThrows(IllegalArgumentException.class, () -> new Move("h7h8k"));
     }
 
     /**
@@ -85,7 +85,7 @@ class MoveTest {
         assertEquals(false, move.equals(new Object()));
         assertEquals(false, move.equals(new Move("d6d8")));
         assertEquals(false, move.equals(new Move("d7e8")));
-        assertEquals(false, move.equals(new Move("d7d8Q")));
+        assertEquals(false, move.equals(new Move("d7d8q")));
         assertEquals(true, move.equals(new Move("d7d8")));
     }
 

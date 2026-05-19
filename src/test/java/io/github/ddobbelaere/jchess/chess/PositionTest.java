@@ -153,7 +153,7 @@ class PositionTest {
                                                 new Move("b8c6")),
                                 Pair.of(Position.fromFen(
                                                 "r2qkbnr/pp2Pppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 5"),
-                                                new Move("e7d8Q")),
+                                                new Move("e7d8q")),
                                 Pair.of(Position.fromFen("r2Qkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 5"),
                                                 new Move("a8d8")),
                                 Pair.of(Position.fromFen("3rkbnr/pp3ppp/2n5/2p2b2/8/8/PPPP1PPP/RNBQKBNR w KQk - 0 6"),
@@ -192,9 +192,9 @@ class PositionTest {
                 // Test promotions to bishop, rook and knight (queen was already check in first
                 // move sequence).
                 moveSequence = Arrays.asList(
-                                Pair.of(Position.fromFen("8/1k1PP3/8/8/8/8/3p2K1/8 w - - 4 9"), new Move("d7d8R")),
-                                Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/3p2K1/8 b - - 0 9"), new Move("d2d1N")),
-                                Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/6K1/3n4 w - - 0 10"), new Move("e7e8B")),
+                                Pair.of(Position.fromFen("8/1k1PP3/8/8/8/8/3p2K1/8 w - - 4 9"), new Move("d7d8r")),
+                                Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/3p2K1/8 b - - 0 9"), new Move("d2d1n")),
+                                Pair.of(Position.fromFen("3R4/1k2P3/8/8/8/8/6K1/3n4 w - - 0 10"), new Move("e7e8b")),
                                 Pair.of(Position.fromFen("3RB3/1k6/8/8/8/8/6K1/3n4 b - - 0 10"), null));
 
                 moveSequences.add(moveSequence);

@@ -93,16 +93,16 @@ class SanTranslatorTest {
                                 Triple.of("exf7+", new Move("e6f7"),
                                                 Position.fromFen(
                                                                 "rnb1kbnr/ppp1qppp/3pP3/8/8/8/PPP1PPPP/RNBQKBNR w KQkq - 1 4")),
-                                Triple.of("fxg8=R", new Move("f7g8R"),
+                                Triple.of("fxg8=R", new Move("f7g8r"),
                                                 Position.fromFen(
                                                                 "rnbk1bnr/ppp1qPpp/3p4/8/8/8/PPP1PPPP/RNBQKBNR w KQ - 1 5")),
-                                Triple.of("fxg8=Q", new Move("f7g8Q"),
+                                Triple.of("fxg8=Q", new Move("f7g8q"),
                                                 Position.fromFen(
                                                                 "rnbk1bnr/ppp1qPpp/3p4/8/8/8/PPP1PPPP/RNBQKBNR w KQ - 1 5")),
-                                Triple.of("fxg8=N", new Move("f7g8N"),
+                                Triple.of("fxg8=N", new Move("f7g8n"),
                                                 Position.fromFen(
                                                                 "rnbk1bnr/ppp1qPpp/3p4/8/8/8/PPP1PPPP/RNBQKBNR w KQ - 1 5")),
-                                Triple.of("fxg8=B", new Move("f7g8B"),
+                                Triple.of("fxg8=B", new Move("f7g8b"),
                                                 Position.fromFen(
                                                                 "rnbk1bnr/ppp1qPpp/3p4/8/8/8/PPP1PPPP/RNBQKBNR w KQ - 1 5")),
                                 Triple.of("N2e3", new Move("c2e3"), Position.fromFen("4k3/8/8/8/2N5/8/2N5/4K3 w - -")),

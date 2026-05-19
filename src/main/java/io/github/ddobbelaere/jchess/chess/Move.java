@@ -109,7 +109,7 @@ public class Move {
      * <ul>
      * <li>Two-character source square (e.g. d2).</li>
      * <li>Two-character destination square (e.g. d4).</li>
-     * <li>Optional single-character promotion piece type (B, N, Q or R).</li>
+     * <li>Optional single-character promotion piece type (b, n, q or r).</li>
      * </ul>
      *
      * @param moveString Descriptive move string.
@@ -128,16 +128,16 @@ public class Move {
         if (len == 5) {
             // Parse promotion piece type character.
             switch (moveString.charAt(4)) {
-                case 'B':
+                case 'b':
                     promotionPieceType = PromotionPieceType.BISHOP;
                     break;
-                case 'N':
+                case 'n':
                     promotionPieceType = PromotionPieceType.KNIGHT;
                     break;
-                case 'Q':
+                case 'q':
                     promotionPieceType = PromotionPieceType.QUEEN;
                     break;
-                case 'R':
+                case 'r':
                     promotionPieceType = PromotionPieceType.ROOK;
                     break;
                 default:
@@ -183,7 +183,8 @@ public class Move {
 
     @Override
     public String toString() {
-        return Board.getSquareName(fromSquare) + Board.getSquareName(toSquare) + promotionPieceType;
+        return Board.getSquareName(fromSquare) + Board.getSquareName(toSquare)
+                + promotionPieceType.toString().toLowerCase();
     }
 
     @Override
