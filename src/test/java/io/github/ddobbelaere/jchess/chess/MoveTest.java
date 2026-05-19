@@ -27,16 +27,14 @@ import org.junit.jupiter.api.Test;
  *
  * @author Dieter Dobbelaere
  */
-class MoveTest
-{
+class MoveTest {
 
     /**
      * Test method for
      * {@link io.github.ddobbelaere.jchess.chess.Move#ChessMove(java.lang.String)}.
      */
     @Test
-    void testChessMoveString()
-    {
+    void testChessMoveString() {
         // Test with normal move.
         Move move = new Move("d2d4");
 
@@ -79,8 +77,7 @@ class MoveTest
      * {@link io.github.ddobbelaere.jchess.chess.Move#equals(Object)}.
      */
     @Test
-    void testEquals()
-    {
+    void testEquals() {
         Move move = new Move("d7d8");
 
         assertEquals(true, move.equals(move));

@@ -22,8 +22,7 @@ package io.github.ddobbelaere.jchess.chess;
  *
  * @author Dieter Dobbelaere
  */
-class Board
-{
+class Board {
     /**
      * Active player's pieces bitboard.
      */
@@ -137,8 +136,7 @@ class Board
     /**
      * Default constructor.
      */
-    Board()
-    {
+    Board() {
 
     }
 
@@ -147,8 +145,7 @@ class Board
      *
      * @param board Board that is to be copied.
      */
-    Board(Board board)
-    {
+    Board(Board board) {
         // Copy all the fields.
         ourPieces = board.ourPieces;
         theirPieces = board.theirPieces;
@@ -162,8 +159,7 @@ class Board
     /**
      * Mirror the board.
      */
-    public void mirror()
-    {
+    public void mirror() {
         // Swap pieces bitboards.
         long temp = ourPieces;
         ourPieces = theirPieces;
@@ -187,8 +183,7 @@ class Board
      * @param square Given square (between 0 and 63).
      * @return Bitboard corresponding to the square.
      */
-    static long getSquareBitboard(final int square)
-    {
+    static long getSquareBitboard(final int square) {
         return 1L << square;
     }
 
@@ -199,8 +194,7 @@ class Board
      * @param col Column of the square.
      * @return Bitboard corresponding to the square.
      */
-    static long getSquareBitboard(final int row, final int col)
-    {
+    static long getSquareBitboard(final int row, final int col) {
         return 1L << (8 * row + col);
     }
 
@@ -210,8 +204,7 @@ class Board
      * @param name Square name (e.g. "e4").
      * @return Bitboard corresponding to the square name.
      */
-    static long getSquareBitboard(final String name)
-    {
+    static long getSquareBitboard(final String name) {
         return getSquareBitboard(name.charAt(1) - '1', name.charAt(0) - 'a');
     }
 
@@ -221,8 +214,7 @@ class Board
      * @param name Square name (e.g. "e4").
      * @return Square corresponding to the square name.
      */
-    static int getSquare(final String name)
-    {
+    static int getSquare(final String name) {
         return 8 * (name.charAt(1) - '1') + (name.charAt(0) - 'a');
     }
 
@@ -232,8 +224,7 @@ class Board
      * @param row Given row (between 0 and 7).
      * @return Bitboard corresponding to the given row.
      */
-    static long getRowBitboard(final int row)
-    {
+    static long getRowBitboard(final int row) {
         return BB_A1H1 << (8 * row);
     }
 
@@ -243,8 +234,7 @@ class Board
      * @param row Given row (between '1' and '8').
      * @return Bitboard corresponding to the given row.
      */
-    static long getRowBitboard(final char row)
-    {
+    static long getRowBitboard(final char row) {
         return getRowBitboard(row - '1');
     }
 
@@ -254,8 +244,7 @@ class Board
      * @param col Given column (between 0 and 7).
      * @return Bitboard corresponding to the given column.
      */
-    static long getColBitboard(final int col)
-    {
+    static long getColBitboard(final int col) {
         return BB_A1A8 << col;
     }
 
@@ -265,8 +254,7 @@ class Board
      * @param col Given column (between 'a' and 'h').
      * @return Bitboard corresponding to the given column.
      */
-    static long getColBitboard(final char col)
-    {
+    static long getColBitboard(final char col) {
         return getColBitboard(col - 'a');
     }
 
@@ -278,17 +266,13 @@ class Board
      * @param col Column of the square.
      * @return Bitboard orresponding to the diagonals that go through the square.
      */
-    static long getDiagsBitboard(final int row, final int col)
-    {
+    static long getDiagsBitboard(final int row, final int col) {
         // Calculate the diagonals going through the square (row,col).
         long diagsBitboard = 0;
 
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (Math.abs(row - i) == Math.abs(col - j))
-                {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (Math.abs(row - i) == Math.abs(col - j)) {
                     // The square (i,j) lies on a diagonal through (row,col).
                     diagsBitboard |= Board.getSquareBitboard(i, j);
                 }
@@ -304,8 +288,7 @@ class Board
      * @param square Given square (between 0 and 63).
      * @return Name corresponding to the square (i.e. "e4").
      */
-    static String getSquareName(final int square)
-    {
+    static String getSquareName(final int square) {
         return "" + (char) ('a' + (square & 0b111)) + (char) ('1' + (square / 8));
     }
 
@@ -315,34 +298,27 @@ class Board
      * @param bitboard Given bitboard.
      * @return String representation of the given bitboard.
      */
-    static String getBitboardDebugString(long bitboard)
-    {
+    static String getBitboardDebugString(long bitboard) {
         StringBuilder sb = new StringBuilder();
 
-        for (int row = 7; row >= 0; row--)
-        {
-            for (int col = 0; col <= 7; col++)
-            {
+        for (int row = 7; row >= 0; row--) {
+            for (int col = 0; col <= 7; col++) {
                 // Determine square bitboard.
                 long squareBitboard = (1L << (8 * row + col));
 
                 // Determine square label.
                 char squareLabel = '.';
 
-                if ((bitboard & squareBitboard) != 0)
-                {
+                if ((bitboard & squareBitboard) != 0) {
                     squareLabel = 'x';
                 }
 
                 // Append to string.
                 sb.append(squareLabel);
 
-                if (col == 7)
-                {
+                if (col == 7) {
                     sb.append(System.lineSeparator());
-                }
-                else
-                {
+                } else {
                     // Add space between square labels.
                     sb.append(' ');
                 }
@@ -355,78 +331,57 @@ class Board
     /**
      * @return FEN piece placement string of the chess board.
      */
-    String getFenPiecePlacementString()
-    {
+    String getFenPiecePlacementString() {
         StringBuilder sb = new StringBuilder();
 
-        for (int row = 7; row >= 0; row--)
-        {
+        for (int row = 7; row >= 0; row--) {
             int numEmptySquares = 0;
 
-            for (int col = 0; col <= 7; col++)
-            {
+            for (int col = 0; col <= 7; col++) {
                 // Determine square bitboard.
                 long squareBitboard;
-                if (!isMirrored)
-                {
+                if (!isMirrored) {
                     // The board is from white's perspective.
                     squareBitboard = (1L << (8 * row + col));
-                }
-                else
-                {
+                } else {
                     // The board is from black's perspective.
                     squareBitboard = (1L << (8 * (7 - row) + col));
                 }
 
-                if (((ourPieces + theirPieces) & squareBitboard) != 0)
-                {
+                if (((ourPieces + theirPieces) & squareBitboard) != 0) {
                     // Determine piece letter.
                     char pieceLetter;
 
-                    if ((pawns & squareBitboard) != 0)
-                    {
+                    if ((pawns & squareBitboard) != 0) {
                         // This is pawn.
                         pieceLetter = 'p';
-                    }
-                    else if ((kings & squareBitboard) != 0)
-                    {
+                    } else if ((kings & squareBitboard) != 0) {
                         // This is king.
                         pieceLetter = 'k';
-                    }
-                    else if ((rooks & squareBitboard) != 0)
-                    {
-                        if ((bishops & squareBitboard) != 0)
-                        {
+                    } else if ((rooks & squareBitboard) != 0) {
+                        if ((bishops & squareBitboard) != 0) {
                             // This is queen.
                             pieceLetter = 'q';
-                        }
-                        else
-                        {
+                        } else {
                             // This is rook.
                             pieceLetter = 'r';
                         }
-                    }
-                    else if ((bishops & squareBitboard) != 0)
-                    {
+                    } else if ((bishops & squareBitboard) != 0) {
                         // This is bishop.
                         pieceLetter = 'b';
-                    }
-                    else
-                    {
+                    } else {
                         // This is knight.
                         pieceLetter = 'n';
                     }
 
                     // Change letter for white pieces to uppercase.
                     if ((!isMirrored && ((ourPieces & squareBitboard) != 0))
-                            || (isMirrored && ((theirPieces & squareBitboard) != 0)))
-                    {
+                            || (isMirrored && ((theirPieces & squareBitboard) != 0))) {
                         pieceLetter = Character.toUpperCase(pieceLetter);
                     }
 
                     // Append number of empty squares to string.
-                    if (numEmptySquares > 0)
-                    {
+                    if (numEmptySquares > 0) {
                         sb.append(numEmptySquares);
 
                         // Reset counter.
@@ -435,19 +390,15 @@ class Board
 
                     // Append piece letter to string.
                     sb.append(pieceLetter);
-                }
-                else
-                {
+                } else {
                     // No piece present at the current square.
                     // Increment counter.
                     numEmptySquares++;
                 }
 
-                if (col == 7 && row > 0)
-                {
+                if (col == 7 && row > 0) {
                     // Append number of empty squares to string.
-                    if (numEmptySquares > 0)
-                    {
+                    if (numEmptySquares > 0) {
                         sb.append(numEmptySquares);
                     }
 
@@ -463,23 +414,17 @@ class Board
      * @return String representation of the chess board.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (int row = 7; row >= 0; row--)
-        {
-            for (int col = 0; col <= 7; col++)
-            {
+        for (int row = 7; row >= 0; row--) {
+            for (int col = 0; col <= 7; col++) {
                 // Determine square bitboard.
                 long squareBitboard;
-                if (!isMirrored)
-                {
+                if (!isMirrored) {
                     // The board is from white's perspective.
                     squareBitboard = (1L << (8 * row + col));
-                }
-                else
-                {
+                } else {
                     // The board is from black's perspective.
                     squareBitboard = (1L << (8 * (7 - row) + col));
                 }
@@ -487,46 +432,32 @@ class Board
                 // Determine square label.
                 char squareLabel = '.';
 
-                if (((ourPieces + theirPieces) & squareBitboard) != 0)
-                {
-                    if ((pawns & squareBitboard) != 0)
-                    {
+                if (((ourPieces + theirPieces) & squareBitboard) != 0) {
+                    if ((pawns & squareBitboard) != 0) {
                         // This is pawn.
                         squareLabel = 'p';
-                    }
-                    else if ((kings & squareBitboard) != 0)
-                    {
+                    } else if ((kings & squareBitboard) != 0) {
                         // This is king.
                         squareLabel = 'k';
-                    }
-                    else if ((rooks & squareBitboard) != 0)
-                    {
-                        if ((bishops & squareBitboard) != 0)
-                        {
+                    } else if ((rooks & squareBitboard) != 0) {
+                        if ((bishops & squareBitboard) != 0) {
                             // This is queen.
                             squareLabel = 'q';
-                        }
-                        else
-                        {
+                        } else {
                             // This is rook.
                             squareLabel = 'r';
                         }
-                    }
-                    else if ((bishops & squareBitboard) != 0)
-                    {
+                    } else if ((bishops & squareBitboard) != 0) {
                         // This is bishop.
                         squareLabel = 'b';
-                    }
-                    else
-                    {
+                    } else {
                         // This is knight.
                         squareLabel = 'n';
                     }
 
                     // Change label for white pieces to uppercase.
                     if ((!isMirrored && ((ourPieces & squareBitboard) != 0))
-                            || (isMirrored && ((theirPieces & squareBitboard) != 0)))
-                    {
+                            || (isMirrored && ((theirPieces & squareBitboard) != 0))) {
                         squareLabel = Character.toUpperCase(squareLabel);
                     }
                 }
@@ -534,12 +465,9 @@ class Board
                 // Append to string.
                 sb.append(squareLabel);
 
-                if (col == 7)
-                {
+                if (col == 7) {
                     sb.append(System.lineSeparator());
-                }
-                else
-                {
+                } else {
                     // Add space between square labels.
                     sb.append(' ');
                 }
@@ -550,20 +478,16 @@ class Board
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
 
-        if (obj == null)
-        {
+        if (obj == null) {
             return false;
         }
 
-        if (getClass() != obj.getClass())
-        {
+        if (getClass() != obj.getClass()) {
             return false;
         }
 

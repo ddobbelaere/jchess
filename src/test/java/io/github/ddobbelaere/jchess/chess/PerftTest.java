@@ -34,8 +34,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Dieter Dobbelaere
  */
-class PerftTest
-{
+class PerftTest {
     /**
      * Generate all positions up to the given maximum depth from the given starting
      * position.
@@ -44,8 +43,7 @@ class PerftTest
      * @param maxDepth Maximum depth.
      * @return Number of generated "leaf" positions.
      */
-    static long Perft(Position position, int maxDepth)
-    {
+    static long Perft(Position position, int maxDepth) {
         return Perft(position, maxDepth, 0);
     }
 
@@ -58,11 +56,9 @@ class PerftTest
      * @param currentDepth Current depth.
      * @return Number of generated "leaf" positions.
      */
-    static long Perft(Position position, int maxDepth, int currentDepth)
-    {
+    static long Perft(Position position, int maxDepth, int currentDepth) {
         // If we are at maximum depth, this is a leaf position.
-        if (currentDepth == maxDepth)
-        {
+        if (currentDepth == maxDepth) {
             return 1;
         }
 
@@ -72,44 +68,33 @@ class PerftTest
         long numPositions = 0;
 
         // Get the number of position resulting from this move.
-        if (currentDepth == 0)
-        {
+        if (currentDepth == 0) {
             // Parallelize at depth 0.
             List<Callable<Long>> taskList = new ArrayList<>();
             ExecutorService execService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-            for (Move move : legalMoves)
-            {
-                taskList.add(new Callable<Long>()
-                {
+            for (Move move : legalMoves) {
+                taskList.add(new Callable<Long>() {
 
                     @Override
-                    public Long call() throws Exception
-                    {
+                    public Long call() throws Exception {
                         return Perft(position.playMove(move), maxDepth, currentDepth + 1);
                     }
                 });
             }
 
             List<Future<Long>> resultList;
-            try
-            {
+            try {
                 resultList = execService.invokeAll(taskList);
 
-                for (Future<Long> result : resultList)
-                {
+                for (Future<Long> result : resultList) {
                     numPositions += result.get();
                 }
-            }
-            catch (InterruptedException | ExecutionException e)
-            {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-        }
-        else
-        {
-            for (Move move : legalMoves)
-            {
+        } else {
+            for (Move move : legalMoves) {
                 Position resultingPosition = position.playMove(move);
                 // assertEquals(true, resultingPosition.isLegal(), "Illegal position\n" +
                 // resultingPosition
@@ -126,8 +111,7 @@ class PerftTest
      * Test starting position.
      */
     @Test
-    void testStartingPosition()
-    {
+    void testStartingPosition() {
         Position position = Position.STARTING;
 
         assertEquals(1, Perft(position, 0));
@@ -145,8 +129,7 @@ class PerftTest
      * "https://www.chessprogramming.org/Perft_Results">https://www.chessprogramming.org/Perft_Results</a>.
      */
     @Test
-    void testKiwipete()
-    {
+    void testKiwipete() {
         Position position = Position.fromFen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -");
 
         assertEquals(48, Perft(position, 1));
@@ -162,8 +145,7 @@ class PerftTest
      * "https://www.chessprogramming.org/Perft_Results">https://www.chessprogramming.org/Perft_Results</a>.
      */
     @Test
-    void testPosition3()
-    {
+    void testPosition3() {
         Position position = Position.fromFen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - -");
 
         assertEquals(14, Perft(position, 1));
@@ -181,8 +163,7 @@ class PerftTest
      * "https://www.chessprogramming.org/Perft_Results">https://www.chessprogramming.org/Perft_Results</a>.
      */
     @Test
-    void testPosition4()
-    {
+    void testPosition4() {
         Position position = Position.fromFen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1");
 
         assertEquals(6, Perft(position, 1));
@@ -198,8 +179,7 @@ class PerftTest
      * "https://www.chessprogramming.org/Perft_Results">https://www.chessprogramming.org/Perft_Results</a>.
      */
     @Test
-    void testPosition5()
-    {
+    void testPosition5() {
         Position position = Position.fromFen("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8");
 
         assertEquals(44, Perft(position, 1));
@@ -214,8 +194,7 @@ class PerftTest
      * "https://www.chessprogramming.org/Perft_Results">https://www.chessprogramming.org/Perft_Results</a>.
      */
     @Test
-    void testPosition6()
-    {
+    void testPosition6() {
         Position position = Position
                 .fromFen("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10");
 
@@ -228,12 +207,10 @@ class PerftTest
         // assertEquals(6923051137L, Perft(position, 6));
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         // Do a performance test on starting position.
         long totalNumPositions = 0;
-        for (int i = 0; i <= 6; i++)
-        {
+        for (int i = 0; i <= 6; i++) {
             // Count number of positions at depth i.
             long startTime = System.nanoTime();
             long numPositions = Perft(Position.STARTING, i);

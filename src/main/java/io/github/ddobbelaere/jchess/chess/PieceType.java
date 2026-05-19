@@ -22,35 +22,32 @@ package io.github.ddobbelaere.jchess.chess;
  *
  * @author Dieter Dobbelaere
  */
-enum PieceType
-{
+enum PieceType {
     PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING;
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         String s = "";
 
-        switch (this)
-        {
-        case PAWN:
-            s = "";
-            break;
-        case ROOK:
-            s = "R";
-            break;
-        case KNIGHT:
-            s = "N";
-            break;
-        case BISHOP:
-            s = "B";
-            break;
-        case QUEEN:
-            s = "Q";
-            break;
-        case KING:
-            s = "K";
-            break;
+        switch (this) {
+            case PAWN:
+                s = "";
+                break;
+            case ROOK:
+                s = "R";
+                break;
+            case KNIGHT:
+                s = "N";
+                break;
+            case BISHOP:
+                s = "B";
+                break;
+            case QUEEN:
+                s = "Q";
+                break;
+            case KING:
+                s = "K";
+                break;
         }
 
         return s;

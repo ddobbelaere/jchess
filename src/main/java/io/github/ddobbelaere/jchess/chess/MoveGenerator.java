@@ -25,8 +25,7 @@ import java.util.List;
  *
  * @author Dieter Dobbelaere
  */
-class MoveGenerator
-{
+class MoveGenerator {
     /**
      * Array of all rook move directions. Each direction is a two element array of
      * the form (row increment, column increment).
@@ -92,8 +91,7 @@ class MoveGenerator
      * themselves).</li>
      * </p>
      */
-    static class KingSafety
-    {
+    static class KingSafety {
         /**
          * Pinned pieces bitboard.
          */
@@ -119,16 +117,14 @@ class MoveGenerator
         /**
          * @return Our king is in check.
          */
-        boolean isCheck()
-        {
+        boolean isCheck() {
             return attackLines != 0;
         }
 
         /**
          * @return Our king is in double check.
          */
-        boolean isDoubleCheck()
-        {
+        boolean isDoubleCheck() {
             return isDoubleCheck;
         }
     }
@@ -140,8 +136,7 @@ class MoveGenerator
      * <li>Legal moves.</li>
      * </p>
      */
-    static class MoveGeneratorResult
-    {
+    static class MoveGeneratorResult {
         /**
          * King safety information.
          */
@@ -155,8 +150,7 @@ class MoveGenerator
         /**
          * Constructor.
          */
-        MoveGeneratorResult(KingSafety kingSafety, List<Move> legalMoves)
-        {
+        MoveGeneratorResult(KingSafety kingSafety, List<Move> legalMoves) {
             this.kingSafety = kingSafety;
             this.legalMoves = legalMoves;
         }
@@ -164,16 +158,14 @@ class MoveGenerator
         /**
          * @return If it's check.
          */
-        boolean isCheck()
-        {
+        boolean isCheck() {
             return kingSafety.isCheck();
         }
 
         /**
          * @return List of legal moves.
          */
-        List<Move> getLegalMoves()
-        {
+        List<Move> getLegalMoves() {
             return legalMoves;
         }
     }
@@ -184,8 +176,7 @@ class MoveGenerator
      * @param position Given legal chess position.
      * @return King safety information of the given legal chess position.
      */
-    static KingSafety generateKingSafety(Position position)
-    {
+    static KingSafety generateKingSafety(Position position) {
         // Construct king safety object.
         KingSafety kingSafety = new KingSafety();
 
@@ -198,17 +189,14 @@ class MoveGenerator
         int numCheckingPieces = 0;
 
         // Check sliding piece attackers.
-        for (int pieceType = 0; pieceType < 2; pieceType++)
-        {
+        for (int pieceType = 0; pieceType < 2; pieceType++) {
             int[][] pieceMoveDirections = (pieceType == 0) ? rookMoveDirections : bishopMoveDirections;
             final long attackingPieces = position.board.theirPieces
                     & ((pieceType == 0) ? position.board.rooks : position.board.bishops);
 
             if ((attackingPieces & ((pieceType == 0) ? MagicUtils.getRookAttackBitboard(ourKingSquare, 0)
-                    : MagicUtils.getBishopAttackBitboard(ourKingSquare, 0))) != 0)
-            {
-                for (int[] pieceMoveDirection : pieceMoveDirections)
-                {
+                    : MagicUtils.getBishopAttackBitboard(ourKingSquare, 0))) != 0) {
+                for (int[] pieceMoveDirection : pieceMoveDirections) {
                     // Start at the square of our king.
                     int row = ourKingRow;
                     int col = ourKingCol;
@@ -218,30 +206,24 @@ class MoveGenerator
                     long possiblePinnedPieceBitboard = 0;
                     long attackLine = 0;
 
-                    while (true)
-                    {
+                    while (true) {
                         // Go to next square.
                         row += pieceMoveDirection[0];
                         col += pieceMoveDirection[1];
 
-                        if (row < 0 || row > 7 || col < 0 || col > 7)
-                        {
+                        if (row < 0 || row > 7 || col < 0 || col > 7) {
                             // Invalid square.
                             break;
                         }
 
                         long squareBitboard = Board.getSquareBitboard(row, col);
 
-                        if ((squareBitboard & position.board.ourPieces) != 0)
-                        {
+                        if ((squareBitboard & position.board.ourPieces) != 0) {
                             // One of our pieces is present here, it is possibly pinned.
-                            if (possiblePinnedPieceFound)
-                            {
+                            if (possiblePinnedPieceFound) {
                                 // There are at least two of our pieces lined up first (so no piece is pinned).
                                 break;
-                            }
-                            else
-                            {
+                            } else {
                                 // If an attacking piece follows, this piece is pinned.
                                 possiblePinnedPieceFound = true;
                                 possiblePinnedPieceBitboard = squareBitboard;
@@ -251,19 +233,14 @@ class MoveGenerator
                         // Add the square bitboard to the attack line.
                         attackLine |= squareBitboard;
 
-                        if ((squareBitboard & position.board.theirPieces) != 0)
-                        {
-                            if ((squareBitboard & attackingPieces) != 0)
-                            {
+                        if ((squareBitboard & position.board.theirPieces) != 0) {
+                            if ((squareBitboard & attackingPieces) != 0) {
                                 // One of their attacking pieces is present.
-                                if (possiblePinnedPieceFound)
-                                {
+                                if (possiblePinnedPieceFound) {
                                     // The attacking pieces doesn't give check, so only update the pinned pieces
                                     // bitboard.
                                     kingSafety.pinnedPieces |= possiblePinnedPieceBitboard;
-                                }
-                                else
-                                {
+                                } else {
                                     // No pinned piece, which means that the attacking piece gives check.
                                     kingSafety.attackLines |= attackLine;
                                     numCheckingPieces++;
@@ -281,8 +258,7 @@ class MoveGenerator
         long attackingPawns = pawnAttackBitboards[ourKingSquare] & position.board.theirPieces & position.board.pawns;
         kingSafety.attackLines |= attackingPawns;
 
-        if (attackingPawns != 0)
-        {
+        if (attackingPawns != 0) {
             // No more than one pawn can give check.
             numCheckingPieces++;
         }
@@ -292,8 +268,7 @@ class MoveGenerator
                 & ~(position.board.pawns | position.board.rooks | position.board.bishops | position.board.kings);
         kingSafety.attackLines |= attackingKnights;
 
-        if (attackingKnights != 0)
-        {
+        if (attackingKnights != 0) {
             // No more than one knight can give check.
             numCheckingPieces++;
         }
@@ -302,34 +277,29 @@ class MoveGenerator
         kingSafety.isDoubleCheck = (numCheckingPieces == 2);
 
         // Accessible squares around king where the king can move to.
-        for (int[] kingMoveDirection : kingMoveDirections)
-        {
+        for (int[] kingMoveDirection : kingMoveDirections) {
             final int row = ourKingRow + kingMoveDirection[0];
             final int col = ourKingCol + kingMoveDirection[1];
 
-            if (row < 0 || row > 7 || col < 0 || col > 7)
-            {
+            if (row < 0 || row > 7 || col < 0 || col > 7) {
                 // Invalid square.
                 continue;
             }
 
             final long squareBitboard = Board.getSquareBitboard(row, col);
 
-            if ((squareBitboard & position.board.ourPieces) != 0)
-            {
+            if ((squareBitboard & position.board.ourPieces) != 0) {
                 // If one of our pieces is present, the square is not accessible.
                 continue;
             }
 
-            if ((squareBitboard & kingSafety.attackLines & ~position.board.theirPieces) != 0)
-            {
+            if ((squareBitboard & kingSafety.attackLines & ~position.board.theirPieces) != 0) {
                 // The square lies on an attack line and is not equal to the attacking piece.
                 // Therefore, it is certainly not accessible.
                 continue;
             }
 
-            if (!squareIsUnderAttack(position, 8 * row + col))
-            {
+            if (!squareIsUnderAttack(position, 8 * row + col)) {
                 // The square is not under attack. Add it to the accessible
                 // squares bitboard.
                 kingSafety.accessibleSquares |= squareBitboard;
@@ -348,34 +318,30 @@ class MoveGenerator
      * @param square   Given square (between 0 and 63).
      * @return The square is under attack.
      */
-    static boolean squareIsUnderAttack(Position position, int square)
-    {
+    static boolean squareIsUnderAttack(Position position, int square) {
         // Check rooks.
         if ((MagicUtils.getRookAttackBitboard(square,
                 (position.board.ourPieces & ~position.board.kings) | position.board.theirPieces)
-                & position.board.theirPieces & position.board.rooks) != 0)
-        {
+                & position.board.theirPieces & position.board.rooks) != 0) {
             return true;
         }
 
         // Check bishops.
         if ((MagicUtils.getBishopAttackBitboard(square,
                 (position.board.ourPieces & ~position.board.kings) | position.board.theirPieces)
-                & position.board.theirPieces & position.board.bishops) != 0)
-        {
+                & position.board.theirPieces & position.board.bishops) != 0) {
             return true;
         }
 
         // Check knights.
         if ((knightAttackBitboards[square] & position.board.theirPieces
-                & ~(position.board.pawns | position.board.rooks | position.board.bishops | position.board.kings)) != 0)
-        {
+                & ~(position.board.pawns | position.board.rooks | position.board.bishops
+                        | position.board.kings)) != 0) {
             return true;
         }
 
         // Check pawns.
-        if ((pawnAttackBitboards[square] & position.board.theirPieces & position.board.pawns) != 0)
-        {
+        if ((pawnAttackBitboards[square] & position.board.theirPieces & position.board.pawns) != 0) {
             return true;
         }
 
@@ -386,8 +352,7 @@ class MoveGenerator
         final int row = square / 8;
         final int col = square % 8;
 
-        if (Math.abs(theirKingRow - row) <= 1 && Math.abs(theirKingCol - col) <= 1)
-        {
+        if (Math.abs(theirKingRow - row) <= 1 && Math.abs(theirKingCol - col) <= 1) {
             return true;
         }
 
@@ -401,8 +366,7 @@ class MoveGenerator
      * @param position Given legal chess position.
      * @return A list of legal moves of the given legal chess position.
      */
-    static MoveGeneratorResult generateLegalMoves(Position position)
-    {
+    static MoveGeneratorResult generateLegalMoves(Position position) {
         // Construct the legal moves list.
         List<Move> legalMoves = new ArrayList<>();
 
@@ -412,8 +376,7 @@ class MoveGenerator
         // Always add king moves.
         generateKingMoves(position, kingSafety, legalMoves);
 
-        if (!kingSafety.isDoubleCheck())
-        {
+        if (!kingSafety.isDoubleCheck()) {
             // Only king moves can resolve a double check, so add non-king moves if it's not
             // double check.
 
@@ -431,10 +394,8 @@ class MoveGenerator
         }
 
         // If it's black to move, mirror all moves.
-        if (position.board.isMirrored)
-        {
-            for (Move move : legalMoves)
-            {
+        if (position.board.isMirrored) {
+            for (Move move : legalMoves) {
                 move.mirror();
             }
         }
@@ -450,16 +411,14 @@ class MoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @param legalMoves List of moves to which the legal king moves are appended.
      */
-    static void generateKingMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
-    {
+    static void generateKingMoves(Position position, KingSafety kingSafety, List<Move> legalMoves) {
         // Calculate the square of our king.
         final int ourKingSquare = Long.numberOfTrailingZeros(position.board.ourPieces & position.board.kings);
 
         // Add moves to accessible squares.
         long accessibleSquares = kingSafety.accessibleSquares;
 
-        while (accessibleSquares != 0)
-        {
+        while (accessibleSquares != 0) {
             // Add move to list.
             legalMoves.add(new Move(ourKingSquare, Long.numberOfTrailingZeros(accessibleSquares)));
 
@@ -468,28 +427,24 @@ class MoveGenerator
         }
 
         // Add castling moves.
-        if (ourKingSquare == Board.SQUARE_E1 && !kingSafety.isCheck())
-        {
+        if (ourKingSquare == Board.SQUARE_E1 && !kingSafety.isCheck()) {
             // Our king is still on its original square and is not in check.
 
             // Check if we can castle short.
-            if (position.weCanCastleShort)
-            {
+            if (position.weCanCastleShort) {
                 // No pieces are allowed to be present on f1 and g1. Moreover, f1 should be an
                 // accessible square and g1 should not be under attack.
                 // Note that we don't have to check if a rook is still present on h1, because
                 // each rook move from h1 invalidates short castling rights.
                 if (((Board.BB_F1 | Board.BB_G1) & (position.board.ourPieces | position.board.theirPieces)) == 0
                         && (kingSafety.accessibleSquares & Board.BB_F1) != 0
-                        && !squareIsUnderAttack(position, Board.SQUARE_G1))
-                {
+                        && !squareIsUnderAttack(position, Board.SQUARE_G1)) {
                     legalMoves.add(new Move(ourKingSquare, Board.SQUARE_G1));
                 }
             }
 
             // Check if we can castle long.
-            if (position.weCanCastleLong)
-            {
+            if (position.weCanCastleLong) {
                 // No pieces are allowed to be present on b1, c1 and d1. Moreover, d1 should
                 // be an accessible square and c1 should not be under attack.
                 // Note that we don't have to check if a rook is still present on a1, because
@@ -497,8 +452,7 @@ class MoveGenerator
                 if (((Board.BB_B1 | Board.BB_C1 | Board.BB_D1)
                         & (position.board.ourPieces | position.board.theirPieces)) == 0
                         && (kingSafety.accessibleSquares & Board.BB_D1) != 0
-                        && !squareIsUnderAttack(position, Board.SQUARE_C1))
-                {
+                        && !squareIsUnderAttack(position, Board.SQUARE_C1)) {
                     legalMoves.add(new Move(ourKingSquare, Board.SQUARE_C1));
                 }
             }
@@ -513,15 +467,13 @@ class MoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @param legalMoves List of moves to which the legal knight moves are appended.
      */
-    static void generateKnightMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
-    {
+    static void generateKnightMoves(Position position, KingSafety kingSafety, List<Move> legalMoves) {
         // This function is never called for positions in double check.
         // Loop over all knights that are not pinned (pinned knight can never move).
         long ourNonPinnedKnights = position.board.ourPieces & ~(position.board.bishops | position.board.kings
                 | position.board.pawns | position.board.rooks | kingSafety.pinnedPieces);
 
-        while (ourNonPinnedKnights != 0)
-        {
+        while (ourNonPinnedKnights != 0) {
             // Calculate the knight source square.
             final int knightFromSquare = Long.numberOfTrailingZeros(ourNonPinnedKnights);
 
@@ -531,14 +483,12 @@ class MoveGenerator
             // If it's check, only moves to an attack line are allowed (as they certainly
             // resolve the check by either interposing or capturing the only attacking piece
             // because this function assumes it's not double check).
-            if (kingSafety.isCheck())
-            {
+            if (kingSafety.isCheck()) {
                 knightToSquaresBitboard &= kingSafety.attackLines;
             }
 
             // Add all legal moves.
-            while (knightToSquaresBitboard != 0)
-            {
+            while (knightToSquaresBitboard != 0) {
                 // Add move to list.
                 legalMoves.add(new Move(knightFromSquare, Long.numberOfTrailingZeros(knightToSquaresBitboard)));
 
@@ -559,8 +509,7 @@ class MoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @param legalMoves List of moves to which the legal rook moves are appended.
      */
-    static void generateRookMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
-    {
+    static void generateRookMoves(Position position, KingSafety kingSafety, List<Move> legalMoves) {
         // Cache the occupied squares bitboard.
         final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
 
@@ -569,8 +518,7 @@ class MoveGenerator
             // Determine non-pinned rooks.
             long ourNonPinnedRooks = position.board.ourPieces & position.board.rooks & ~kingSafety.pinnedPieces;
 
-            while (ourNonPinnedRooks != 0)
-            {
+            while (ourNonPinnedRooks != 0) {
                 // Calculate the rook source square.
                 final int rookFromSquare = Long.numberOfTrailingZeros(ourNonPinnedRooks);
 
@@ -581,14 +529,12 @@ class MoveGenerator
                 // If it's check, only moves to an attack line are allowed (as they certainly
                 // resolve the check by either interposing or capturing the only attacking piece
                 // because this function assumes it's not double check).
-                if (kingSafety.isCheck())
-                {
+                if (kingSafety.isCheck()) {
                     rookToSquaresBitboard &= kingSafety.attackLines;
                 }
 
                 // Add all legal moves.
-                while (rookToSquaresBitboard != 0)
-                {
+                while (rookToSquaresBitboard != 0) {
                     // Add move to list.
                     legalMoves.add(new Move(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
 
@@ -603,8 +549,7 @@ class MoveGenerator
 
         // Generate all pinned rook moves.
         // Note that no pinned rook can resolve a check.
-        if (!kingSafety.isCheck())
-        {
+        if (!kingSafety.isCheck()) {
             // Determine pinned rooks.
             long ourPinnedRooks = position.board.ourPieces & position.board.rooks & kingSafety.pinnedPieces;
 
@@ -613,15 +558,13 @@ class MoveGenerator
             final int ourKingRow = ourKingSquare / 8;
             final int ourKingCol = ourKingSquare % 8;
 
-            while (ourPinnedRooks != 0)
-            {
+            while (ourPinnedRooks != 0) {
                 // Calculate the rook source square.
                 final int rookFromSquare = Long.numberOfTrailingZeros(ourPinnedRooks);
                 final int rookFromRow = rookFromSquare / 8;
                 final int rookFromCol = rookFromSquare % 8;
 
-                if (ourKingCol == rookFromCol || ourKingRow == rookFromRow)
-                {
+                if (ourKingCol == rookFromCol || ourKingRow == rookFromRow) {
                     // The rook is pinned by a rook-like piece.
                     // If it would have been pinned by a bishop-like piece, it would not be able to
                     // move.
@@ -634,8 +577,7 @@ class MoveGenerator
                             occupiedSquaresBitboard) & ~position.board.ourPieces & sameLineWrtKingMask;
 
                     // Add all legal moves.
-                    while (rookToSquaresBitboard != 0)
-                    {
+                    while (rookToSquaresBitboard != 0) {
                         // Add move to list.
                         legalMoves.add(new Move(rookFromSquare, Long.numberOfTrailingZeros(rookToSquaresBitboard)));
 
@@ -658,8 +600,7 @@ class MoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @param legalMoves List of moves to which the legal bishop moves are appended.
      */
-    static void generateBishopMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
-    {
+    static void generateBishopMoves(Position position, KingSafety kingSafety, List<Move> legalMoves) {
         // Cache the occupied squares bitboard.
         final long occupiedSquaresBitboard = position.board.ourPieces | position.board.theirPieces;
 
@@ -668,8 +609,7 @@ class MoveGenerator
             // Determine non-pinned bishops.
             long ourNonPinnedBishops = position.board.ourPieces & position.board.bishops & ~kingSafety.pinnedPieces;
 
-            while (ourNonPinnedBishops != 0)
-            {
+            while (ourNonPinnedBishops != 0) {
                 // Calculate the bishop source square.
                 final int bishopFromSquare = Long.numberOfTrailingZeros(ourNonPinnedBishops);
 
@@ -680,14 +620,12 @@ class MoveGenerator
                 // If it's check, only moves to an attack line are allowed (as they certainly
                 // resolve the check by either interposing or capturing the only attacking piece
                 // because this function assumes it's not double check).
-                if (kingSafety.isCheck())
-                {
+                if (kingSafety.isCheck()) {
                     bishopToSquaresBitboard &= kingSafety.attackLines;
                 }
 
                 // Add all legal moves.
-                while (bishopToSquaresBitboard != 0)
-                {
+                while (bishopToSquaresBitboard != 0) {
                     // Add move to list.
                     legalMoves.add(new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
 
@@ -702,8 +640,7 @@ class MoveGenerator
 
         // Generate all pinned bishop moves.
         // Note that no pinned bishop can resolve a check.
-        if (!kingSafety.isCheck())
-        {
+        if (!kingSafety.isCheck()) {
             // Determine pinned bishops.
             long ourPinnedBishops = position.board.ourPieces & position.board.bishops & kingSafety.pinnedPieces;
 
@@ -712,15 +649,13 @@ class MoveGenerator
             final int ourKingRow = ourKingSquare / 8;
             final int ourKingCol = ourKingSquare % 8;
 
-            while (ourPinnedBishops != 0)
-            {
+            while (ourPinnedBishops != 0) {
                 // Calculate the bishop source square.
                 final int bishopFromSquare = Long.numberOfTrailingZeros(ourPinnedBishops);
                 final int bishopFromRow = bishopFromSquare / 8;
                 final int bishopFromCol = bishopFromSquare % 8;
 
-                if (ourKingCol != bishopFromCol && ourKingRow != bishopFromRow)
-                {
+                if (ourKingCol != bishopFromCol && ourKingRow != bishopFromRow) {
                     // The bishop is pinned by a bishop-like piece.
                     // If it would have been pinned by a rook-like piece, it would not be able to
                     // move.
@@ -733,8 +668,7 @@ class MoveGenerator
                             occupiedSquaresBitboard) & ~position.board.ourPieces & sameLineWrtKingMask;
 
                     // Add all legal moves.
-                    while (bishopToSquaresBitboard != 0)
-                    {
+                    while (bishopToSquaresBitboard != 0) {
                         // Add move to list.
                         legalMoves.add(new Move(bishopFromSquare, Long.numberOfTrailingZeros(bishopToSquaresBitboard)));
 
@@ -757,8 +691,7 @@ class MoveGenerator
      * @param kingSafety King safety corresponding to the position.
      * @param legalMoves List of moves to which the legal pawn moves are appended.
      */
-    static void generatePawnMoves(Position position, KingSafety kingSafety, List<Move> legalMoves)
-    {
+    static void generatePawnMoves(Position position, KingSafety kingSafety, List<Move> legalMoves) {
         // This function is never called for positions in double check.
         // Loop over all pawns.
         long ourPawns = position.board.ourPieces & position.board.pawns;
@@ -775,8 +708,7 @@ class MoveGenerator
         final long theirPiecesAndEnPassantBitboard = position.board.theirPieces
                 | (1L << position.enPassantCaptureSquare);
 
-        while (ourPawns != 0)
-        {
+        while (ourPawns != 0) {
             // Calculate the pawn source square.
             final int pawnFromSquare = Long.numberOfTrailingZeros(ourPawns);
             final int pawnFromRow = pawnFromSquare / 8;
@@ -792,10 +724,8 @@ class MoveGenerator
             // If it is not pinned, it can possibly move.
             // If it is pinned, it has to stay on the same line w.r.t. the king, which means
             // the king has to be on the same column of the pawn.
-            if (!isPinned || pawnFromCol == ourKingCol)
-            {
-                if (((pawnFromBitboard << 8) & occupiedSquaresBitboard) == 0)
-                {
+            if (!isPinned || pawnFromCol == ourKingCol) {
+                if (((pawnFromBitboard << 8) & occupiedSquaresBitboard) == 0) {
                     // No piece is present one square in front of the pawn.
                     final int pawnToSquare = pawnFromSquare + 8;
 
@@ -803,15 +733,11 @@ class MoveGenerator
                     // - It's not check or
                     // - It's check (but not double check, as assumed earlier) and the pawn moves to
                     // an attacking line (either interposing or capturing the only attacking piece).
-                    if (!kingSafety.isCheck() || ((pawnFromBitboard << 8) & kingSafety.attackLines) != 0)
-                    {
-                        if (pawnFromRow != 6)
-                        {
+                    if (!kingSafety.isCheck() || ((pawnFromBitboard << 8) & kingSafety.attackLines) != 0) {
+                        if (pawnFromRow != 6) {
                             // Normal move.
                             legalMoves.add(new Move(pawnFromSquare, pawnToSquare));
-                        }
-                        else
-                        {
+                        } else {
                             // Promotion.
                             legalMoves.add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.BISHOP));
                             legalMoves.add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.KNIGHT));
@@ -823,14 +749,12 @@ class MoveGenerator
                     // Two moves forward.
                     // If the pawn starts from its initial square, moving two squares forward is
                     // possible if no piece is present on the destination square.
-                    if (pawnFromRow == 1 && ((pawnFromBitboard << 16) & occupiedSquaresBitboard) == 0)
-                    {
+                    if (pawnFromRow == 1 && ((pawnFromBitboard << 16) & occupiedSquaresBitboard) == 0) {
                         // Only continue if
                         // - It's not check or
                         // - It's check (but not double check, as assumed earlier) and the pawn moves to
                         // an attacking line (either interposing or capturing the only attacking piece).
-                        if (!kingSafety.isCheck() || ((pawnFromBitboard << 16) & kingSafety.attackLines) != 0)
-                        {
+                        if (!kingSafety.isCheck() || ((pawnFromBitboard << 16) & kingSafety.attackLines) != 0) {
 
                             legalMoves.add(new Move(pawnFromSquare, pawnFromSquare + 16));
                         }
@@ -840,31 +764,26 @@ class MoveGenerator
             }
 
             // Captures.
-            for (final int direction : new int[] { -1, 1 })
-            {
+            for (final int direction : new int[] { -1, 1 }) {
                 // Cache destination square parameters.
                 final int pawnToSquare = pawnFromSquare + 8 + direction;
                 final int pawnToCol = pawnFromCol + direction;
                 final long pawnToBitboard = Board.getSquareBitboard(pawnToSquare);
 
-                if (pawnToCol >= 0 && pawnToCol <= 7)
-                {
-                    if ((pawnToBitboard & theirPiecesAndEnPassantBitboard) != 0)
-                    {
+                if (pawnToCol >= 0 && pawnToCol <= 7) {
+                    if ((pawnToBitboard & theirPiecesAndEnPassantBitboard) != 0) {
                         // One of their pieces is present on the destination square (possibly en
                         // passant).
                         // If it is not pinned, it can possibly capture.
                         // If it is pinned, it has to stay on the same line w.r.t. the king, which means
                         // the king has to be on the same diagonal of the pawn's source and destination
                         // square.
-                        if (!isPinned || pawnFromCol - ourKingCol == direction * (pawnFromRow - ourKingRow))
-                        {
+                        if (!isPinned || pawnFromCol - ourKingCol == direction * (pawnFromRow - ourKingRow)) {
                             boolean enPassantCheckPasses = true;
                             boolean checkingEnPassantPawnCaptured = false;
 
                             // Handle en passant captures.
-                            if (pawnToSquare == position.enPassantCaptureSquare)
-                            {
+                            if (pawnToSquare == position.enPassantCaptureSquare) {
                                 // Do a check for en passant captures. It is possible that our pawn is not
                                 // pinned, but still cannot capture in the following situation:
                                 // K . . . P p . r.
@@ -874,23 +793,20 @@ class MoveGenerator
                                 if (pawnFromRow == ourKingRow && (MagicUtils.getRookAttackBitboard(ourKingSquare,
                                         occupiedSquaresBitboard
                                                 & ~(pawnFromBitboard | Board.getSquareBitboard(pawnFromRow, pawnToCol)))
-                                        & position.board.theirPieces & position.board.rooks) != 0)
-                                {
+                                        & position.board.theirPieces & position.board.rooks) != 0) {
                                     enPassantCheckPasses = false;
                                 }
 
                                 // Determine if we capture an en passant pawn that gives check.
                                 // This is the case if the pawn is part of an attack line (and thus gives
                                 // check).
-                                if ((kingSafety.attackLines & Board.getSquareBitboard(pawnFromRow, pawnToCol)) != 0)
-                                {
+                                if ((kingSafety.attackLines & Board.getSquareBitboard(pawnFromRow, pawnToCol)) != 0) {
                                     checkingEnPassantPawnCaptured = true;
                                 }
                             }
 
                             // Only continue if en passant check passes.
-                            if (enPassantCheckPasses)
-                            {
+                            if (enPassantCheckPasses) {
                                 // Only continue if
                                 // - It's not check or
                                 // - It's check (but not double check, as assumed earlier) and the pawn moves to
@@ -899,15 +815,11 @@ class MoveGenerator
                                 // expose the king to other checks once removed, as then our king would have
                                 // been in check on the previous move.
                                 if (!kingSafety.isCheck() || (pawnToBitboard & kingSafety.attackLines) != 0
-                                        || checkingEnPassantPawnCaptured)
-                                {
-                                    if (pawnFromRow != 6)
-                                    {
+                                        || checkingEnPassantPawnCaptured) {
+                                    if (pawnFromRow != 6) {
                                         // Normal move.
                                         legalMoves.add(new Move(pawnFromSquare, pawnToSquare));
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         // Promotion.
                                         legalMoves
                                                 .add(new Move(pawnFromSquare, pawnToSquare, PromotionPieceType.BISHOP));

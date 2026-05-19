@@ -26,8 +26,7 @@ import java.util.regex.Pattern;
  *
  * @author Dieter Dobbelaere
  */
-class SanTranslator
-{
+class SanTranslator {
     private static final Pattern SAN_PATTERN = Pattern.compile(
             "[QKNBR]?([a-h]?[1-8]?)[x:]?([a-h][1-8])(?:=([QNRB]))?(?:e.p.)?[+#]?");
 
@@ -40,52 +39,45 @@ class SanTranslator
      * @throws IllegalMoveException If the SAN string is invalid, ambiguous or does
      *                              not correspond to a legal move.
      */
-    static Move fromSan(String san, Position position)
-    {
-        if (san.length() < 2)
-        {
+    static Move fromSan(String san, Position position) {
+        if (san.length() < 2) {
             throw new IllegalMoveException("Invalid SAN string \"" + san + "\"");
         }
 
         // Detect castling moves.
-        if (san.startsWith("O-O-O") || san.startsWith("0-0-0"))
-        {
+        if (san.startsWith("O-O-O") || san.startsWith("0-0-0")) {
             return position.isWhiteToMove() ? Move.LONG_CASTLING_WHITE : Move.LONG_CASTLING_BLACK;
-        }
-        else if (san.startsWith("O-O") || san.startsWith("0-0"))
-        {
+        } else if (san.startsWith("O-O") || san.startsWith("0-0")) {
             return position.isWhiteToMove() ? Move.SHORT_CASTLING_WHITE : Move.SHORT_CASTLING_BLACK;
         }
 
         // Determine the piece type.
         PieceType pieceType;
 
-        switch (san.charAt(0))
-        {
-        case 'Q':
-            pieceType = PieceType.QUEEN;
-            break;
-        case 'N':
-            pieceType = PieceType.KNIGHT;
-            break;
-        case 'B':
-            pieceType = PieceType.BISHOP;
-            break;
-        case 'R':
-            pieceType = PieceType.ROOK;
-            break;
-        case 'K':
-            pieceType = PieceType.KING;
-            break;
-        default:
-            pieceType = PieceType.PAWN;
-            break;
+        switch (san.charAt(0)) {
+            case 'Q':
+                pieceType = PieceType.QUEEN;
+                break;
+            case 'N':
+                pieceType = PieceType.KNIGHT;
+                break;
+            case 'B':
+                pieceType = PieceType.BISHOP;
+                break;
+            case 'R':
+                pieceType = PieceType.ROOK;
+                break;
+            case 'K':
+                pieceType = PieceType.KING;
+                break;
+            default:
+                pieceType = PieceType.PAWN;
+                break;
         }
 
         // Parse the move destination square, disambiguating label and promotion piece.
         Matcher matcher = SAN_PATTERN.matcher(san);
-        if (!matcher.matches())
-        {
+        if (!matcher.matches()) {
             throw new IllegalMoveException("Invalid SAN string \"" + san + "\"");
         }
 
@@ -95,15 +87,11 @@ class SanTranslator
 
         // Convert disambiguating label to bitboard.
         long fromBitboard = 0xFFFFFFFFFFFFFFFFL;
-        for (int i = 0; i < disambiguatingLabel.length(); i++)
-        {
+        for (int i = 0; i < disambiguatingLabel.length(); i++) {
             char c = disambiguatingLabel.charAt(i);
-            if (c >= 'a' && c <= 'h')
-            {
+            if (c >= 'a' && c <= 'h') {
                 fromBitboard &= Board.getColBitboard(c);
-            }
-            else
-            {
+            } else {
                 fromBitboard &= Board.getRowBitboard(c);
             }
         }
@@ -111,22 +99,20 @@ class SanTranslator
         // Parse promotion piece type.
         PromotionPieceType promotionPieceType = PromotionPieceType.NONE;
 
-        if (promotionPieceLabel != null)
-        {
-            switch (promotionPieceLabel.charAt(0))
-            {
-            case 'Q':
-                promotionPieceType = PromotionPieceType.QUEEN;
-                break;
-            case 'R':
-                promotionPieceType = PromotionPieceType.ROOK;
-                break;
-            case 'N':
-                promotionPieceType = PromotionPieceType.KNIGHT;
-                break;
-            case 'B':
-                promotionPieceType = PromotionPieceType.BISHOP;
-                break;
+        if (promotionPieceLabel != null) {
+            switch (promotionPieceLabel.charAt(0)) {
+                case 'Q':
+                    promotionPieceType = PromotionPieceType.QUEEN;
+                    break;
+                case 'R':
+                    promotionPieceType = PromotionPieceType.ROOK;
+                    break;
+                case 'N':
+                    promotionPieceType = PromotionPieceType.KNIGHT;
+                    break;
+                case 'B':
+                    promotionPieceType = PromotionPieceType.BISHOP;
+                    break;
             }
         }
 
@@ -135,25 +121,19 @@ class SanTranslator
         Move move = null;
 
         // Search for the correct move.
-        for (Move possibleMove : possibleMoves)
-        {
+        for (Move possibleMove : possibleMoves) {
             if (possibleMove.getToSquare() == toSquare
                     && (Board.getSquareBitboard(possibleMove.getFromSquare()) & fromBitboard) != 0
-                    && possibleMove.getPromotionPieceType() == promotionPieceType)
-            {
-                if (move != null)
-                {
+                    && possibleMove.getPromotionPieceType() == promotionPieceType) {
+                if (move != null) {
                     throw new IllegalMoveException("Move \"" + san + "\" is ambiguous in the position\n" + position);
-                }
-                else
-                {
+                } else {
                     move = possibleMove;
                 }
             }
         }
 
-        if (move == null)
-        {
+        if (move == null) {
             throw new IllegalMoveException("Move \"" + san + "\" is illegal in the position\n" + position);
         }
 
@@ -167,8 +147,7 @@ class SanTranslator
      * @param position Given position in which the move is played.
      * @return SAN of the move (e.g. Ngxe2+).
      */
-    static String toSan(Move move, Position position)
-    {
+    static String toSan(Move move, Position position) {
         return toSan(move, position, position.playMove(move));
     }
 
@@ -180,35 +159,26 @@ class SanTranslator
      * @param nextPosition Position after the move has been played.
      * @return SAN of the move (e.g. Ngxe2+).
      */
-    static String toSan(Move move, Position position, Position nextPosition)
-    {
+    static String toSan(Move move, Position position, Position nextPosition) {
         StringBuilder san = new StringBuilder();
 
-        if (position.isShortCastlingMove(move))
-        {
+        if (position.isShortCastlingMove(move)) {
             san.append("O-O");
-        }
-        else if (position.isLongCastlingMove(move))
-        {
+        } else if (position.isLongCastlingMove(move)) {
             san.append("O-O-O");
-        }
-        else
-        {
+        } else {
             // Append the piece type name.
             PieceType pieceType = position.getMovePieceType(move);
             san.append(pieceType);
 
-            if (pieceType != PieceType.PAWN && pieceType != PieceType.KING)
-            {
+            if (pieceType != PieceType.PAWN && pieceType != PieceType.KING) {
                 // Handle ambiguities.
                 san.append(getDisambiguatingLabel(position, move, position.getLegalMoves(pieceType)));
             }
 
             // Handle captures.
-            if (position.isCapturingMove(move))
-            {
-                if (pieceType == PieceType.PAWN)
-                {
+            if (position.isCapturingMove(move)) {
+                if (pieceType == PieceType.PAWN) {
                     san.append((char) ('a' + (move.getFromSquare() % 8)));
                 }
 
@@ -219,30 +189,24 @@ class SanTranslator
             san.append(Board.getSquareName(move.getToSquare()));
 
             // Handle en passant capture suffix.
-            if (pieceType == PieceType.PAWN && position.isEnPassantCaptureSquare(move.getToSquare()))
-            {
+            if (pieceType == PieceType.PAWN && position.isEnPassantCaptureSquare(move.getToSquare())) {
                 san.append("e.p.");
             }
 
             // Handle pawn promotion.
             PromotionPieceType promotionPieceType = move.getPromotionPieceType();
 
-            if (promotionPieceType != PromotionPieceType.NONE)
-            {
+            if (promotionPieceType != PromotionPieceType.NONE) {
                 san.append('=');
                 san.append(promotionPieceType);
             }
         }
 
         // Determine if the move leads to check or checkmate.
-        if (nextPosition.isCheck())
-        {
-            if (nextPosition.isCheckmate())
-            {
+        if (nextPosition.isCheck()) {
+            if (nextPosition.isCheckmate()) {
                 san.append('#');
-            }
-            else
-            {
+            } else {
                 san.append('+');
             }
         }
@@ -258,8 +222,7 @@ class SanTranslator
      * @param samePieceTypeMoves List of moves with the same piece type.
      * @return
      */
-    private static String getDisambiguatingLabel(Position position, Move move, List<Move> samePieceTypeMoves)
-    {
+    private static String getDisambiguatingLabel(Position position, Move move, List<Move> samePieceTypeMoves) {
         boolean sameRowPiecePresent = false;
         boolean sameColPiecePresent = false;
         boolean ambiguityPresent = false;
@@ -267,46 +230,32 @@ class SanTranslator
         int row = move.getFromSquare() / 8;
         int col = move.getFromSquare() % 8;
 
-        for (Move otherMove : samePieceTypeMoves)
-        {
-            if (otherMove.getToSquare() == move.getToSquare() && !otherMove.equals(move))
-            {
+        for (Move otherMove : samePieceTypeMoves) {
+            if (otherMove.getToSquare() == move.getToSquare() && !otherMove.equals(move)) {
                 int otherRow = otherMove.getFromSquare() / 8;
                 int otherCol = otherMove.getFromSquare() % 8;
 
                 ambiguityPresent = true;
 
-                if (row == otherRow)
-                {
+                if (row == otherRow) {
                     sameRowPiecePresent = true;
-                }
-                else if (col == otherCol)
-                {
+                } else if (col == otherCol) {
                     sameColPiecePresent = true;
                 }
             }
         }
 
-        if (ambiguityPresent)
-        {
-            if (sameColPiecePresent)
-            {
-                if (sameRowPiecePresent)
-                {
+        if (ambiguityPresent) {
+            if (sameColPiecePresent) {
+                if (sameRowPiecePresent) {
                     return Board.getSquareName(move.getFromSquare());
-                }
-                else
-                {
+                } else {
                     return "" + (row + 1);
                 }
-            }
-            else
-            {
+            } else {
                 return "" + (char) ('a' + col);
             }
-        }
-        else
-        {
+        } else {
             return "";
         }
     }

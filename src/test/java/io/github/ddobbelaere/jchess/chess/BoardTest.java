@@ -26,15 +26,13 @@ import org.junit.jupiter.api.Test;
  *
  * @author Dieter Dobbelaere
  */
-class BoardTest
-{
+class BoardTest {
 
     /**
      * Test static methods.
      */
     @Test
-    void testStaticMethods()
-    {
+    void testStaticMethods() {
         // Check bitboard methods.
         assertEquals(1, Board.getSquareBitboard("a1"));
         assertEquals(Board.getSquareBitboard("c2"), Board.getSquareBitboard(1, 2));
@@ -44,14 +42,12 @@ class BoardTest
         assertEquals(Long.reverseBytes(0x8040201008040201L), Board.getDiagsBitboard(0, 7));
         assertEquals(true, Board.getBitboardDebugString(1L).contains("x"));
 
-        for (int i = 0; i < 8; i++)
-        {
+        for (int i = 0; i < 8; i++) {
             // Clear expected bitboards.
             long rowBitboard = 0;
             long colBitboard = 0;
 
-            for (int j = 0; j < 8; j++)
-            {
+            for (int j = 0; j < 8; j++) {
                 // Add square to expected row and column bitboards.
                 rowBitboard |= Board.getSquareBitboard(i, j);
                 colBitboard |= Board.getSquareBitboard(j, i);
@@ -68,8 +64,7 @@ class BoardTest
      * {@link io.github.ddobbelaere.jchess.chess.Board#equals(Object)}.
      */
     @Test
-    void testEquals()
-    {
+    void testEquals() {
         Board board = new Board();
 
         assertEquals(true, board.equals(board));

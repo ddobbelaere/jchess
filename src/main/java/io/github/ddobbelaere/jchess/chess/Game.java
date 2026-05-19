@@ -27,8 +27,7 @@ import java.util.Optional;
  *
  * @author Dieter Dobbelaere
  */
-public class Game
-{
+public class Game {
     /**
      * List of moves.
      */
@@ -52,8 +51,7 @@ public class Game
     /**
      * Create a game from the standard starting position.
      */
-    public Game()
-    {
+    public Game() {
         this(Position.STARTING);
     }
 
@@ -62,8 +60,7 @@ public class Game
      *
      * @param position Starting position.
      */
-    public Game(Position position)
-    {
+    public Game(Position position) {
         // Just add it to the position list, as Position is immutable (from outside the
         // package).
         positions.add(position);
@@ -76,8 +73,7 @@ public class Game
      * @throws IllegalFenException If the FEN string is invalid or represents an
      *                             illegal position.
      */
-    public Game(String fen)
-    {
+    public Game(String fen) {
         Position position = Position.fromFen(fen);
         positions.add(position);
     }
@@ -88,10 +84,8 @@ public class Game
      * @param moves Given moves.
      * @throws IllegalMoveException If an illegal move is encountered.
      */
-    public void playMoves(Move... moves)
-    {
-        for (Move move : moves)
-        {
+    public void playMoves(Move... moves) {
+        for (Move move : moves) {
             // The next statement possibly throws an IllegalMoveException.
             Position nextPosition = getLastPosition().playMove(move);
 
@@ -109,10 +103,8 @@ public class Game
      * @param moves Given moves in standard algebraic notation (e.g. Qxd4).
      * @throws IllegalMoveException If an illegal move is encountered.
      */
-    public void playMoves(String... moves)
-    {
-        for (String move : moves)
-        {
+    public void playMoves(String... moves) {
+        for (String move : moves) {
             // The next statement possibly throws an IllegalMoveException.
             Move internalMove = SanTranslator.fromSan(move, getLastPosition());
             Position nextPosition = getLastPosition().playMove(internalMove);
@@ -129,8 +121,7 @@ public class Game
      *
      * @return A reference to an unmodifiable view of the list of moves.
      */
-    public List<Move> getMoves()
-    {
+    public List<Move> getMoves() {
         return Collections.unmodifiableList(moves);
     }
 
@@ -140,12 +131,10 @@ public class Game
      *
      * @return The list of moves in standard algebraic notation.
      */
-    public List<String> getMovesSan()
-    {
+    public List<String> getMovesSan() {
         List<String> movesSan = new ArrayList<>(moves.size());
 
-        for (int i = 0; i < moves.size(); i++)
-        {
+        for (int i = 0; i < moves.size(); i++) {
             movesSan.add(SanTranslator.toSan(moves.get(i), positions.get(i), positions.get(i + 1)));
         }
 
@@ -158,8 +147,7 @@ public class Game
      *
      * @return A reference to an unmodifiable view of the list of positions.
      */
-    public List<Position> getPositions()
-    {
+    public List<Position> getPositions() {
         return Collections.unmodifiableList(positions);
     }
 
@@ -168,8 +156,7 @@ public class Game
      *
      * @return The current position.
      */
-    public Position getCurrentPosition()
-    {
+    public Position getCurrentPosition() {
         return getLastPosition();
     }
 
@@ -178,8 +165,7 @@ public class Game
      *
      * @return The last position in the list of positions.
      */
-    Position getLastPosition()
-    {
+    Position getLastPosition() {
         return positions.get(positions.size() - 1);
     }
 
@@ -190,8 +176,7 @@ public class Game
      * @return A list of legal moves that can be played in the current position of
      *         the game.
      */
-    public List<Move> getLegalMoves()
-    {
+    public List<Move> getLegalMoves() {
         return getLastPosition().getLegalMoves();
     }
 
@@ -202,15 +187,13 @@ public class Game
      * @return A list of legal moves that can be played in the current position of
      *         the game in standard algebraic notation.
      */
-    public List<String> getLegalMovesSan()
-    {
+    public List<String> getLegalMovesSan() {
         final Position lastPosition = getLastPosition();
         final List<Move> legalMoves = lastPosition.getLegalMoves();
 
         List<String> legalMovesSan = new ArrayList<>(legalMoves.size());
 
-        for (int i = 0; i < legalMoves.size(); i++)
-        {
+        for (int i = 0; i < legalMoves.size(); i++) {
             legalMovesSan.add(SanTranslator.toSan(legalMoves.get(i), lastPosition));
         }
 
@@ -223,31 +206,26 @@ public class Game
      * @return {@code true} if and only if the current position is a threefold
      *         repetition.
      */
-    public boolean isThreefoldRepetition()
-    {
+    public boolean isThreefoldRepetition() {
         // Count the number of occurrences of the final position.
         int numOccurences = 0;
 
         // Loop backwards to speed-up detection in case a threefold repetition is
         // present.
-        for (int i = positions.size() - 2; i >= 0; i--)
-        {
+        for (int i = positions.size() - 2; i >= 0; i--) {
             Position position = positions.get(i);
 
-            if (positions.get(i).equalsIgnoreMoveCounts(getLastPosition()))
-            {
+            if (positions.get(i).equalsIgnoreMoveCounts(getLastPosition())) {
                 numOccurences++;
             }
 
             // Short-circuit if we have reached a threefold.
-            if (numOccurences >= 2)
-            {
+            if (numOccurences >= 2) {
                 return true;
             }
 
             // Short-circuit if the move before was zeroing move.
-            if (position.getNumNoCaptureOrPawnAdvancePlies() == 0)
-            {
+            if (position.getNumNoCaptureOrPawnAdvancePlies() == 0) {
                 return false;
             }
         }
@@ -259,16 +237,14 @@ public class Game
     /**
      * @return The name of the player with the white pieces.
      */
-    Optional<String> getWhitePlayerName()
-    {
+    Optional<String> getWhitePlayerName() {
         return whitePlayerName;
     }
 
     /**
      * @return The name of the player with the black pieces.
      */
-    Optional<String> getBlackPlayerName()
-    {
+    Optional<String> getBlackPlayerName() {
         return blackPlayerName;
     }
 
@@ -277,8 +253,7 @@ public class Game
      *
      * @param name Given name.
      */
-    void setWhitePlayerName(String name)
-    {
+    void setWhitePlayerName(String name) {
         whitePlayerName = Optional.of(name);
     }
 
@@ -287,8 +262,7 @@ public class Game
      *
      * @param name Given name.
      */
-    void setBlackPlayerName(String name)
-    {
+    void setBlackPlayerName(String name) {
         blackPlayerName = Optional.of(name);
     }
 }

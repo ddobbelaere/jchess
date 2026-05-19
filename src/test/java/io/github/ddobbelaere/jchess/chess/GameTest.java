@@ -29,12 +29,10 @@ import org.junit.jupiter.api.Test;
  *
  * @author Dieter Dobbelaere
  */
-class GameTest
-{
+class GameTest {
 
     @Test
-    void test()
-    {
+    void test() {
         // Construct a new game.
         Game game = createGame(Position.STARTING, "d2d4", "g8f6", "c2c4", "e7e6", "b1c3", "f8b4");
 
@@ -62,8 +60,7 @@ class GameTest
      * {@link io.github.ddobbelaere.jchess.chess.Game#isThreefoldRepetition()}.
      */
     @Test
-    void testIsThreefoldRepetition()
-    {
+    void testIsThreefoldRepetition() {
         assertEquals(false, new Game().isThreefoldRepetition());
         assertEquals(false,
                 new Game("rnbqkb1r/pppp1ppp/5n2/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 10 3").isThreefoldRepetition());
@@ -77,8 +74,7 @@ class GameTest
      * Test method for game info methods.
      */
     @Test
-    void testGameInfoMethods()
-    {
+    void testGameInfoMethods() {
         Game game = new Game();
 
         assertEquals(false, game.getWhitePlayerName().isPresent());
@@ -100,12 +96,10 @@ class GameTest
      * @return Game from the given starting position with the given moves played.
      * @throws IllegalMoveException If one of the moves is illegal.
      */
-    private static Game createGame(Position position, String... moves)
-    {
+    private static Game createGame(Position position, String... moves) {
         Game game = new Game(position);
 
-        for (String move : moves)
-        {
+        for (String move : moves) {
             game.playMoves(new Move(move));
         }
 
@@ -121,12 +115,10 @@ class GameTest
      * @return Game from the given starting position with the given moves played.
      * @throws IllegalMoveException If one of the moves is illegal.
      */
-    private static Game createGameSan(Position position, String... moves)
-    {
+    private static Game createGameSan(Position position, String... moves) {
         Game game = new Game(position);
 
-        for (String move : moves)
-        {
+        for (String move : moves) {
             game.playMoves(move);
         }
 

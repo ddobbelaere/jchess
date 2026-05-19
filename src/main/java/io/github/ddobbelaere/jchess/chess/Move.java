@@ -35,8 +35,7 @@ package io.github.ddobbelaere.jchess.chess;
  *
  * @author Dieter Dobbelaere
  */
-public class Move
-{
+public class Move {
     /**
      * Source square of the moved piece.
      */
@@ -80,8 +79,7 @@ public class Move
      * @param toSquare           Destination square of the moved piece.
      * @param promotionPieceType Promotion piece type.
      */
-    Move(int fromSquare, int toSquare, PromotionPieceType promotionPieceType)
-    {
+    Move(int fromSquare, int toSquare, PromotionPieceType promotionPieceType) {
         this.fromSquare = (byte) fromSquare;
         this.toSquare = (byte) toSquare;
         this.promotionPieceType = promotionPieceType;
@@ -93,8 +91,7 @@ public class Move
      * @param fromSquare Source square of the moved piece.
      * @param toSquare   Destination square of the moved piece.
      */
-    Move(int fromSquare, int toSquare)
-    {
+    Move(int fromSquare, int toSquare) {
         this(fromSquare, toSquare, PromotionPieceType.NONE);
     }
 
@@ -103,8 +100,7 @@ public class Move
      *
      * @param move Move to copy.
      */
-    Move(Move move)
-    {
+    Move(Move move) {
         this(move.fromSquare, move.toSquare, move.promotionPieceType);
     }
 
@@ -118,38 +114,35 @@ public class Move
      *
      * @param moveString Descriptive move string.
      */
-    public Move(String moveString)
-    {
+    public Move(String moveString) {
         // Check move string length.
         int len = moveString.length();
 
-        if (len != 4 && len != 5)
-        {
+        if (len != 4 && len != 5) {
             throw new IllegalArgumentException(
                     "Move string " + moveString + " should contain either 4 or 5 characters.");
         }
 
         PromotionPieceType promotionPieceType = PromotionPieceType.NONE;
 
-        if (len == 5)
-        {
+        if (len == 5) {
             // Parse promotion piece type character.
-            switch (moveString.charAt(4))
-            {
-            case 'B':
-                promotionPieceType = PromotionPieceType.BISHOP;
-                break;
-            case 'N':
-                promotionPieceType = PromotionPieceType.KNIGHT;
-                break;
-            case 'Q':
-                promotionPieceType = PromotionPieceType.QUEEN;
-                break;
-            case 'R':
-                promotionPieceType = PromotionPieceType.ROOK;
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal promotion piece type in move string " + moveString + ".");
+            switch (moveString.charAt(4)) {
+                case 'B':
+                    promotionPieceType = PromotionPieceType.BISHOP;
+                    break;
+                case 'N':
+                    promotionPieceType = PromotionPieceType.KNIGHT;
+                    break;
+                case 'Q':
+                    promotionPieceType = PromotionPieceType.QUEEN;
+                    break;
+                case 'R':
+                    promotionPieceType = PromotionPieceType.ROOK;
+                    break;
+                default:
+                    throw new IllegalArgumentException(
+                            "Illegal promotion piece type in move string " + moveString + ".");
             }
         }
 
@@ -161,58 +154,49 @@ public class Move
     /**
      * @return Source square of the moved piece.
      */
-    int getFromSquare()
-    {
+    int getFromSquare() {
         return fromSquare;
     }
 
     /**
      * @return Destination square of the moved piece.
      */
-    int getToSquare()
-    {
+    int getToSquare() {
         return toSquare;
     }
 
     /**
      * @return Promotion piece type.
      */
-    PromotionPieceType getPromotionPieceType()
-    {
+    PromotionPieceType getPromotionPieceType() {
         return promotionPieceType;
     }
 
     /**
      * Mirror the move (change side to move), e.g. d7d8Q becomes d2d1Q.
      */
-    void mirror()
-    {
+    void mirror() {
         // Mirror source and destination square, promotion piece type stays the same.
         fromSquare ^= 0b111000;
         toSquare ^= 0b111000;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return Board.getSquareName(fromSquare) + Board.getSquareName(toSquare) + promotionPieceType;
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
 
-        if (obj == null)
-        {
+        if (obj == null) {
             return false;
         }
 
-        if (getClass() != obj.getClass())
-        {
+        if (getClass() != obj.getClass()) {
             return false;
         }
 

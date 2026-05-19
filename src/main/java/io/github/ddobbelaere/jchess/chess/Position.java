@@ -51,8 +51,7 @@ import io.github.ddobbelaere.jchess.chess.MoveGenerator.MoveGeneratorResult;
  *
  * @author Dieter Dobbelaere
  */
-public class Position
-{
+public class Position {
     /**
      * Chess board corresponding to the position.
      */
@@ -107,8 +106,7 @@ public class Position
     /**
      * Default constructor.
      */
-    Position()
-    {
+    Position() {
 
     }
 
@@ -117,8 +115,7 @@ public class Position
      *
      * @param position Position that is to be copied.
      */
-    public Position(Position position)
-    {
+    public Position(Position position) {
         // Copy all the fields.
         board = new Board(position.board);
         weCanCastleShort = position.weCanCastleShort;
@@ -138,14 +135,12 @@ public class Position
      * @throws IllegalFenException If the FEN string is invalid or represents an
      *                             illegal position.
      */
-    public static Position fromFen(String fen)
-    {
+    public static Position fromFen(String fen) {
         // Split FEN into different parts (assuming whitespace delimiters).
         String[] fenParts = fen.split("\\s+");
 
         // A FEN string should have at least three parts.
-        if (fenParts.length < 3)
-        {
+        if (fenParts.length < 3) {
             throw new IllegalFenException("FEN string has less than three parts.");
         }
 
@@ -157,63 +152,50 @@ public class Position
         byte row = 7;
         final String pieceNames = "kqrbnp";
 
-        for (char c : fenParts[0].toCharArray())
-        {
-            if (c == '/')
-            {
+        for (char c : fenParts[0].toCharArray()) {
+            if (c == '/') {
                 // Next row.
                 col = 0;
                 row--;
-            }
-            else if (c >= '1' && c <= '8')
-            {
+            } else if (c >= '1' && c <= '8') {
                 // Skip empty squares.
                 col += c - '0';
-            }
-            else if (pieceNames.indexOf(Character.toLowerCase(c)) >= 0)
-            {
+            } else if (pieceNames.indexOf(Character.toLowerCase(c)) >= 0) {
                 // Sanity check of square indices.
-                if (row < 0 || row > 7 || col < 0 || col > 7)
-                {
+                if (row < 0 || row > 7 || col < 0 || col > 7) {
                     throw new IllegalFenException("Invalid piece placement string.");
                 }
 
                 long squareBitboard = Board.getSquareBitboard(row, col);
 
-                if (Character.isUpperCase(c))
-                {
+                if (Character.isUpperCase(c)) {
                     position.board.ourPieces |= squareBitboard;
-                }
-                else
-                {
+                } else {
                     position.board.theirPieces |= squareBitboard;
                 }
 
-                switch (Character.toLowerCase(c))
-                {
-                case 'p':
-                    position.board.pawns |= squareBitboard;
-                    break;
-                case 'r':
-                    position.board.rooks |= squareBitboard;
-                    break;
-                case 'b':
-                    position.board.bishops |= squareBitboard;
-                    break;
-                case 'q':
-                    position.board.rooks |= squareBitboard;
-                    position.board.bishops |= squareBitboard;
-                    break;
-                case 'k':
-                    position.board.kings |= squareBitboard;
-                    break;
+                switch (Character.toLowerCase(c)) {
+                    case 'p':
+                        position.board.pawns |= squareBitboard;
+                        break;
+                    case 'r':
+                        position.board.rooks |= squareBitboard;
+                        break;
+                    case 'b':
+                        position.board.bishops |= squareBitboard;
+                        break;
+                    case 'q':
+                        position.board.rooks |= squareBitboard;
+                        position.board.bishops |= squareBitboard;
+                        break;
+                    case 'k':
+                        position.board.kings |= squareBitboard;
+                        break;
                 }
 
                 // Increment column.
                 col++;
-            }
-            else
-            {
+            } else {
                 throw new IllegalFenException("Invalid piece placement string.");
             }
         }
@@ -225,13 +207,11 @@ public class Position
         position.theyCanCastleLong = fenParts[2].contains("q");
 
         // Process (optional) en passant square.
-        if (fenParts.length >= 4 && fenParts[3].length() == 2)
-        {
+        if (fenParts.length >= 4 && fenParts[3].length() == 2) {
             int square = 8 * (fenParts[3].charAt(1) - '1') + (fenParts[3].charAt(0) - 'a');
 
             // Sanity check on square.
-            if (square < 0 || square > 63)
-            {
+            if (square < 0 || square > 63) {
                 throw new IllegalFenException("Invalid en passant target square.");
             }
 
@@ -240,41 +220,31 @@ public class Position
         }
 
         // Process active color.
-        if (fenParts[1].equals("b"))
-        {
+        if (fenParts[1].equals("b")) {
             // Black to move. Mirror position.
             position.mirror();
         }
 
         // Process number of plies since last capture or pawn advance (if available).
-        if (fenParts.length >= 5)
-        {
-            try
-            {
+        if (fenParts.length >= 5) {
+            try {
                 position.numNoCaptureOrPawnAdvancePlies = Integer.parseInt(fenParts[4]);
-            }
-            catch (NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 throw new IllegalFenException("Invalid number of plies since the last capture or pawn advance..");
             }
         }
 
         // Process move number (if available).
-        if (fenParts.length >= 6)
-        {
-            try
-            {
+        if (fenParts.length >= 6) {
+            try {
                 position.numGameMoves = Integer.parseInt(fenParts[5]);
-            }
-            catch (NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 throw new IllegalFenException("Invalid number of full moves since the start of the game.");
             }
         }
 
         // Check if the position is legal.
-        if (!position.isLegal())
-        {
+        if (!position.isLegal()) {
             throw new IllegalFenException("Illegal position.");
         }
 
@@ -286,8 +256,7 @@ public class Position
      *
      * @return FEN string corresponding to the position.
      */
-    public String getFen()
-    {
+    public String getFen() {
         StringBuilder sb = new StringBuilder();
 
         // Append piece placement string.
@@ -299,36 +268,29 @@ public class Position
         // Append castling availability information.
         sb.append((weCanCastleShort || weCanCastleLong || theyCanCastleShort || theyCanCastleLong) ? " " : " -");
 
-        if (isWhiteToMove() ? weCanCastleShort : theyCanCastleShort)
-        {
+        if (isWhiteToMove() ? weCanCastleShort : theyCanCastleShort) {
             sb.append("K");
         }
 
-        if (isWhiteToMove() ? weCanCastleLong : theyCanCastleLong)
-        {
+        if (isWhiteToMove() ? weCanCastleLong : theyCanCastleLong) {
             sb.append("Q");
         }
 
-        if (isWhiteToMove() ? theyCanCastleShort : weCanCastleShort)
-        {
+        if (isWhiteToMove() ? theyCanCastleShort : weCanCastleShort) {
             sb.append("k");
         }
 
-        if (isWhiteToMove() ? theyCanCastleLong : weCanCastleLong)
-        {
+        if (isWhiteToMove() ? theyCanCastleLong : weCanCastleLong) {
             sb.append("q");
         }
 
         // Append en passant capture square.
-        if (enPassantCaptureSquare != 0)
-        {
+        if (enPassantCaptureSquare != 0) {
             byte mirroredEnPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8)
                     + (enPassantCaptureSquare & 0b111));
             sb.append(" "
                     + Board.getSquareName(board.isMirrored ? mirroredEnPassantCaptureSquare : enPassantCaptureSquare));
-        }
-        else
-        {
+        } else {
             sb.append(" -");
         }
 
@@ -344,8 +306,7 @@ public class Position
     /**
      * Mirror the position (change side to move).
      */
-    void mirror()
-    {
+    void mirror() {
         // Mirror the chess board.
         board.mirror();
 
@@ -359,8 +320,7 @@ public class Position
         theyCanCastleLong = temp;
 
         // Mirror en passant square.
-        if (enPassantCaptureSquare != 0)
-        {
+        if (enPassantCaptureSquare != 0) {
             enPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8) + (enPassantCaptureSquare & 0b111));
         }
 
@@ -369,8 +329,7 @@ public class Position
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
 
         // Chess board representation.
@@ -380,28 +339,23 @@ public class Position
         sb.append((board.isMirrored ? "black" : "white") + " to move");
 
         // Castling information.
-        if (weCanCastleShort || weCanCastleLong || theyCanCastleShort || theyCanCastleLong)
-        {
+        if (weCanCastleShort || weCanCastleLong || theyCanCastleShort || theyCanCastleLong) {
             sb.append(" - ");
         }
 
-        if (board.isMirrored ? theyCanCastleShort : weCanCastleShort)
-        {
+        if (board.isMirrored ? theyCanCastleShort : weCanCastleShort) {
             sb.append("K");
         }
 
-        if (board.isMirrored ? theyCanCastleLong : weCanCastleLong)
-        {
+        if (board.isMirrored ? theyCanCastleLong : weCanCastleLong) {
             sb.append("Q");
         }
 
-        if (board.isMirrored ? weCanCastleShort : theyCanCastleShort)
-        {
+        if (board.isMirrored ? weCanCastleShort : theyCanCastleShort) {
             sb.append("k");
         }
 
-        if (board.isMirrored ? weCanCastleLong : theyCanCastleLong)
-        {
+        if (board.isMirrored ? weCanCastleLong : theyCanCastleLong) {
             sb.append("q");
         }
 
@@ -412,8 +366,7 @@ public class Position
         sb.append(numNoCaptureOrPawnAdvancePlies + " plies since last capture or pawn advance");
 
         // En passant information.
-        if (enPassantCaptureSquare != 0)
-        {
+        if (enPassantCaptureSquare != 0) {
             byte mirroredEnPassantCaptureSquare = (byte) (8 * (7 - enPassantCaptureSquare / 8)
                     + (enPassantCaptureSquare & 0b111));
             sb.append(System.lineSeparator() + "e.p. capture square: "
@@ -429,11 +382,9 @@ public class Position
     /**
      * @return The chess position is legal.
      */
-    boolean isLegal()
-    {
+    boolean isLegal() {
         // Check that each side has exactly one king.
-        if (Long.bitCount(board.kings & board.ourPieces) != 1 || Long.bitCount(board.kings & board.theirPieces) != 1)
-        {
+        if (Long.bitCount(board.kings & board.ourPieces) != 1 || Long.bitCount(board.kings & board.theirPieces) != 1) {
             return false;
         }
 
@@ -443,8 +394,7 @@ public class Position
 
         // Castling is not possible if the king has moved.
         if (((weCanCastleShort || weCanCastleLong) && !ourKingOnOriginalSquare)
-                || ((theyCanCastleShort || theyCanCastleLong) && !theirKingOnOriginalSquare))
-        {
+                || ((theyCanCastleShort || theyCanCastleLong) && !theirKingOnOriginalSquare)) {
             return false;
         }
 
@@ -455,30 +405,25 @@ public class Position
         if ((weCanCastleShort && (ourRooks & Board.getSquareBitboard("h1")) == 0)
                 || (weCanCastleLong && (ourRooks & Board.getSquareBitboard("a1")) == 0)
                 || (theyCanCastleShort && (theirRooks & Board.getSquareBitboard("h8")) == 0)
-                || (theyCanCastleLong && (theirRooks & Board.getSquareBitboard("a8")) == 0))
-        {
+                || (theyCanCastleLong && (theirRooks & Board.getSquareBitboard("a8")) == 0)) {
             return false;
         }
 
         // En passant information must pass some obvious sanity checks.
-        if (enPassantCaptureSquare != 0)
-        {
+        if (enPassantCaptureSquare != 0) {
             // Check that the en passant capture square lies on the sixth row.
-            if ((enPassantCaptureSquare >> 3) != 5)
-            {
+            if ((enPassantCaptureSquare >> 3) != 5) {
                 return false;
             }
 
             // Check that there is an opponent's pawn in front of the capture square.
-            if (((Board.getSquareBitboard(enPassantCaptureSquare) >> 8) & board.pawns & board.theirPieces) == 0)
-            {
+            if (((Board.getSquareBitboard(enPassantCaptureSquare) >> 8) & board.pawns & board.theirPieces) == 0) {
                 return false;
             }
         }
 
         // Check that pawns are not at the back ranks.
-        if ((board.pawns & (Board.getRowBitboard(0) | Board.getRowBitboard(7))) != 0)
-        {
+        if ((board.pawns & (Board.getRowBitboard(0) | Board.getRowBitboard(7))) != 0) {
             return false;
         }
 
@@ -494,8 +439,7 @@ public class Position
         mirror();
 
         // Check that the king of the side that is not to move is not in check.
-        if (theirKingInCheck)
-        {
+        if (theirKingInCheck) {
             return false;
         }
 
@@ -506,11 +450,9 @@ public class Position
     /**
      * @return The move generator result.
      */
-    MoveGeneratorResult getMoveGeneratorResult()
-    {
+    MoveGeneratorResult getMoveGeneratorResult() {
         // Lazy initialization.
-        if (moveGenResult == null)
-        {
+        if (moveGenResult == null) {
             // Cache move generator result.
             moveGenResult = MoveGenerator.generateLegalMoves(this);
         }
@@ -522,14 +464,10 @@ public class Position
      * @param square Given square.
      * @return The given square is an en passant capture square.
      */
-    boolean isEnPassantCaptureSquare(int square)
-    {
-        if (isWhiteToMove())
-        {
+    boolean isEnPassantCaptureSquare(int square) {
+        if (isWhiteToMove()) {
             return square == enPassantCaptureSquare;
-        }
-        else
-        {
+        } else {
             return square == (enPassantCaptureSquare ^ 0b111000);
         }
     }
@@ -538,8 +476,7 @@ public class Position
      * @param move Given move.
      * @return The given move is a capturing move.
      */
-    boolean isCapturingMove(Move move)
-    {
+    boolean isCapturingMove(Move move) {
         final long toSquareBitboard = Board.getSquareBitboard(
                 isWhiteToMove() ? move.getToSquare() : (move.getToSquare() ^ 0b111000));
 
@@ -551,8 +488,7 @@ public class Position
      * @param move Given move.
      * @return The given move is equal to short castling.
      */
-    boolean isShortCastlingMove(Move move)
-    {
+    boolean isShortCastlingMove(Move move) {
         return getMovePieceType(move) == PieceType.KING
                 && (isWhiteToMove() ? move.equals(Move.SHORT_CASTLING_WHITE) : move.equals(Move.SHORT_CASTLING_BLACK));
     }
@@ -561,8 +497,7 @@ public class Position
      * @param move Given move.
      * @return The given move is equal to long castling.
      */
-    boolean isLongCastlingMove(Move move)
-    {
+    boolean isLongCastlingMove(Move move) {
         return getMovePieceType(move) == PieceType.KING
                 && (isWhiteToMove() ? move.equals(Move.LONG_CASTLING_WHITE) : move.equals(Move.LONG_CASTLING_BLACK));
     }
@@ -573,36 +508,23 @@ public class Position
      * @param move Given move.
      * @return Piece type corresponding to the given move.
      */
-    PieceType getMovePieceType(Move move)
-    {
+    PieceType getMovePieceType(Move move) {
         final long fromSquareBitboard = Board.getSquareBitboard(
                 isWhiteToMove() ? move.getFromSquare() : (move.getFromSquare() ^ 0b111000));
 
-        if ((board.pawns & fromSquareBitboard) != 0)
-        {
+        if ((board.pawns & fromSquareBitboard) != 0) {
             return PieceType.PAWN;
-        }
-        else if ((board.bishops & fromSquareBitboard) != 0)
-        {
-            if ((board.rooks & fromSquareBitboard) != 0)
-            {
+        } else if ((board.bishops & fromSquareBitboard) != 0) {
+            if ((board.rooks & fromSquareBitboard) != 0) {
                 return PieceType.QUEEN;
-            }
-            else
-            {
+            } else {
                 return PieceType.BISHOP;
             }
-        }
-        else if ((board.rooks & fromSquareBitboard) != 0)
-        {
+        } else if ((board.rooks & fromSquareBitboard) != 0) {
             return PieceType.ROOK;
-        }
-        else if ((board.kings & fromSquareBitboard) != 0)
-        {
+        } else if ((board.kings & fromSquareBitboard) != 0) {
             return PieceType.KING;
-        }
-        else
-        {
+        } else {
             return PieceType.KNIGHT;
         }
     }
@@ -613,18 +535,15 @@ public class Position
      * @param pieceType Given piece type.
      * @return List of all legal moves with the given piece type in the position.
      */
-    List<Move> getLegalMoves(PieceType pieceType)
-    {
+    List<Move> getLegalMoves(PieceType pieceType) {
         // TODO: Make MoveGenerator non-static and member of Position to allow for
         // easier caching of moves and on-demand fetching of particular types of moves.
 
         // Return an unmodifiable view of the list.
         List<Move> moves = new ArrayList<>();
 
-        for (Move move : getMoveGeneratorResult().getLegalMoves())
-        {
-            if (getMovePieceType(move) == pieceType)
-            {
+        for (Move move : getMoveGeneratorResult().getLegalMoves()) {
+            if (getMovePieceType(move) == pieceType) {
                 moves.add(move);
             }
         }
@@ -637,8 +556,7 @@ public class Position
      *
      * @return List of all legal moves in the position.
      */
-    public List<Move> getLegalMoves()
-    {
+    public List<Move> getLegalMoves() {
         // Return an unmodifiable view of the list.
         return Collections.unmodifiableList(getMoveGeneratorResult().getLegalMoves());
     }
@@ -650,17 +568,14 @@ public class Position
      * @return Resulting position after the given move is applied.
      * @throws IllegalMoveException If the move is illegal.
      */
-    public Position playMove(Move move)
-    {
+    public Position playMove(Move move) {
         // Check if the move is legal.
-        if (!getLegalMoves().contains(move))
-        {
+        if (!getLegalMoves().contains(move)) {
             throw new IllegalMoveException("Move " + move + " is illegal in the position " + this);
         }
 
         // Mirror the move if it's black to move.
-        if (board.isMirrored)
-        {
+        if (board.isMirrored) {
             move = new Move(move);
             move.mirror();
         }
@@ -676,20 +591,16 @@ public class Position
         final boolean isPawnMove = (position.board.pawns & fromSquareBitboard) != 0;
 
         // Update number of plies since the last capture or pawn advance.
-        if (isPawnMove || (position.board.theirPieces & toSquareBitboard) != 0)
-        {
+        if (isPawnMove || (position.board.theirPieces & toSquareBitboard) != 0) {
             // This is either a pawn move or a piece capture, reset the counter.
             position.numNoCaptureOrPawnAdvancePlies = 0;
-        }
-        else
-        {
+        } else {
             // Increment counter.
             position.numNoCaptureOrPawnAdvancePlies++;
         }
 
         // Increment number of moves after black's move.
-        if (position.board.isMirrored)
-        {
+        if (position.board.isMirrored) {
             position.numGameMoves++;
         }
 
@@ -707,50 +618,43 @@ public class Position
         position.enPassantCaptureSquare = 0;
 
         // Invalidate opponent's castling rights if the piece moves to a8 or h8.
-        if (move.getToSquare() == Board.SQUARE_A8)
-        {
+        if (move.getToSquare() == Board.SQUARE_A8) {
             position.theyCanCastleLong = false;
-        }
-        else if (move.getToSquare() == Board.SQUARE_H8)
-        {
+        } else if (move.getToSquare() == Board.SQUARE_H8) {
             position.theyCanCastleShort = false;
         }
 
         // Handle pawn moves.
-        if (isPawnMove)
-        {
+        if (isPawnMove) {
             // Remove en passant captured pawn.
-            if (move.getToSquare() == enPassantCaptureSquare)
-            {
+            if (move.getToSquare() == enPassantCaptureSquare) {
                 position.board.theirPieces &= ~(toSquareBitboard >> 8);
                 position.board.pawns &= ~(toSquareBitboard >> 8);
             }
 
             // Handle promotion.
-            switch (move.getPromotionPieceType())
-            {
-            case NONE:
-                position.board.pawns |= toSquareBitboard;
-                break;
-            case QUEEN:
-                position.board.rooks |= toSquareBitboard;
-                position.board.bishops |= toSquareBitboard;
-                break;
-            case ROOK:
-                position.board.rooks |= toSquareBitboard;
-                break;
-            case BISHOP:
-                position.board.bishops |= toSquareBitboard;
-                break;
-            case KNIGHT:
-                break;
+            switch (move.getPromotionPieceType()) {
+                case NONE:
+                    position.board.pawns |= toSquareBitboard;
+                    break;
+                case QUEEN:
+                    position.board.rooks |= toSquareBitboard;
+                    position.board.bishops |= toSquareBitboard;
+                    break;
+                case ROOK:
+                    position.board.rooks |= toSquareBitboard;
+                    break;
+                case BISHOP:
+                    position.board.bishops |= toSquareBitboard;
+                    break;
+                case KNIGHT:
+                    break;
             }
 
             // Set en passant capture square (it there is an opponent's pawn that can
             // capture it).
             if (move.getToSquare() - move.getFromSquare() == 16 && (position.board.theirPieces & position.board.pawns
-                    & ((toSquareBitboard << 1) | (toSquareBitboard >> 1)) & Board.BB_A4H4) != 0)
-            {
+                    & ((toSquareBitboard << 1) | (toSquareBitboard >> 1)) & Board.BB_A4H4) != 0) {
                 position.enPassantCaptureSquare = (byte) (move.getFromSquare() + 8);
             }
 
@@ -759,11 +663,9 @@ public class Position
         }
 
         // Handle king moves.
-        if ((position.board.kings & fromSquareBitboard) != 0)
-        {
+        if ((position.board.kings & fromSquareBitboard) != 0) {
             // Handle castlings.
-            if (move.equals(Move.SHORT_CASTLING_WHITE))
-            {
+            if (move.equals(Move.SHORT_CASTLING_WHITE)) {
                 // Short castling.
                 // Move the rook from h1 to f1.
                 position.board.rooks &= ~Board.BB_H1;
@@ -771,9 +673,7 @@ public class Position
 
                 position.board.ourPieces &= ~Board.BB_H1;
                 position.board.ourPieces |= Board.BB_F1;
-            }
-            else if (move.equals(Move.LONG_CASTLING_WHITE))
-            {
+            } else if (move.equals(Move.LONG_CASTLING_WHITE)) {
                 // Long castling.
                 // Move the rook from a1 to d1.
                 position.board.rooks &= ~Board.BB_A1;
@@ -793,15 +693,11 @@ public class Position
         }
 
         // Handle rook moves.
-        if ((position.board.rooks & fromSquareBitboard) != 0)
-        {
+        if ((position.board.rooks & fromSquareBitboard) != 0) {
             // Invalidate castling rights if a rook (or queen) moves from a1 or h1.
-            if (fromSquareBitboard == Board.BB_A1)
-            {
+            if (fromSquareBitboard == Board.BB_A1) {
                 position.weCanCastleLong = false;
-            }
-            else if (fromSquareBitboard == Board.BB_H1)
-            {
+            } else if (fromSquareBitboard == Board.BB_H1) {
                 position.weCanCastleShort = false;
             }
 
@@ -811,8 +707,7 @@ public class Position
         }
 
         // Handle bishop moves.
-        if ((position.board.bishops & fromSquareBitboard) != 0)
-        {
+        if ((position.board.bishops & fromSquareBitboard) != 0) {
             // Perform the actual move.
             position.board.bishops &= ~fromSquareBitboard;
             position.board.bishops |= toSquareBitboard;
@@ -835,8 +730,7 @@ public class Position
      * @return Resulting position after the given move is applied.
      * @throws IllegalMoveException If the move is illegal.
      */
-    public Position playMove(String move)
-    {
+    public Position playMove(String move) {
         return playMove(SanTranslator.fromSan(move, this));
     }
 
@@ -845,8 +739,7 @@ public class Position
      *
      * @return {@code true} if and only if it's white to move.
      */
-    public boolean isWhiteToMove()
-    {
+    public boolean isWhiteToMove() {
         return !board.isMirrored;
     }
 
@@ -855,8 +748,7 @@ public class Position
      *
      * @return {@code true} if and only if it's black to move.
      */
-    public boolean isBlackToMove()
-    {
+    public boolean isBlackToMove() {
         return board.isMirrored;
     }
 
@@ -865,14 +757,10 @@ public class Position
      *
      * @return {@code true} if and only if white can castle short.
      */
-    public boolean whiteCanCastleShort()
-    {
-        if (isWhiteToMove())
-        {
+    public boolean whiteCanCastleShort() {
+        if (isWhiteToMove()) {
             return weCanCastleShort;
-        }
-        else
-        {
+        } else {
             return theyCanCastleShort;
         }
     }
@@ -882,14 +770,10 @@ public class Position
      *
      * @return {@code true} if and only if black can castle short.
      */
-    public boolean blackCanCastleShort()
-    {
-        if (isWhiteToMove())
-        {
+    public boolean blackCanCastleShort() {
+        if (isWhiteToMove()) {
             return theyCanCastleShort;
-        }
-        else
-        {
+        } else {
             return weCanCastleShort;
         }
     }
@@ -899,14 +783,10 @@ public class Position
      *
      * @return {@code true} if and only if white can castle long.
      */
-    public boolean whiteCanCastleLong()
-    {
-        if (isWhiteToMove())
-        {
+    public boolean whiteCanCastleLong() {
+        if (isWhiteToMove()) {
             return weCanCastleLong;
-        }
-        else
-        {
+        } else {
             return theyCanCastleLong;
         }
     }
@@ -916,14 +796,10 @@ public class Position
      *
      * @return {@code true} if and only if black can castle long.
      */
-    public boolean blackCanCastleLong()
-    {
-        if (isWhiteToMove())
-        {
+    public boolean blackCanCastleLong() {
+        if (isWhiteToMove()) {
             return theyCanCastleLong;
-        }
-        else
-        {
+        } else {
             return weCanCastleLong;
         }
     }
@@ -933,8 +809,7 @@ public class Position
      *
      * @return Number of full moves since the start of the game.
      */
-    public int getMoveNumber()
-    {
+    public int getMoveNumber() {
         return numGameMoves;
     }
 
@@ -943,8 +818,7 @@ public class Position
      *
      * @return Number of plies since the last capture or pawn advance.
      */
-    public int getNumNoCaptureOrPawnAdvancePlies()
-    {
+    public int getNumNoCaptureOrPawnAdvancePlies() {
         return numNoCaptureOrPawnAdvancePlies;
     }
 
@@ -953,8 +827,7 @@ public class Position
      *
      * @return {@code true} if and only if it's check.
      */
-    public boolean isCheck()
-    {
+    public boolean isCheck() {
         return getMoveGeneratorResult().isCheck();
     }
 
@@ -963,8 +836,7 @@ public class Position
      *
      * @return {@code true} if and only if it's checkmate.
      */
-    public boolean isCheckmate()
-    {
+    public boolean isCheckmate() {
         return getMoveGeneratorResult().getLegalMoves().isEmpty() && isCheck();
     }
 
@@ -973,8 +845,7 @@ public class Position
      *
      * @return {@code true} if and only if it's stalemate.
      */
-    public boolean isStalemate()
-    {
+    public boolean isStalemate() {
         return getMoveGeneratorResult().getLegalMoves().isEmpty() && !isCheck();
     }
 
@@ -986,28 +857,23 @@ public class Position
      *         position, but ignoring move counts (number of game moves and number
      *         of plies since the last capture or pawn advance).
      */
-    public boolean equalsIgnoreMoveCounts(Position other)
-    {
+    public boolean equalsIgnoreMoveCounts(Position other) {
         return Objects.equals(board, other.board) && enPassantCaptureSquare == other.enPassantCaptureSquare
                 && theyCanCastleLong == other.theyCanCastleLong && theyCanCastleShort == other.theyCanCastleShort
                 && weCanCastleLong == other.weCanCastleLong && weCanCastleShort == other.weCanCastleShort;
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
 
-        if (obj == null)
-        {
+        if (obj == null) {
             return false;
         }
 
-        if (getClass() != obj.getClass())
-        {
+        if (getClass() != obj.getClass()) {
             return false;
         }
 

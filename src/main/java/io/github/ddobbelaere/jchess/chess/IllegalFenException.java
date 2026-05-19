@@ -24,13 +24,11 @@ package io.github.ddobbelaere.jchess.chess;
  *
  */
 @SuppressWarnings("serial")
-public class IllegalFenException extends RuntimeException
-{
+public class IllegalFenException extends RuntimeException {
     /**
      * @see RuntimeException#RuntimeException(String)
      */
-    public IllegalFenException(String message)
-    {
+    public IllegalFenException(String message) {
         super(message);
     }
 }

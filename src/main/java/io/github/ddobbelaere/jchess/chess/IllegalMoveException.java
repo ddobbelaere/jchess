@@ -24,13 +24,11 @@ package io.github.ddobbelaere.jchess.chess;
  *
  */
 @SuppressWarnings("serial")
-public class IllegalMoveException extends RuntimeException
-{
+public class IllegalMoveException extends RuntimeException {
     /**
      * @see RuntimeException#RuntimeException(String)
      */
-    public IllegalMoveException(String message)
-    {
+    public IllegalMoveException(String message) {
         super(message);
     }
 }
