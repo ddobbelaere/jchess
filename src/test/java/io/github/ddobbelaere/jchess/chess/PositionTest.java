@@ -333,7 +333,10 @@ class PositionTest {
                                 "r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b KQ g3 0 11",
 
                                 // No castling and en passant capture possible.
-                                "r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b - - 3 20");
+                                "r1bq1rk1/pp2ppb1/2np1np1/8/3NP1Pp/1BN1BP2/PPPQ3P/R3K2R b - - 3 20",
+
+                                // No pieces on first rank.
+                                "8/8/8/4k3/4P3/4K3/8/8 w - - 0 1");
         }
 
         /**

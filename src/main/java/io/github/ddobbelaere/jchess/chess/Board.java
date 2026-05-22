@@ -396,13 +396,15 @@ class Board {
                     numEmptySquares++;
                 }
 
-                if (col == 7 && row > 0) {
+                if (col == 7) {
                     // Append number of empty squares to string.
                     if (numEmptySquares > 0) {
                         sb.append(numEmptySquares);
                     }
 
-                    sb.append("/");
+                    if (row > 0) {
+                        sb.append("/");
+                    }
                 }
             }
         }
